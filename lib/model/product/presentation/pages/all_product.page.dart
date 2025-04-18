@@ -26,14 +26,14 @@ class _AllProductPageState extends State<AllProductPage> {
         toolbarHeight: 80,
       ),
       body: Consumer<ProductProvider>(
-        builder: (BuildContext context, ProductProvider product, Widget? child) {
+        builder: (BuildContext context, ProductProvider productProvider, Widget? child) {
           return ColoredBox(
             color: Colors.white,
             child: ListView.builder(
-              itemCount: product.allProducts.length,
+              itemCount: productProvider.allProducts.length,
               itemBuilder: (context, index) => ProductItemWidget(
-                currentAllProduct: product.allProducts[index],
-                margin: index != product.allProducts.length - 1 ? const EdgeInsets.fromLTRB(13, 13, 13, 0) : const EdgeInsets.fromLTRB(13, 13, 13, 10),
+                currentAllProduct: productProvider.allProducts[index],
+                margin: index != productProvider.allProducts.length - 1 ? const EdgeInsets.fromLTRB(13, 13, 13, 0) : const EdgeInsets.fromLTRB(13, 13, 13, 10),
               ),
             ),
           );
