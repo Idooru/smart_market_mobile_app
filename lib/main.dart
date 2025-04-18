@@ -1,20 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_market/core/common/route.strategy.dart';
 import 'package:smart_market/core/themes/theme_data.dart';
-// import 'package:provider/provider.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
+import 'package:smart_market/model/main/presentation/page/app_main.page.dart';
+import 'package:smart_market/model/product/presentation/state/product.provider.dart';
 
-void main() {
+void main() async {
   initLocator();
-  /*
-   * 현재 생성된 Provider 없으므로 잠시 비워둠
-   */
-  // MultiProvider(
-  //   providers: const [],
-  //   child: const MyApp(),
-  // );
+  await dotenv.load(fileName: 'assets/config/.env');
 
-  /* Provider 사용시 위 코드로 대체해야함 */
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => ProductProvider(),
+        )
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -25,13 +31,19 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: themeData,
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text("Hello World"),
-          backgroundColor: Colors.red,
-        ),
-        body: const ColoredBox(color: Colors.red),
-      ),
+      routes: {
+        '/home': (context) {
+          return const AppMainPage();
+        },
+      },
+      onGenerateRoute: (RouteSettings settings) {
+        final strategy = routeStrategies[settings.name];
+        if (strategy != null) {
+          return strategy.route(settings);
+        }
+        return null;
+      },
+      home: const AppMainPage(),
     );
   }
 }
