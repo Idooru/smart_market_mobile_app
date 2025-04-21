@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_market/core/utils/parse_date.dart';
 import 'package:smart_market/model/product/domain/entities/response/all_product.entity.dart';
 import 'package:smart_market/model/product/presentation/pages/detail_product.page.dart';
 import 'package:smart_market/model/product/presentation/widgets/display_average_score.widget.dart';
@@ -16,10 +17,7 @@ class ProductItemWidget extends StatelessWidget {
   void navigateDetailProductPage(BuildContext context) {
     Navigator.of(context).pushNamed(
       "/detail_product",
-      arguments: DetailProductPageArgs(
-        productId: currentAllProduct.id,
-        productName: currentAllProduct.name,
-      ),
+      arguments: DetailProductPageArgs(productId: currentAllProduct.id),
     );
   }
 
@@ -87,7 +85,7 @@ class ProductItemWidget extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      "created date: ${currentAllProduct.createdAt.year}-${currentAllProduct.createdAt.month.toString().padLeft(2, '0')}-${currentAllProduct.createdAt.day.toString().padLeft(2, '0')}",
+                      "created date: ${parseDate(currentAllProduct.createdAt)}",
                       style: const TextStyle(fontSize: 12),
                     ),
                   ],
