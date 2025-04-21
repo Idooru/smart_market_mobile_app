@@ -24,6 +24,10 @@ class _AppMainPageState extends State<AppMainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: const Text("Smart Market"),
+      ),
       body: SafeArea(child: pages.elementAt(selectedIndex)),
       bottomNavigationBar: SizedBox(
         height: 95,

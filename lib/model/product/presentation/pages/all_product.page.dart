@@ -17,11 +17,6 @@ class _AllProductPageState extends State<AllProductPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Text("Smart Market"),
-        toolbarHeight: 80,
-      ),
       body: FutureBuilder(
         future: productService.getAllProduct(context),
         builder: (BuildContext context, AsyncSnapshot<List<AllProduct>> snapshot) {
