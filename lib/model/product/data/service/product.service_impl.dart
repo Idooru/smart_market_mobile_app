@@ -12,11 +12,9 @@ class ProductServiceImpl implements ProductService {
   late ProductProvider productProvider;
 
   @override
-  Future<void> insertAllProduct(BuildContext context) async {
+  Future<List<AllProduct>> getAllProduct(BuildContext context) async {
     productProvider = context.watch<ProductProvider>();
-    List<AllProduct> allProducts = await productRepository.fetchAllProducts();
-
-    productProvider.setAllProducts(allProducts);
+    return productRepository.fetchAllProducts();
   }
 
   @override
