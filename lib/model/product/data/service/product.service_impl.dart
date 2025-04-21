@@ -1,25 +1,25 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:smart_market/core/common/data_state.dart';
+import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/model/product/domain/entities/response/all_product.entity.dart';
 import 'package:smart_market/model/product/domain/entities/response/detail_product.entity.dart';
 import 'package:smart_market/model/product/domain/repository/product.repository.dart';
 import 'package:smart_market/model/product/domain/service/product.service.dart';
-import 'package:smart_market/model/product/presentation/state/product.provider.dart';
 
 class ProductServiceImpl implements ProductService {
   final ProductRepository productRepository = locator<ProductRepository>();
-  late ProductProvider productProvider;
 
   @override
-  Future<List<AllProduct>> getAllProduct(BuildContext context) async {
-    productProvider = context.watch<ProductProvider>();
-    return productRepository.fetchAllProducts();
+  Future<List<AllProduct>> getAllProduct() async {
+    DataState<List<AllProduct>> dataState = await productRepository.fetchAllProducts();
+    if (dataState.exception != null) throw DioFailError(message: dataState.exception.toString());
+    return dataState.data!;
   }
 
   @override
-  Future<DetailProduct> getDetailProduct(BuildContext context, String productId) async {
-    productProvider = context.watch<ProductProvider>();
-    return productRepository.fetchDetailProduct(productId);
+  Future<DetailProduct> getDetailProduct(String productId) async {
+    DataState<DetailProduct> dataState = await productRepository.fetchDetailProduct(productId);
+    if (dataState.exception != null) throw DioFailError(message: dataState.exception.toString());
+    return dataState.data!;
   }
 }

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
+import 'package:smart_market/core/widgets/handler/internal_server_error_handler.widget.dart';
+import 'package:smart_market/core/widgets/handler/network_error_handler.widget.dart';
+import 'package:smart_market/core/widgets/handler/loading_handler.widget.dart';
 import 'package:smart_market/model/product/domain/entities/response/detail_product.entity.dart';
 import 'package:smart_market/model/product/domain/service/product.service.dart';
 import 'package:smart_market/model/product/presentation/widgets/display_average_score.widget.dart';
@@ -26,29 +30,45 @@ class DetailProductPage extends StatefulWidget {
 
 class _DetailProductPageState extends State<DetailProductPage> {
   final ProductService productService = locator<ProductService>();
+  late Future<DetailProduct> _getDetailProductFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _getDetailProductFuture = productService.getDetailProduct(widget.productId);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: productService.getDetailProduct(context, widget.productId),
-      builder: (BuildContext context, AsyncSnapshot<DetailProduct> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('에러 발생: ${snapshot.error}'));
-        } else if (snapshot.hasData) {
-          final data = snapshot.data!;
-          return Scaffold(
-            appBar: AppBar(
-              backgroundColor: Colors.white,
-              title: const Text("detail"),
-            ),
-            body: Container(
-              width: double.infinity,
-              height: double.infinity,
-              color: Colors.white,
-              padding: const EdgeInsets.all(20),
-              child: SingleChildScrollView(
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: const Text("detail"),
+      ),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        color: Colors.white,
+        padding: const EdgeInsets.all(20),
+        child: FutureBuilder(
+          future: _getDetailProductFuture,
+          builder: (BuildContext context, AsyncSnapshot<DetailProduct> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const LoadingHandlerWidget(title: "상품 상세 데이터 불러오기..");
+            } else if (snapshot.hasError) {
+              DioFailError error = snapshot.error as DioFailError;
+              if (error.message.contains("Timeout") || error.message.contains('Socket')) {
+                return NetworkErrorHandlerWidget(reconnectCallback: () {
+                  setState(() {
+                    _getDetailProductFuture = productService.getDetailProduct(widget.productId);
+                  });
+                });
+              } else {
+                return const InternalServerErrorHandlerWidget();
+              }
+            } else if (snapshot.hasData) {
+              final data = snapshot.data!;
+              return SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -192,13 +212,13 @@ class _DetailProductPageState extends State<DetailProductPage> {
                     const SizedBox(height: 5),
                   ],
                 ),
-              ),
-            ),
-          );
-        } else {
-          return const Center(child: Text('데이터가 없습니다.'));
-        }
-      },
+              );
+            } else {
+              return const Center(child: Text('데이터가 없습니다.'));
+            }
+          },
+        ),
+      ),
     );
   }
 }
