@@ -18,23 +18,19 @@ class DisplayAverageScoreWidget extends StatelessWidget {
 
     // 꽉 찬 별 (빨강)
     for (int i = 0; i < fullStars; i++) {
-      stars.add(const Icon(Icons.star, size: 20, color: Colors.red));
+      stars.add(const Icon(Icons.star, size: 15, color: Colors.red));
     }
 
     // 반 별 (빨강)
     if (hasHalfStar) {
-      stars.add(const Icon(Icons.star_half, size: 20, color: Colors.red));
+      stars.add(const Icon(Icons.star_half, size: 15, color: Colors.red));
     }
 
     // 빈 별 (회색)
     for (int i = 0; i < emptyStars; i++) {
-      stars.add(const Icon(Icons.star_border, size: 20, color: Colors.red));
+      stars.add(const Icon(Icons.star_border, size: 15, color: Colors.red));
     }
 
-    return SizedBox(
-      width: 100,
-      height: 25,
-      child: Row(children: stars),
-    );
+    return Row(children: stars);
   }
 }

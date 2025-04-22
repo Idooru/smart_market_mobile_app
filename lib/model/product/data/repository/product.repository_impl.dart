@@ -1,18 +1,34 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:smart_market/core/common/data_state.dart';
 import 'package:smart_market/core/utils/dio_initializer.dart';
+import 'package:smart_market/model/product/domain/entities/request/search_all_product.entity.dart';
 import 'package:smart_market/model/product/domain/entities/response/all_product.entity.dart';
 import 'package:smart_market/model/product/domain/entities/response/detail_product.entity.dart';
 import 'package:smart_market/model/product/domain/repository/product.repository.dart';
 
 class ProductRepositoryImpl extends DioInitializer implements ProductRepository {
   @override
-  Future<DataState<List<AllProduct>>> fetchAllProducts() async {
+  Future<DataState<List<AllProduct>>> fetchAllProducts([SearchAllProduct? args]) async {
     try {
-      Response response = await dio.get("$baseUrl/product/all");
+      Response response;
+      String url;
+
+      if (args != null) {
+        String validateNameQuery = args.name != null ? "name=${args.name}" : "";
+        String validateCategoryQuery = args.category != "전체" ? "category=${args.category}" : "";
+        url = "$baseUrl/product/all?align=${args.align}&column=${args.column}&$validateNameQuery&$validateCategoryQuery";
+      } else {
+        url = "$baseUrl/product/all";
+      }
+
+      debugPrint("url: $url");
+      response = await dio.get(url);
+
       List<AllProduct> allProducts = List<Map<String, dynamic>>.from(response.data["result"]).map((data) => AllProduct.fromJson(data)).toList();
       return DataSuccess(data: allProducts);
     } on DioException catch (err) {
+      debugPrint("response: ${err.message}");
       return DataFail(exception: err);
     }
   }

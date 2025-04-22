@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:smart_market/core/utils/parse_date.dart';
 import 'package:smart_market/model/product/domain/entities/response/all_product.entity.dart';
 import 'package:smart_market/model/product/presentation/pages/detail_product.page.dart';
@@ -18,6 +19,58 @@ class ProductItemWidget extends StatelessWidget {
     Navigator.of(context).pushNamed(
       "/detail_product",
       arguments: DetailProductPageArgs(productId: currentAllProduct.id),
+    );
+  }
+
+  Text getNameWidget() {
+    return Text(
+      currentAllProduct.name,
+      style: const TextStyle(fontSize: 18, color: Color.fromARGB(255, 61, 61, 61), fontWeight: FontWeight.w300),
+    );
+  }
+
+  Text getPriceWidget() {
+    return Text(
+      "${currentAllProduct.price}원",
+      style: const TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.w500,
+      ),
+    );
+  }
+
+  Text getAverageScoreText() {
+    return const Text("평점: ", style: TextStyle(fontSize: 13));
+  }
+
+  Text getCategoryText() {
+    return Text(
+      "카테고리: ${currentAllProduct.category}",
+      style: const TextStyle(fontSize: 13),
+    );
+  }
+
+  Text getCreatedAtText() {
+    return Text(
+      "게시일: ${parseDate(currentAllProduct.createdAt)}",
+      style: const TextStyle(fontSize: 13),
+    );
+  }
+
+  Text getReviewText() {
+    return Text.rich(
+      TextSpan(
+        text: "리뷰: ",
+        style: const TextStyle(fontSize: 13),
+        children: [getReviewCount()],
+      ),
+    );
+  }
+
+  TextSpan getReviewCount() {
+    return TextSpan(
+      text: "${currentAllProduct.reviewCount}",
+      style: const TextStyle(fontSize: 13, color: Colors.red),
     );
   }
 
@@ -54,39 +107,21 @@ class ProductItemWidget extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      currentAllProduct.name,
-                      style: const TextStyle(fontSize: 18, color: Color.fromARGB(255, 61, 61, 61), fontWeight: FontWeight.w300),
+                    true ? _HighlightFilteredProductWidget(textWidget: getNameWidget()) : getNameWidget(),
+                    true ? _HighlightFilteredProductWidget(textWidget: getPriceWidget()) : getPriceWidget(),
+                    Row(
+                      children: [
+                        true ? _HighlightFilteredProductWidget(textWidget: getAverageScoreText()) : getAverageScoreText(),
+                        DisplayAverageScoreWidget(averageScore: currentAllProduct.averageScore),
+                      ],
                     ),
-                    Text(
-                      "${currentAllProduct.price}원",
-                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                    ),
-                    DisplayAverageScoreWidget(averageScore: currentAllProduct.averageScore),
+                    true ? _HighlightFilteredProductWidget(textWidget: getCategoryText()) : getCategoryText(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          "category: ${currentAllProduct.category}",
-                          style: const TextStyle(fontSize: 12),
-                        ),
-                        Text.rich(
-                          TextSpan(
-                            text: "review: ",
-                            style: const TextStyle(fontSize: 12),
-                            children: [
-                              TextSpan(
-                                text: "${currentAllProduct.reviewCount}",
-                                style: const TextStyle(fontSize: 12, color: Colors.red),
-                              ),
-                            ],
-                          ),
-                        ),
+                        true ? _HighlightFilteredProductWidget(textWidget: getCreatedAtText()) : getCreatedAtText(),
+                        true ? _HighlightFilteredProductWidget(textWidget: getReviewText()) : getReviewText(),
                       ],
-                    ),
-                    Text(
-                      "created date: ${parseDate(currentAllProduct.createdAt)}",
-                      style: const TextStyle(fontSize: 12),
                     ),
                   ],
                 ),
@@ -96,5 +131,39 @@ class ProductItemWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _HighlightFilteredProductWidget extends StatefulWidget {
+  final Text textWidget;
+
+  const _HighlightFilteredProductWidget({required this.textWidget});
+
+  @override
+  State<_HighlightFilteredProductWidget> createState() => _HighlightFilteredProductWidgetState();
+}
+
+class _HighlightFilteredProductWidgetState extends State<_HighlightFilteredProductWidget> {
+  bool _showShimmer = true;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(seconds: 5), () {
+      setState(() {
+        _showShimmer = false;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _showShimmer
+        ? Shimmer.fromColors(
+            baseColor: Colors.white,
+            highlightColor: Colors.yellow,
+            child: widget.textWidget,
+          )
+        : widget.textWidget;
   }
 }

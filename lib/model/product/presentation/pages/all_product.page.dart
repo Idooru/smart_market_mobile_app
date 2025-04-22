@@ -7,6 +7,7 @@ import 'package:smart_market/core/widgets/handler/loading_handler.widget.dart';
 import 'package:smart_market/model/product/domain/entities/response/all_product.entity.dart';
 import 'package:smart_market/model/product/domain/service/product.service.dart';
 import 'package:smart_market/model/product/presentation/widgets/product_item.widget.dart';
+import 'package:smart_market/model/product/presentation/widgets/search_filter.widget.dart';
 
 class AllProductPage extends StatefulWidget {
   const AllProductPage({super.key});
@@ -28,6 +29,66 @@ class _AllProductPageState extends State<AllProductPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(0),
+          child: Row(
+            children: [
+              Container(
+                width: 60,
+                height: 45,
+                color: const Color.fromARGB(255, 39, 40, 41),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.filter,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) => Dialog(
+                        child: SearchFilterWidget(
+                          filterCallback: (args) {
+                            setState(() {
+                              _getAllProductFuture = productService.getAllProduct(args);
+                            });
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  color: const Color.fromARGB(155, 151, 168, 182),
+                  height: 45,
+                  padding: const EdgeInsets.all(5),
+                  child: TextField(
+                    // controller: controller,
+                    // focusNode: focusNode,
+                    // onChanged: (String search) => phonebookService.searchUser(phonbook, search),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      prefixIcon: IconButton(
+                        icon: const Icon(
+                          Icons.search,
+                          color: Colors.black,
+                        ),
+                        onPressed: () {},
+                      ),
+                      hintText: "상품 이름 검색",
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
       body: ColoredBox(
         color: Colors.white,
         child: FutureBuilder(
