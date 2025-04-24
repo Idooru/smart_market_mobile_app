@@ -6,6 +6,7 @@ import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/model/main/presentation/page/app_main.page.dart';
 import 'package:smart_market/model/product/presentation/state/product.provider.dart';
+import 'package:smart_market/model/product/presentation/state/product_filtered.provider.dart';
 
 void main() async {
   initLocator();
@@ -14,9 +15,8 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (context) => ProductProvider(),
-        )
+        ChangeNotifierProvider(create: (context) => ProductProvider()),
+        ChangeNotifierProvider(create: (context) => ProductFilteredProvider()),
       ],
       child: const MyApp(),
     ),

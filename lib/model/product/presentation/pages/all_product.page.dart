@@ -64,7 +64,7 @@ class _AllProductPageState extends State<AllProductPage> {
               ),
               Expanded(
                 child: Container(
-                  color: const Color.fromARGB(155, 151, 168, 182),
+                  color: Colors.blueGrey[100],
                   height: 45,
                   padding: const EdgeInsets.all(5),
                   child: TextField(

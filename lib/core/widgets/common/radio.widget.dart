@@ -76,6 +76,7 @@ class RadioItemWidget extends StatelessWidget {
             value: value,
             groupValue: groupValue,
             onChanged: selectRadioCallback,
+            activeColor: Colors.blueGrey,
           ),
         ),
         Text(

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:smart_market/core/widgets/common/radio.widget.dart';
 import 'package:smart_market/model/product/domain/entities/request/search_all_product.entity.dart';
+import 'package:smart_market/model/product/presentation/state/product_filtered.provider.dart';
 
 final Map<String, String> searchFilterMap = {};
 
@@ -21,6 +23,8 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
   String _selectedColumn = searchFilterMap["select-column"] ?? "createdAt";
   String _selectedCategory = searchFilterMap["select-category"] ?? "전체";
 
+  late ProductFilteredProvider productFilteredProvider;
+
   void initFilterMap() {
     setState(() {
       _selectedAlign = "DESC";
@@ -40,14 +44,20 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
       category: _selectedCategory,
     );
 
+    productFilteredProvider.clearFiltered();
+    productFilteredProvider.setFiltering(_selectedColumn, _selectedCategory != "전체");
+
     widget.filterCallback(searchAllProduct);
+
     Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
+    productFilteredProvider = context.watch<ProductFilteredProvider>();
+
     return Container(
-      width: 300,
+      width: 250,
       height: 285,
       decoration: BoxDecoration(
         color: Colors.grey[200], // 연한 회색 배경
@@ -229,11 +239,31 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 TextButton(
-                  child: const Text('취소'),
+                  child: const Text(
+                    '취소',
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 70, 70, 70),
+                    ),
+                  ),
                   onPressed: () => Navigator.pop(context),
                 ),
-                TextButton(onPressed: clickToFind, child: const Text('찾기')),
-                TextButton(child: const Text('이름 검색'), onPressed: () {}),
+                TextButton(
+                  onPressed: clickToFind,
+                  child: const Text(
+                    '찾기',
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 70, 70, 70),
+                    ),
+                  ),
+                ),
+                TextButton(
+                    child: const Text(
+                      '이름 검색',
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 70, 70, 70),
+                      ),
+                    ),
+                    onPressed: () {}),
               ],
             ),
           )

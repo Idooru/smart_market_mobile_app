@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:smart_market/core/utils/parse_date.dart';
 import 'package:smart_market/model/product/domain/entities/response/all_product.entity.dart';
 import 'package:smart_market/model/product/presentation/pages/detail_product.page.dart';
+import 'package:smart_market/model/product/presentation/state/product_filtered.provider.dart';
 import 'package:smart_market/model/product/presentation/widgets/display_average_score.widget.dart';
 
 class ProductItemWidget extends StatelessWidget {
@@ -104,26 +108,30 @@ class ProductItemWidget extends StatelessWidget {
               flex: 1,
               child: Container(
                 margin: const EdgeInsets.fromLTRB(0, 13, 13, 13),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    true ? _HighlightFilteredProductWidget(textWidget: getNameWidget()) : getNameWidget(),
-                    true ? _HighlightFilteredProductWidget(textWidget: getPriceWidget()) : getPriceWidget(),
-                    Row(
+                child: Consumer<ProductFilteredProvider>(
+                  builder: (BuildContext context, ProductFilteredProvider provider, Widget? child) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        true ? _HighlightFilteredProductWidget(textWidget: getAverageScoreText()) : getAverageScoreText(),
-                        DisplayAverageScoreWidget(averageScore: currentAllProduct.averageScore),
+                        provider.isNameFiltered ? _HighlightFilteredProductWidget(textWidget: getNameWidget()) : getNameWidget(),
+                        provider.isPriceFiltered ? _HighlightFilteredProductWidget(textWidget: getPriceWidget()) : getPriceWidget(),
+                        Row(
+                          children: [
+                            provider.isAverageScoreFiltered ? _HighlightFilteredProductWidget(textWidget: getAverageScoreText()) : getAverageScoreText(),
+                            DisplayAverageScoreWidget(averageScore: currentAllProduct.averageScore),
+                          ],
+                        ),
+                        provider.isCategoryFiltered ? _HighlightFilteredProductWidget(textWidget: getCategoryText()) : getCategoryText(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            provider.isCreatedAtFiltered ? _HighlightFilteredProductWidget(textWidget: getCreatedAtText()) : getCreatedAtText(),
+                            provider.isReviewFiltered ? _HighlightFilteredProductWidget(textWidget: getReviewText()) : getReviewText(),
+                          ],
+                        ),
                       ],
-                    ),
-                    true ? _HighlightFilteredProductWidget(textWidget: getCategoryText()) : getCategoryText(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        true ? _HighlightFilteredProductWidget(textWidget: getCreatedAtText()) : getCreatedAtText(),
-                        true ? _HighlightFilteredProductWidget(textWidget: getReviewText()) : getReviewText(),
-                      ],
-                    ),
-                  ],
+                    );
+                  },
                 ),
               ),
             )
@@ -145,23 +153,37 @@ class _HighlightFilteredProductWidget extends StatefulWidget {
 
 class _HighlightFilteredProductWidgetState extends State<_HighlightFilteredProductWidget> {
   bool _showShimmer = true;
+  Timer? _shimmerTimer;
+
+  late ProductFilteredProvider productFilteredProvider;
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 5), () {
-      setState(() {
-        _showShimmer = false;
-      });
+    _shimmerTimer = Timer(const Duration(seconds: 10), () {
+      if (mounted) {
+        setState(() {
+          _showShimmer = false;
+        });
+        productFilteredProvider.clearFiltered();
+      }
     });
   }
 
   @override
+  void dispose() {
+    _shimmerTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    productFilteredProvider = context.watch<ProductFilteredProvider>();
+
     return _showShimmer
         ? Shimmer.fromColors(
-            baseColor: Colors.white,
-            highlightColor: Colors.yellow,
+            baseColor: Colors.yellow[700]!,
+            highlightColor: Colors.red[700]!,
             child: widget.textWidget,
           )
         : widget.textWidget;
