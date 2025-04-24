@@ -4,24 +4,24 @@ import 'package:smart_market/core/widgets/common/radio.widget.dart';
 import 'package:smart_market/model/product/domain/entities/request/search_all_product.entity.dart';
 import 'package:smart_market/model/product/presentation/state/product_filtered.provider.dart';
 
-final Map<String, String> searchFilterMap = {};
+final Map<String, String> filterMap = {};
 
-class SearchFilterWidget extends StatefulWidget {
+class FilterWidget extends StatefulWidget {
   final void Function(SearchAllProduct) filterCallback;
 
-  const SearchFilterWidget({
+  const FilterWidget({
     super.key,
     required this.filterCallback,
   });
 
   @override
-  State<SearchFilterWidget> createState() => _SearchFilterWidgetState();
+  State<FilterWidget> createState() => _FilterWidgetState();
 }
 
-class _SearchFilterWidgetState extends State<SearchFilterWidget> {
-  String _selectedAlign = searchFilterMap["select-align"] ?? "DESC";
-  String _selectedColumn = searchFilterMap["select-column"] ?? "createdAt";
-  String _selectedCategory = searchFilterMap["select-category"] ?? "전체";
+class _FilterWidgetState extends State<FilterWidget> {
+  String _selectedAlign = filterMap["select-align"] ?? "DESC";
+  String _selectedColumn = filterMap["select-column"] ?? "createdAt";
+  String _selectedCategory = filterMap["select-category"] ?? "전체";
 
   late ProductFilteredProvider productFilteredProvider;
 
@@ -34,9 +34,9 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
   }
 
   void clickToFind() {
-    searchFilterMap["select-align"] = _selectedAlign;
-    searchFilterMap["select-column"] = _selectedColumn;
-    searchFilterMap["select-category"] = _selectedCategory;
+    filterMap["select-align"] = _selectedAlign;
+    filterMap["select-column"] = _selectedColumn;
+    filterMap["select-category"] = _selectedCategory;
 
     SearchAllProduct searchAllProduct = SearchAllProduct(
       align: _selectedAlign,
@@ -256,14 +256,6 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                     ),
                   ),
                 ),
-                TextButton(
-                    child: const Text(
-                      '이름 검색',
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 70, 70, 70),
-                      ),
-                    ),
-                    onPressed: () {}),
               ],
             ),
           )

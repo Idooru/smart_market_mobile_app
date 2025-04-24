@@ -7,7 +7,7 @@ import 'package:smart_market/core/widgets/handler/loading_handler.widget.dart';
 import 'package:smart_market/model/product/domain/entities/response/all_product.entity.dart';
 import 'package:smart_market/model/product/domain/service/product.service.dart';
 import 'package:smart_market/model/product/presentation/widgets/product_item.widget.dart';
-import 'package:smart_market/model/product/presentation/widgets/search_filter.widget.dart';
+import 'package:smart_market/model/product/presentation/widgets/filter.widget.dart';
 
 class AllProductPage extends StatefulWidget {
   const AllProductPage({super.key});
@@ -50,7 +50,7 @@ class _AllProductPageState extends State<AllProductPage> {
                       context: context,
                       barrierDismissible: false,
                       builder: (BuildContext context) => Dialog(
-                        child: SearchFilterWidget(
+                        child: FilterWidget(
                           filterCallback: (args) {
                             setState(() {
                               _getAllProductFuture = productService.getAllProduct(args);
