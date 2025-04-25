@@ -6,4 +6,5 @@ import 'package:smart_market/model/product/domain/entities/response/detail_produ
 abstract interface class ProductRepository {
   Future<DataState<List<AllProduct>>> fetchAllProducts([SearchAllProduct? args]);
   Future<DataState<DetailProduct>> fetchDetailProduct(String productId);
+  Future<DataState<List<String>>> fetchProductAutocomplete(String name);
 }

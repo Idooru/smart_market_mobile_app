@@ -23,4 +23,11 @@ class ProductServiceImpl implements ProductService {
     if (dataState.exception != null) throw DioFailError(message: dataState.exception.toString());
     return dataState.data!;
   }
+
+  @override
+  Future<List<String>> getProductAutocomplete(String name) async {
+    DataState<List<String>> dataState = await productRepository.fetchProductAutocomplete(name);
+    if (dataState.exception != null) throw DioFailError(message: dataState.exception.toString());
+    return dataState.data!;
+  }
 }

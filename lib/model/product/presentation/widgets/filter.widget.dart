@@ -33,7 +33,7 @@ class _FilterWidgetState extends State<FilterWidget> {
     });
   }
 
-  void clickToFind() {
+  void clickToFind(ProductFilteredProvider provider) {
     filterMap["select-align"] = _selectedAlign;
     filterMap["select-column"] = _selectedColumn;
     filterMap["select-category"] = _selectedCategory;
@@ -44,8 +44,8 @@ class _FilterWidgetState extends State<FilterWidget> {
       category: _selectedCategory,
     );
 
-    productFilteredProvider.clearFiltered();
-    productFilteredProvider.setFiltering(_selectedColumn, _selectedCategory != "전체");
+    provider.clearFiltered();
+    provider.setFiltering(_selectedColumn, _selectedCategory != "전체");
 
     widget.filterCallback(searchAllProduct);
 
@@ -54,8 +54,6 @@ class _FilterWidgetState extends State<FilterWidget> {
 
   @override
   Widget build(BuildContext context) {
-    productFilteredProvider = context.watch<ProductFilteredProvider>();
-
     return Container(
       width: 250,
       height: 285,
@@ -247,15 +245,17 @@ class _FilterWidgetState extends State<FilterWidget> {
                   ),
                   onPressed: () => Navigator.pop(context),
                 ),
-                TextButton(
-                  onPressed: clickToFind,
-                  child: const Text(
-                    '찾기',
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 70, 70, 70),
+                Consumer<ProductFilteredProvider>(builder: (BuildContext context, ProductFilteredProvider provider, Widget? child) {
+                  return TextButton(
+                    onPressed: () => clickToFind(provider),
+                    child: const Text(
+                      '찾기',
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 70, 70, 70),
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                }),
               ],
             ),
           )

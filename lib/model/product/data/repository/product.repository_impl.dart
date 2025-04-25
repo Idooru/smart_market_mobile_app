@@ -43,4 +43,16 @@ class ProductRepositoryImpl extends DioInitializer implements ProductRepository 
       return DataFail(exception: err);
     }
   }
+
+  @override
+  Future<DataState<List<String>>> fetchProductAutocomplete(String name) async {
+    try {
+      name = name.isEmpty ? "_" : name;
+      Response response = await dio.get("$baseUrl/product/autocomplete/$name");
+      List<String> productNames = response.data["result"].cast<String>();
+      return DataSuccess(data: productNames);
+    } on DioException catch (err) {
+      return DataFail(exception: err);
+    }
+  }
 }
