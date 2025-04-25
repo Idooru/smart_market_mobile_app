@@ -9,7 +9,7 @@ import 'package:smart_market/model/product/domain/entities/response/all_product.
 import 'package:smart_market/model/product/domain/service/product.service.dart';
 import 'package:smart_market/model/product/presentation/state/product_search.provider.dart';
 import 'package:smart_market/model/product/presentation/widgets/product_item.widget.dart';
-import 'package:smart_market/model/product/presentation/widgets/filter.widget.dart';
+import 'package:smart_market/model/product/presentation/widgets/product_filter.dialog.dart';
 import 'package:smart_market/model/product/presentation/widgets/product_search.widget.dart';
 import 'package:smart_market/model/product/presentation/widgets/product_search_area.widget.dart';
 
@@ -83,19 +83,11 @@ class _AllProductPageState extends State<AllProductPage> {
                                         color: Colors.white,
                                       ),
                                       onPressed: () {
-                                        showDialog(
-                                          context: context,
-                                          barrierDismissible: false,
-                                          builder: (BuildContext context) => Dialog(
-                                            child: FilterWidget(
-                                              filterCallback: (args) {
-                                                setState(() {
-                                                  _getAllProductFuture = productService.getAllProduct(args);
-                                                });
-                                              },
-                                            ),
-                                          ),
-                                        );
+                                        ProductFilterDialog.show(context, (args) {
+                                          setState(() {
+                                            _getAllProductFuture = productService.getAllProduct(args);
+                                          });
+                                        });
                                       },
                                     ),
                                   ),

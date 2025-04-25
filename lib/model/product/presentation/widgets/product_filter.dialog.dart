@@ -3,22 +3,37 @@ import 'package:provider/provider.dart';
 import 'package:smart_market/core/widgets/common/radio.widget.dart';
 import 'package:smart_market/model/product/domain/entities/request/search_all_product.entity.dart';
 import 'package:smart_market/model/product/presentation/state/product_filtered.provider.dart';
+import 'package:smart_market/model/product/presentation/state/product_search.provider.dart';
 
 final Map<String, String> filterMap = {};
 
-class FilterWidget extends StatefulWidget {
+class ProductFilterDialog {
+  static void show(BuildContext context, void Function(SearchAllProduct) filterCallback) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) => Dialog(
+        child: ProductFilterDialogWidget(
+          filterCallback: filterCallback,
+        ),
+      ),
+    );
+  }
+}
+
+class ProductFilterDialogWidget extends StatefulWidget {
   final void Function(SearchAllProduct) filterCallback;
 
-  const FilterWidget({
+  const ProductFilterDialogWidget({
     super.key,
     required this.filterCallback,
   });
 
   @override
-  State<FilterWidget> createState() => _FilterWidgetState();
+  State<ProductFilterDialogWidget> createState() => ProductFIlterDialogWidgetState();
 }
 
-class _FilterWidgetState extends State<FilterWidget> {
+class ProductFIlterDialogWidgetState extends State<ProductFilterDialogWidget> {
   String _selectedAlign = filterMap["select-align"] ?? "DESC";
   String _selectedColumn = filterMap["select-column"] ?? "createdAt";
   String _selectedCategory = filterMap["select-category"] ?? "전체";
@@ -33,7 +48,10 @@ class _FilterWidgetState extends State<FilterWidget> {
     });
   }
 
-  void clickToFind(ProductFilteredProvider provider) {
+  void clickToFind(
+    ProductFilteredProvider filteredProvider,
+    ProductSearchProvider searchProvider,
+  ) {
     filterMap["select-align"] = _selectedAlign;
     filterMap["select-column"] = _selectedColumn;
     filterMap["select-category"] = _selectedCategory;
@@ -44,8 +62,10 @@ class _FilterWidgetState extends State<FilterWidget> {
       category: _selectedCategory,
     );
 
-    provider.clearFiltered();
-    provider.setFiltering(_selectedColumn, _selectedCategory != "전체");
+    filteredProvider.clearFiltered();
+    filteredProvider.setFiltering(_selectedColumn, _selectedCategory != "전체");
+
+    searchProvider.setSearchMode(SearchMode.none);
 
     widget.filterCallback(searchAllProduct);
 
@@ -245,17 +265,19 @@ class _FilterWidgetState extends State<FilterWidget> {
                   ),
                   onPressed: () => Navigator.pop(context),
                 ),
-                Consumer<ProductFilteredProvider>(builder: (BuildContext context, ProductFilteredProvider provider, Widget? child) {
-                  return TextButton(
-                    onPressed: () => clickToFind(provider),
-                    child: const Text(
-                      '찾기',
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 70, 70, 70),
+                Consumer2<ProductFilteredProvider, ProductSearchProvider>(
+                  builder: (BuildContext context, ProductFilteredProvider filteredProvider, ProductSearchProvider searchProvider, Widget? child) {
+                    return TextButton(
+                      onPressed: () => clickToFind(filteredProvider, searchProvider),
+                      child: const Text(
+                        '찾기',
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 70, 70, 70),
+                        ),
                       ),
-                    ),
-                  );
-                }),
+                    );
+                  },
+                ),
               ],
             ),
           )
