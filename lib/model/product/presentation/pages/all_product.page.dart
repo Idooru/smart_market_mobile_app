@@ -11,7 +11,6 @@ import 'package:smart_market/model/product/presentation/state/product_search.pro
 import 'package:smart_market/model/product/presentation/widgets/product_item.widget.dart';
 import 'package:smart_market/model/product/presentation/widgets/product_filter.dialog.dart';
 import 'package:smart_market/model/product/presentation/widgets/product_search.widget.dart';
-import 'package:smart_market/model/product/presentation/widgets/product_search_area.widget.dart';
 
 class AllProductPage extends StatefulWidget {
   const AllProductPage({super.key});
@@ -35,101 +34,89 @@ class _AllProductPageState extends State<AllProductPage> {
     return Scaffold(
       body: ColoredBox(
         color: Colors.white,
-        child: Consumer<ProductSearchProvider>(builder: (BuildContext context, ProductSearchProvider provider, Widget? child) {
-          return FutureBuilder(
-            future: _getAllProductFuture,
-            builder: (BuildContext context, AsyncSnapshot<List<AllProduct>> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const LoadingHandlerWidget(title: "상품 전체 데이터 불러오기..");
-              } else if (snapshot.hasError) {
-                DioFailError error = snapshot.error as DioFailError;
-                if (error.message.contains("Timeout") || error.message.contains('Socket')) {
-                  return NetworkErrorHandlerWidget(reconnectCallback: () {
-                    setState(() {
-                      _getAllProductFuture = productService.getAllProduct();
+        child: Consumer<ProductSearchProvider>(
+          builder: (BuildContext context, ProductSearchProvider provider, Widget? child) {
+            return FutureBuilder(
+              future: _getAllProductFuture,
+              builder: (BuildContext context, AsyncSnapshot<List<AllProduct>> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const LoadingHandlerWidget(title: "상품 전체 데이터 불러오기..");
+                } else if (snapshot.hasError) {
+                  DioFailError error = snapshot.error as DioFailError;
+                  if (error.message.contains("Timeout") || error.message.contains('Socket')) {
+                    return NetworkErrorHandlerWidget(reconnectCallback: () {
+                      setState(() {
+                        _getAllProductFuture = productService.getAllProduct();
+                      });
                     });
+                  } else {
+                    return const InternalServerErrorHandlerWidget();
+                  }
+                } else if (snapshot.hasData) {
+                  final data = snapshot.data!;
+
+                  return Consumer<ProductSearchProvider>(builder: (BuildContext context, ProductSearchProvider provider, Widget? child) {
+                    return CustomScrollView(
+                      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                      slivers: [
+                        SliverAppBar(
+                          title: const Text("Smart Market"),
+                          pinned: true,
+                          floating: true,
+                          snap: true,
+                          backgroundColor: Colors.blueGrey[300],
+                          automaticallyImplyLeading: false,
+                          bottom: PreferredSize(
+                            preferredSize: const Size.fromHeight(45),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: 60,
+                                      height: 45,
+                                      color: const Color.fromARGB(255, 39, 40, 41),
+                                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                                      child: IconButton(
+                                        icon: const Icon(
+                                          Icons.filter,
+                                          color: Colors.white,
+                                        ),
+                                        onPressed: () {
+                                          ProductFilterDialog.show(context, (args) {
+                                            setState(() {
+                                              _getAllProductFuture = productService.getAllProduct(args);
+                                            });
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    const ProductSearchButtonWidget(),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) => ProductItemWidget(
+                              currentAllProduct: data[index],
+                              margin: index != data.length - 1 ? const EdgeInsets.fromLTRB(13, 13, 13, 0) : const EdgeInsets.fromLTRB(13, 13, 13, 10),
+                            ),
+                            childCount: data.length,
+                          ),
+                        ),
+                      ],
+                    );
                   });
                 } else {
-                  return const InternalServerErrorHandlerWidget();
+                  return const Center(child: Text('데이터가 없습니다.'));
                 }
-              } else if (snapshot.hasData) {
-                final data = snapshot.data!;
-
-                return Consumer<ProductSearchProvider>(builder: (BuildContext context, ProductSearchProvider provider, Widget? child) {
-                  return CustomScrollView(
-                    keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                    slivers: [
-                      SliverAppBar(
-                        title: const Text("Smart Market"),
-                        pinned: true,
-                        floating: true,
-                        snap: true,
-                        backgroundColor: Colors.blueGrey[300],
-                        automaticallyImplyLeading: false,
-                        bottom: PreferredSize(
-                          preferredSize: provider.searchMode != SearchMode.none ? const Size.fromHeight(250) : const Size.fromHeight(45),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    width: 60,
-                                    height: 45,
-                                    color: const Color.fromARGB(255, 39, 40, 41),
-                                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                                    child: IconButton(
-                                      icon: const Icon(
-                                        Icons.filter,
-                                        color: Colors.white,
-                                      ),
-                                      onPressed: () {
-                                        ProductFilterDialog.show(context, (args) {
-                                          setState(() {
-                                            _getAllProductFuture = productService.getAllProduct(args);
-                                          });
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                  ProductSearchWidget(
-                                    searchCallback: (args) {
-                                      setState(() {
-                                        _getAllProductFuture = productService.getAllProduct(args);
-                                      });
-                                    },
-                                  ),
-                                ],
-                              ),
-                              ProductSearchAreaWidget(
-                                provider: provider,
-                                searchCallback: (args) {
-                                  setState(() {
-                                    _getAllProductFuture = productService.getAllProduct(args);
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) => ProductItemWidget(
-                            currentAllProduct: data[index],
-                            margin: index != data.length - 1 ? const EdgeInsets.fromLTRB(13, 13, 13, 0) : const EdgeInsets.fromLTRB(13, 13, 13, 10),
-                          ),
-                          childCount: data.length,
-                        ),
-                      ),
-                    ],
-                  );
-                });
-              } else {
-                return const Center(child: Text('데이터가 없습니다.'));
-              }
-            },
-          );
-        }),
+              },
+            );
+          },
+        ),
       ),
     );
   }

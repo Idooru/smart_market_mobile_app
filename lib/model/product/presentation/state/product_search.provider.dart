@@ -16,7 +16,7 @@ class ProductSearchProvider extends ChangeNotifier {
   SearchMode get searchMode => _searchMode;
   List<String> get searchHistory => _searchHistory;
   TextEditingController get controller => _controller;
-  String get search => _controller.text;
+  String get keyword => _controller.text;
 
   void setSearchMode(SearchMode mode) {
     _searchMode = mode;
@@ -33,8 +33,8 @@ class ProductSearchProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setSearch(String search) {
-    _controller.text = search;
+  void setKeyword(String keyword) {
+    _controller.text = keyword;
     notifyListeners();
   }
 

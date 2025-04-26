@@ -60,6 +60,7 @@ class ProductFIlterDialogWidgetState extends State<ProductFilterDialogWidget> {
       align: _selectedAlign,
       column: _selectedColumn,
       category: _selectedCategory,
+      name: searchProvider.keyword,
     );
 
     filteredProvider.clearFiltered();

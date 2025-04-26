@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:smart_market/model/product/presentation/pages/all_product.page.dart';
 import 'package:smart_market/model/main/presentation/page/test.page.dart';
 import 'package:smart_market/model/main/presentation/page/test2.page.dart';
+import 'package:smart_market/model/product/presentation/pages/product_search.page.dart';
 
 class AppMainPage extends StatefulWidget {
   const AppMainPage({super.key});
 
   @override
-  State<AppMainPage> createState() => _AppMainPageState();
+  State<AppMainPage> createState() => AppMainPageState();
 }
 
-class _AppMainPageState extends State<AppMainPage> {
-  int selectedIndex = 1;
+class AppMainPageState extends State<AppMainPage> {
+  int selectedIndex = 0;
 
-  List<Widget> pages = [const Test2Widget(), const AllProductPage(), const TestWidget()];
+  List<Widget> pages = [AllProductPage(), const ProductSearchPage(), const Test2Widget(), const TestWidget()];
 
   void tapBottomNavigator(int index) {
     setState(() {
@@ -37,12 +38,16 @@ class _AppMainPageState extends State<AppMainPage> {
           backgroundColor: const Color.fromARGB(255, 207, 207, 207),
           items: const [
             BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart),
-              label: "cart",
-            ),
-            BottomNavigationBarItem(
               icon: Icon(Icons.local_mall),
               label: "products",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.search),
+              label: "search",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_cart),
+              label: "cart",
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.contact_page),
