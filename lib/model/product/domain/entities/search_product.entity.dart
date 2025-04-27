@@ -1,4 +1,18 @@
-class AllProduct {
+class RequestSearchProduct {
+  final String align;
+  final String column;
+  final String category;
+  final String? name;
+
+  const RequestSearchProduct({
+    required this.align,
+    required this.column,
+    required this.category,
+    this.name,
+  });
+}
+
+class ResponseSearchProduct {
   final String id;
   final String name;
   final int price;
@@ -8,7 +22,7 @@ class AllProduct {
   final double averageScore;
   final int reviewCount;
 
-  const AllProduct({
+  const ResponseSearchProduct({
     required this.id,
     required this.name,
     required this.price,
@@ -19,8 +33,8 @@ class AllProduct {
     required this.reviewCount,
   });
 
-  factory AllProduct.fromJson(Map<String, dynamic> json) {
-    return AllProduct(
+  factory ResponseSearchProduct.fromJson(Map<String, dynamic> json) {
+    return ResponseSearchProduct(
       id: json["id"],
       name: json["name"],
       price: json["price"],

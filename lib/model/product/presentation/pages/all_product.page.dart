@@ -5,7 +5,7 @@ import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/widgets/handler/internal_server_error_handler.widget.dart';
 import 'package:smart_market/core/widgets/handler/network_error_handler.widget.dart';
 import 'package:smart_market/core/widgets/handler/loading_handler.widget.dart';
-import 'package:smart_market/model/product/domain/entities/response/all_product.entity.dart';
+import 'package:smart_market/model/product/domain/entities/search_product.entity.dart';
 import 'package:smart_market/model/product/domain/service/product.service.dart';
 import 'package:smart_market/model/product/presentation/state/product_search.provider.dart';
 import 'package:smart_market/model/product/presentation/widgets/product_item.widget.dart';
@@ -21,7 +21,7 @@ class AllProductPage extends StatefulWidget {
 
 class _AllProductPageState extends State<AllProductPage> {
   final ProductService productService = locator<ProductService>();
-  late Future<List<AllProduct>> _getAllProductFuture;
+  late Future<List<ResponseSearchProduct>> _getAllProductFuture;
 
   @override
   void initState() {
@@ -38,7 +38,7 @@ class _AllProductPageState extends State<AllProductPage> {
           builder: (BuildContext context, ProductSearchProvider provider, Widget? child) {
             return FutureBuilder(
               future: _getAllProductFuture,
-              builder: (BuildContext context, AsyncSnapshot<List<AllProduct>> snapshot) {
+              builder: (BuildContext context, AsyncSnapshot<List<ResponseSearchProduct>> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const LoadingHandlerWidget(title: "상품 전체 데이터 불러오기..");
                 } else if (snapshot.hasError) {

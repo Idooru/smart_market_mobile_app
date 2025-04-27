@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_market/core/utils/parse_date.dart';
-import 'package:smart_market/model/product/domain/entities/response/detail_product.entity.dart';
+import 'package:smart_market/model/product/domain/entities/detail_product.entity.dart';
 import 'package:smart_market/model/product/presentation/widgets/display_average_score.widget.dart';
 import 'package:smart_market/model/product/presentation/widgets/review_image_grid.widget.dart';
 

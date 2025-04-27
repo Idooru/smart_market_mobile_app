@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_market/core/widgets/common/radio.widget.dart';
-import 'package:smart_market/model/product/domain/entities/request/search_all_product.entity.dart';
+import 'package:smart_market/model/product/domain/entities/search_product.entity.dart';
 import 'package:smart_market/model/product/presentation/state/product_filtered.provider.dart';
 import 'package:smart_market/model/product/presentation/state/product_search.provider.dart';
 
 final Map<String, String> filterMap = {};
 
 class ProductFilterDialog {
-  static void show(BuildContext context, void Function(SearchAllProduct) filterCallback) {
+  static void show(BuildContext context, void Function(RequestSearchProduct) filterCallback) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -22,7 +22,7 @@ class ProductFilterDialog {
 }
 
 class ProductFilterDialogWidget extends StatefulWidget {
-  final void Function(SearchAllProduct) filterCallback;
+  final void Function(RequestSearchProduct) filterCallback;
 
   const ProductFilterDialogWidget({
     super.key,
@@ -56,7 +56,7 @@ class ProductFIlterDialogWidgetState extends State<ProductFilterDialogWidget> {
     filterMap["select-column"] = _selectedColumn;
     filterMap["select-category"] = _selectedCategory;
 
-    SearchAllProduct searchAllProduct = SearchAllProduct(
+    RequestSearchProduct searchAllProduct = RequestSearchProduct(
       align: _selectedAlign,
       column: _selectedColumn,
       category: _selectedCategory,

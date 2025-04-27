@@ -1,14 +1,14 @@
-class DetailProduct {
+class ResponseDetailProduct {
   final Product product;
   final List<Review> reviews;
 
-  const DetailProduct({
+  const ResponseDetailProduct({
     required this.product,
     required this.reviews,
   });
 
-  factory DetailProduct.fromJson(Map<String, dynamic> json) {
-    return DetailProduct(
+  factory ResponseDetailProduct.fromJson(Map<String, dynamic> json) {
+    return ResponseDetailProduct(
       product: Product.fromJson(json["product"]),
       reviews: (json["reviews"] as List).map((e) => Review.fromJson(e)).toList(),
     );

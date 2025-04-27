@@ -8,8 +8,7 @@ import 'package:smart_market/core/widgets/handler/internal_server_error_handler.
 import 'package:smart_market/core/widgets/handler/loading_handler.widget.dart';
 import 'package:smart_market/core/widgets/handler/network_error_handler.widget.dart';
 import 'package:smart_market/model/main/presentation/page/app_main.page.dart';
-import 'package:smart_market/model/product/domain/entities/request/search_all_product.entity.dart';
-import 'package:smart_market/model/product/domain/entities/response/all_product.entity.dart';
+import 'package:smart_market/model/product/domain/entities/search_product.entity.dart';
 import 'package:smart_market/model/product/domain/service/product.service.dart';
 import 'package:smart_market/model/product/presentation/state/product_search.provider.dart';
 import 'package:smart_market/model/product/presentation/widgets/product_filter.dialog.dart';
@@ -25,7 +24,7 @@ class ProductSearchPage extends StatefulWidget {
 class _ProductSearchPageState extends State<ProductSearchPage> {
   final ProductService productService = locator<ProductService>();
   final FocusNode focusNode = FocusNode();
-  Future<List<AllProduct>>? _getAllProductFuture;
+  Future<List<ResponseSearchProduct>>? _getAllProductFuture;
   late Future<List<String>> _getProductAutoCompleteFuture;
 
   @override
@@ -80,7 +79,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
     );
   }
 
-  void updateProductList(SearchAllProduct args) {
+  void updateProductList(RequestSearchProduct args) {
     setState(() {
       _getAllProductFuture = productService.getAllProduct(args);
     });
@@ -92,10 +91,10 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
     focusNode.requestFocus();
   }
 
-  void search(String keyword, ProductSearchProvider provider, void Function(SearchAllProduct) callback) {
+  void search(String keyword, ProductSearchProvider provider, void Function(RequestSearchProduct) callback) {
     if (keyword.isEmpty) return;
 
-    SearchAllProduct searchAllProduct = SearchAllProduct(
+    RequestSearchProduct searchProduct = RequestSearchProduct(
       align: filterMap["select-algin"] ?? "DESC",
       column: filterMap["select-column"] ?? "createdAt",
       category: filterMap["select-category"] ?? "전체",
@@ -105,7 +104,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
     provider.appendHistory(keyword);
     provider.setKeyword(keyword);
     provider.setSearchMode(SearchMode.none);
-    callback(searchAllProduct);
+    callback(searchProduct);
     focusNode.unfocus();
   }
 
@@ -323,14 +322,14 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                       color: Colors.white,
                       child: FutureBuilder(
                         future: _getAllProductFuture,
-                        builder: (BuildContext context, AsyncSnapshot<List<AllProduct>> snapshot) {
+                        builder: (BuildContext context, AsyncSnapshot<List<ResponseSearchProduct>> snapshot) {
                           if (snapshot.connectionState == ConnectionState.waiting) {
                             return LoadingHandlerWidget(title: "${provider.keyword}로 검색한 결과 불러오기..");
                           } else if (snapshot.hasError) {
                             DioFailError error = snapshot.error as DioFailError;
                             if (error.message.contains("Timeout") || error.message.contains('Socket')) {
                               return NetworkErrorHandlerWidget(reconnectCallback: () {
-                                SearchAllProduct searchAllProduct = SearchAllProduct(
+                                RequestSearchProduct searchAllProduct = RequestSearchProduct(
                                   align: filterMap["select-algin"] ?? "DESC",
                                   column: filterMap["select-column"] ?? "createdAt",
                                   category: filterMap["select-category"] ?? "전체",
