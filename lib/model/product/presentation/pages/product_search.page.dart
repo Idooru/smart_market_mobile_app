@@ -290,7 +290,17 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                                               (autoComplete) => GestureDetector(
                                                 onTap: () => search(autoComplete, provider, updateProductList),
                                                 child: Container(
+                                                  width: double.infinity,
                                                   padding: const EdgeInsets.all(10),
+                                                  decoration: const BoxDecoration(
+                                                    color: Color.fromARGB(255, 245, 245, 245),
+                                                    border: Border(
+                                                      bottom: BorderSide(
+                                                        color: Colors.grey, // 밑줄 색
+                                                        width: 0.2, // 밑줄 두께
+                                                      ),
+                                                    ),
+                                                  ),
                                                   child: Text(autoComplete),
                                                 ),
                                               ),
