@@ -7,15 +7,15 @@ class ProductSearchButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Container(
-        color: Colors.blueGrey[100],
-        height: 45,
-        padding: const EdgeInsets.all(5),
-        child: GestureDetector(
-          onTap: () {
-            final state = context.findAncestorStateOfType<AppMainPageState>();
-            state?.tapBottomNavigator(1); // index 1 = ProductSearchPage
-          },
+      child: GestureDetector(
+        onTap: () {
+          final state = context.findAncestorStateOfType<AppMainPageState>();
+          state?.tapBottomNavigator(1); // index 1 = ProductSearchPage
+        },
+        child: Container(
+          color: Colors.blueGrey[100],
+          height: 45,
+          padding: const EdgeInsets.all(5),
           child: const Row(
             children: [
               Padding(
