@@ -11,10 +11,12 @@ enum SearchMode {
 class ProductSearchProvider extends ChangeNotifier {
   SearchMode _searchMode = SearchMode.none;
   List<String> _searchHistory = [];
+  bool _isSetHistory = true;
   final TextEditingController _controller = TextEditingController();
 
   SearchMode get searchMode => _searchMode;
   List<String> get searchHistory => _searchHistory;
+  bool get isSetHistory => _isSetHistory;
   TextEditingController get controller => _controller;
   String get keyword => _controller.text;
 
@@ -33,6 +35,17 @@ class ProductSearchProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void turnOnHistory() {
+    _isSetHistory = true;
+    notifyListeners();
+  }
+
+  void clearHistory() {
+    _searchHistory.clear();
+    _isSetHistory = false;
+    notifyListeners();
+  }
+
   void setKeyword(String keyword) {
     _controller.text = keyword;
     notifyListeners();
@@ -41,5 +54,6 @@ class ProductSearchProvider extends ChangeNotifier {
   void clearAll() {
     _searchMode = SearchMode.none;
     _searchHistory = [];
+    _isSetHistory = true;
   }
 }

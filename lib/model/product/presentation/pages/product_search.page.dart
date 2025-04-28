@@ -116,7 +116,10 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
 
     RequestSearchProducts searchProduct = RequestSearchProducts(mode: mode, autoCompletes: autoCompletes, keyword: keyword);
 
-    provider.appendHistory(keyword);
+    if (provider.isSetHistory) {
+      provider.appendHistory(keyword);
+    }
+
     provider.setKeyword(keyword);
     provider.setSearchMode(SearchMode.none);
     callback(searchProduct);
@@ -344,62 +347,96 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                                     childWidget: SingleChildScrollView(
                                       controller: scrollController,
                                       child: Column(
-                                        children: provider.searchHistory.asMap().entries.map(
-                                          (entry) {
-                                            int index = entry.key;
-                                            String history = entry.value;
+                                        children: [
+                                          ...provider.searchHistory.asMap().entries.map(
+                                            (entry) {
+                                              int index = entry.key;
+                                              String history = entry.value;
 
-                                            return GestureDetector(
-                                              onTap: () => search(history, provider, RequestProductSearchMode.manual, updateProductList),
-                                              child: Container(
-                                                decoration: const BoxDecoration(
-                                                  color: Color.fromARGB(255, 255, 252, 243),
-                                                  border: Border(
-                                                    bottom: BorderSide(
-                                                      color: Colors.grey, // 밑줄 색
-                                                      width: 0.2, // 밑줄 두께
+                                              return GestureDetector(
+                                                onTap: () => search(history, provider, RequestProductSearchMode.manual, updateProductList),
+                                                child: Container(
+                                                  decoration: const BoxDecoration(
+                                                    color: Color.fromARGB(255, 255, 252, 243),
+                                                    border: Border(
+                                                      bottom: BorderSide(
+                                                        color: Colors.grey, // 밑줄 색
+                                                        width: 0.2, // 밑줄 두께
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                                padding: const EdgeInsets.only(left: 15),
-                                                height: 40,
-                                                child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Text(history),
-                                                    Row(
-                                                      children: [
-                                                        Text(
-                                                          parseDate(DateTime.now()),
-                                                          style: const TextStyle(
-                                                            color: Color.fromARGB(255, 93, 93, 93),
-                                                            fontSize: 12,
+                                                  padding: const EdgeInsets.only(left: 15),
+                                                  height: 40,
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Text(history),
+                                                      Row(
+                                                        children: [
+                                                          Text(
+                                                            parseDate(DateTime.now()),
+                                                            style: const TextStyle(
+                                                              color: Color.fromARGB(255, 93, 93, 93),
+                                                              fontSize: 12,
+                                                            ),
                                                           ),
-                                                        ),
-                                                        IconButton(
-                                                          onPressed: () {
-                                                            provider.removeHistory(index);
-                                                          },
-                                                          icon: Icon(
-                                                            Icons.close,
-                                                            size: 22,
-                                                            color: Colors.red[900],
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ],
+                                                          IconButton(
+                                                            onPressed: () {
+                                                              provider.removeHistory(index);
+                                                            },
+                                                            icon: Icon(
+                                                              Icons.close,
+                                                              size: 22,
+                                                              color: Colors.red[900],
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
+                                              );
+                                            },
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              provider.clearHistory();
+                                            },
+                                            child: Container(
+                                              decoration: const BoxDecoration(
+                                                color: Color.fromARGB(255, 240, 240, 240),
                                               ),
-                                            );
-                                          },
-                                        ).toList(),
+                                              padding: const EdgeInsets.only(left: 15),
+                                              height: 40,
+                                              child: const Center(
+                                                child: Text("검색 기록 저장 끄기"),
+                                              ),
+                                            ),
+                                          )
+                                        ],
                                       ),
                                     ),
                                   )
-                                : const Center(
-                                    child: Text("검색 기록이 비어있습니다."),
-                                  ),
+                                : provider.isSetHistory
+                                    ? const Center(
+                                        child: Text("검색 기록이 비어있습니다."),
+                                      )
+                                    : SizedBox(
+                                        width: double.infinity,
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            const Text("검색 기록이 비어있습니다."),
+                                            TextButton(
+                                              onPressed: () {
+                                                provider.turnOnHistory();
+                                              },
+                                              child: const Text("검색 기록 저장 켜기"),
+                                            )
+                                          ],
+                                        ),
+                                      ),
                           );
                         } // 자동 완성 표시
                         else if (provider.searchMode == SearchMode.searching) {
