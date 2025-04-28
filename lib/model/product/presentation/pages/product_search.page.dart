@@ -46,6 +46,8 @@ class ProductSearchPage extends StatefulWidget {
 class _ProductSearchPageState extends State<ProductSearchPage> {
   final ProductService productService = locator<ProductService>();
   final FocusNode focusNode = FocusNode();
+
+  late List<String> autoCompletes;
   Future<List<ResponseSearchProduct>>? _getAllProductFuture;
   late Future<List<String>> _getProductAutoCompleteFuture;
 
@@ -97,9 +99,9 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
     );
   }
 
-  void updateProductList(RequestSearchProduct args) {
+  void updateProductList(RequestSearchProducts args) {
     setState(() {
-      _getAllProductFuture = productService.getAllProduct(args);
+      _getAllProductFuture = productService.getSearchProduct(args);
     });
   }
 
@@ -109,15 +111,10 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
     focusNode.requestFocus();
   }
 
-  void search(String keyword, ProductSearchProvider provider, void Function(RequestSearchProduct) callback) {
+  void search(String keyword, ProductSearchProvider provider, RequestProductSearchMode mode, void Function(RequestSearchProducts) callback) {
     if (keyword.isEmpty) return;
 
-    RequestSearchProduct searchProduct = RequestSearchProduct(
-      align: filterMap["select-algin"] ?? "DESC",
-      column: filterMap["select-column"] ?? "createdAt",
-      category: filterMap["select-category"] ?? "전체",
-      name: keyword,
-    );
+    RequestSearchProducts searchProduct = RequestSearchProducts(mode: mode, autoCompletes: autoCompletes, keyword: keyword);
 
     provider.appendHistory(keyword);
     provider.setKeyword(keyword);
@@ -224,9 +221,8 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                                         } else {
                                           provider.setSearchMode(SearchMode.searching);
                                         }
-                                        provider.setKeyword(keyword);
                                       },
-                                      onSubmitted: (String text) => search(text, provider, updateProductList),
+                                      onSubmitted: (keyword) => search(keyword, provider, RequestProductSearchMode.manual, updateProductList),
                                       decoration: const InputDecoration(
                                         border: InputBorder.none,
                                         prefixIcon: Icon(Icons.search, color: Colors.black),
@@ -322,9 +318,8 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                                   } else {
                                     provider.setSearchMode(SearchMode.searching);
                                   }
-                                  provider.setKeyword(keyword);
                                 },
-                                onSubmitted: (String text) => search(text, provider, updateProductList),
+                                onSubmitted: (String keyword) => search(keyword, provider, RequestProductSearchMode.manual, updateProductList),
                                 decoration: const InputDecoration(
                                   border: InputBorder.none,
                                   prefixIcon: Icon(Icons.search, color: Colors.black),
@@ -355,7 +350,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                                             String history = entry.value;
 
                                             return GestureDetector(
-                                              onTap: () => search(history, provider, updateProductList),
+                                              onTap: () => search(history, provider, RequestProductSearchMode.manual, updateProductList),
                                               child: Container(
                                                 decoration: const BoxDecoration(
                                                   color: Color.fromARGB(255, 255, 252, 243),
@@ -427,7 +422,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                                     return const InternalServerErrorHandlerWidget();
                                   }
                                 } else {
-                                  final autoCompletes = snapshot.data!;
+                                  autoCompletes = snapshot.data!;
                                   ScrollController scrollController = ScrollController();
 
                                   return SizedBox(
@@ -441,7 +436,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                                                 children: autoCompletes
                                                     .map(
                                                       (autoComplete) => GestureDetector(
-                                                        onTap: () => search(autoComplete, provider, updateProductList),
+                                                        onTap: () => search(autoComplete, provider, RequestProductSearchMode.manual, updateProductList),
                                                         child: Container(
                                                           width: double.infinity,
                                                           padding: const EdgeInsets.all(10),

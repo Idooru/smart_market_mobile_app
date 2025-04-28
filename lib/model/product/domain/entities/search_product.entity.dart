@@ -1,5 +1,17 @@
 import 'package:smart_market/core/utils/split_host_url.dart';
 
+enum RequestProductSearchMode {
+  manual,
+  category,
+}
+
+String translateRequestProductSearchMode(RequestProductSearchMode searchMode) {
+  if (searchMode == RequestProductSearchMode.manual) {
+    return "manual";
+  }
+  return "category";
+}
+
 class RequestSearchProduct {
   final String align;
   final String column;
@@ -11,6 +23,18 @@ class RequestSearchProduct {
     required this.column,
     required this.category,
     this.name,
+  });
+}
+
+class RequestSearchProducts {
+  final RequestProductSearchMode mode;
+  final List<String> autoCompletes;
+  final String keyword;
+
+  const RequestSearchProducts({
+    required this.mode,
+    required this.autoCompletes,
+    required this.keyword,
   });
 }
 

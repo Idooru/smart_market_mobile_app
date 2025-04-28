@@ -8,7 +8,7 @@ import 'package:smart_market/model/product/presentation/state/product_search.pro
 final Map<String, String> filterMap = {};
 
 class ProductFilterDialog {
-  static void show(BuildContext context, void Function(RequestSearchProduct) filterCallback) {
+  static void show(BuildContext context, void Function(RequestSearchProducts) filterCallback) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -22,7 +22,7 @@ class ProductFilterDialog {
 }
 
 class ProductFilterDialogWidget extends StatefulWidget {
-  final void Function(RequestSearchProduct) filterCallback;
+  final void Function(RequestSearchProducts) filterCallback;
 
   const ProductFilterDialogWidget({
     super.key,
@@ -52,25 +52,25 @@ class ProductFIlterDialogWidgetState extends State<ProductFilterDialogWidget> {
     ProductFilteredProvider filteredProvider,
     ProductSearchProvider searchProvider,
   ) {
-    filterMap["select-align"] = _selectedAlign;
-    filterMap["select-column"] = _selectedColumn;
-    filterMap["select-category"] = _selectedCategory;
+    // filterMap["select-align"] = _selectedAlign;
+    // filterMap["select-column"] = _selectedColumn;
+    // filterMap["select-category"] = _selectedCategory;
 
-    RequestSearchProduct searchAllProduct = RequestSearchProduct(
-      align: _selectedAlign,
-      column: _selectedColumn,
-      category: _selectedCategory,
-      name: searchProvider.keyword,
-    );
+    // RequestSearchProducts searchAllProduct = RequestSearchProducts(
+    //   align: _selectedAlign,
+    //   column: _selectedColumn,
+    //   category: _selectedCategory,
+    //   name: searchProvider.keyword,
+    // );
 
-    filteredProvider.clearFiltered();
-    filteredProvider.setFiltering(_selectedColumn, _selectedCategory != "전체");
+    // filteredProvider.clearFiltered();
+    // filteredProvider.setFiltering(_selectedColumn, _selectedCategory != "전체");
 
-    searchProvider.setSearchMode(SearchMode.none);
+    // searchProvider.setSearchMode(SearchMode.none);
 
-    widget.filterCallback(searchAllProduct);
+    // widget.filterCallback(searchAllProduct);
 
-    Navigator.pop(context);
+    // Navigator.pop(context);
   }
 
   @override

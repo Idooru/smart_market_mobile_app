@@ -17,6 +17,13 @@ class ProductServiceImpl implements ProductService {
   }
 
   @override
+  Future<List<ResponseSearchProduct>> getSearchProduct(RequestSearchProducts args) async {
+    DataState<List<ResponseSearchProduct>> dataState = await productRepository.searchProduct(args);
+    if (dataState.exception != null) throw DioFailError(message: dataState.exception.toString());
+    return dataState.data!;
+  }
+
+  @override
   Future<ResponseDetailProduct> getDetailProduct(String productId) async {
     DataState<ResponseDetailProduct> dataState = await productRepository.fetchDetailProduct(productId);
     if (dataState.exception != null) throw DioFailError(message: dataState.exception.toString());

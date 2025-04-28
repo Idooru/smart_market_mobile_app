@@ -85,7 +85,7 @@ class _AllProductPageState extends State<AllProductPage> {
                                         onPressed: () {
                                           ProductFilterDialog.show(context, (args) {
                                             setState(() {
-                                              _getAllProductFuture = productService.getAllProduct(args);
+                                              // _getAllProductFuture = productService.getAllProduct(args);
                                             });
                                           });
                                         },

@@ -10,7 +10,6 @@ class ProductRepositoryImpl extends DioInitializer implements ProductRepository 
   @override
   Future<DataState<List<ResponseSearchProduct>>> fetchAllProducts([RequestSearchProduct? args]) async {
     try {
-      Response response;
       String url;
 
       if (args != null) {
@@ -22,12 +21,27 @@ class ProductRepositoryImpl extends DioInitializer implements ProductRepository 
       }
 
       debugPrint("url: $url");
-      response = await dio.get(url);
+      Response response = await dio.get(url);
 
       List<ResponseSearchProduct> allProducts = List<Map<String, dynamic>>.from(response.data["result"]).map((data) => ResponseSearchProduct.fromJson(data)).toList();
       return DataSuccess(data: allProducts);
     } on DioException catch (err) {
       debugPrint("response: ${err.message}");
+      return DataFail(exception: err);
+    }
+  }
+
+  @override
+  Future<DataState<List<ResponseSearchProduct>>> searchProduct(RequestSearchProducts args) async {
+    try {
+      String url =
+          "$baseUrl/product/search?mode=${translateRequestProductSearchMode(args.mode)}&autoCompletes=${args.autoCompletes.isNotEmpty ? args.autoCompletes.reduce((value, element) => '$value, $element') : ""}&keyword=${args.keyword}";
+
+      Response response = await dio.get(url);
+
+      List<ResponseSearchProduct> searchProducts = List<Map<String, dynamic>>.from(response.data["result"]).map((data) => ResponseSearchProduct.fromJson(data)).toList();
+      return DataSuccess(data: searchProducts);
+    } on DioException catch (err) {
       return DataFail(exception: err);
     }
   }
