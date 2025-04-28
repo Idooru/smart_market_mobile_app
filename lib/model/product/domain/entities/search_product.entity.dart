@@ -1,3 +1,5 @@
+import 'package:smart_market/core/utils/split_host_url.dart';
+
 class RequestSearchProduct {
   final String align;
   final String column;
@@ -40,7 +42,7 @@ class ResponseSearchProduct {
       price: json["price"],
       category: json["category"],
       createdAt: DateTime.parse(json["createdAt"]),
-      imageUrls: List<String>.from(json["imageUrls"]),
+      imageUrls: List<String>.from(json["imageUrls"]).map(splitHostUrl).toList(),
       averageScore: double.parse(json["averageScore"]),
       reviewCount: json["reviewCount"],
     );

@@ -1,3 +1,5 @@
+import 'package:smart_market/core/utils/split_host_url.dart';
+
 class ResponseDetailProduct {
   final Product product;
   final List<Review> reviews;
@@ -77,8 +79,8 @@ class Review {
       title: json["title"],
       content: json["content"],
       starRateScore: double.parse(json["starRateScore"]),
-      imageUrls: List<String>.from(json["imageUrls"]),
-      videoUrls: List<String>.from(json["videoUrls"]),
+      imageUrls: List<String>.from(json["imageUrls"].map(splitHostUrl).toList()),
+      videoUrls: List<String>.from(json["videoUrls"].map(splitHostUrl).toList()),
       createdAt: DateTime.parse(json["createdAt"]),
       nickName: json["nickName"],
     );
