@@ -136,7 +136,9 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
               ? AppBar(
                   title: const Text("Search"),
                   centerTitle: false,
-                  backgroundColor: Colors.blueGrey[300]!,
+                  flexibleSpace: Container(
+                    color: Colors.blueGrey[300], // 스크롤 될 시 색상 변경 방지
+                  ),
                   actions: provider.searchMode == SearchMode.none && provider.keyword.isNotEmpty
                       ? [
                           IconButton(
@@ -173,7 +175,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                       // header
                       SliverAppBar(
                         flexibleSpace: Container(
-                          color: Colors.blueGrey[300], // 직접 고정
+                          color: Colors.blueGrey[300], // 스크롤 될 시 색상 변경 방지
                         ),
                         pinned: false,
                         floating: true,
