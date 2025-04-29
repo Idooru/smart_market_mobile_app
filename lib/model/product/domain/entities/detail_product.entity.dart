@@ -46,7 +46,7 @@ class Product {
       origin: json["origin"],
       category: json["category"],
       description: json["description"],
-      imageUrls: List<String>.from(json["imageUrls"]),
+      imageUrls: List<String>.from(json["imageUrls"]).map(splitHostUrl).toList(),
       averageScore: double.parse(json["averageScore"]),
     );
   }
@@ -79,8 +79,8 @@ class Review {
       title: json["title"],
       content: json["content"],
       starRateScore: double.parse(json["starRateScore"]),
-      imageUrls: List<String>.from(json["imageUrls"].map(splitHostUrl).toList()),
-      videoUrls: List<String>.from(json["videoUrls"].map(splitHostUrl).toList()),
+      imageUrls: List<String>.from(json["imageUrls"]).map(splitHostUrl).toList(),
+      videoUrls: List<String>.from(json["videoUrls"]).map(splitHostUrl).toList(),
       createdAt: DateTime.parse(json["createdAt"]),
       nickName: json["nickName"],
     );
