@@ -335,16 +335,41 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                               if (products.isEmpty) {
                                 return getNoneProduct(provider.keyword);
                               }
-                              return ListView.builder(
+                              return ListView(
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
-                                itemCount: products.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return ProductItemWidget(
-                                    currentAllProduct: products[index],
-                                    margin: index != products.length - 1 ? const EdgeInsets.fromLTRB(13, 13, 13, 0) : const EdgeInsets.fromLTRB(13, 13, 13, 10),
-                                  );
-                                },
+                                children: [
+                                  // 상품 갯수 정보 표시
+                                  Container(
+                                    color: Colors.white,
+                                    height: 50,
+                                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: const Color.fromARGB(180, 240, 240, 240),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      padding: const EdgeInsets.only(left: 10),
+                                      child: Row(
+                                        children: [
+                                          const Icon(Icons.info),
+                                          const SizedBox(width: 10),
+                                          Text("총 ${products.length}개의 상품 목록을 가져옵니다."),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  // 실제 상품 목록
+                                  ...products.asMap().entries.map((entry) {
+                                    final index = entry.key;
+                                    final product = entry.value;
+                                    final isLast = index == products.length - 1;
+                                    return ProductItemWidget(
+                                      currentAllProduct: product,
+                                      margin: isLast ? const EdgeInsets.fromLTRB(13, 13, 13, 10) : const EdgeInsets.fromLTRB(13, 13, 13, 0),
+                                    );
+                                  }),
+                                ],
                               );
                             } else {
                               return getNoneProduct(provider.keyword);
