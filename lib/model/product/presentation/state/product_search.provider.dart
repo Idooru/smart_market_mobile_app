@@ -9,7 +9,7 @@ enum SearchMode {
 }
 
 class ProductSearchProvider extends ChangeNotifier {
-  SearchMode _searchMode = SearchMode.none;
+  SearchMode _searchMode = SearchMode.focused;
   List<String> _searchHistory = [];
   bool _isSetHistory = true;
   final TextEditingController _controller = TextEditingController();
