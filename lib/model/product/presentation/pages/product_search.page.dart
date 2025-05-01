@@ -118,6 +118,63 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
     callback(searchProduct);
   }
 
+  String getInitial(String text) {
+    const int base = 0xAC00;
+    const List<String> initials = ['ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'];
+
+    return text.split('').map((char) {
+      int code = char.codeUnitAt(0) - base;
+      if (code < 0 || code > 11171) return char;
+
+      int initialIndex = code ~/ (21 * 28);
+      return initials[initialIndex];
+    }).join();
+  }
+
+  List<TextSpan> highlightInitialMatch(String text, String keyword) {
+    final initials = getInitial(text);
+    final index = initials.indexOf(keyword);
+
+    if (index == -1 || keyword.isEmpty) {
+      return [TextSpan(text: text)];
+    }
+
+    return [
+      TextSpan(text: text.substring(0, index)),
+      TextSpan(
+        text: text.substring(index, index + keyword.length),
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      ),
+      TextSpan(text: text.substring(index + keyword.length)),
+    ];
+  }
+
+  List<TextSpan> highlightKeyword(String text, String keyword) {
+    final List<TextSpan> spans = [];
+    int start = 0;
+
+    while (true) {
+      final index = text.indexOf(keyword, start);
+      if (index == -1) {
+        spans.add(TextSpan(text: text.substring(start)));
+        break;
+      }
+
+      if (index > start) {
+        spans.add(TextSpan(text: text.substring(start, index)));
+      }
+
+      spans.add(TextSpan(
+        text: text.substring(index, index + keyword.length),
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      ));
+
+      start = index + keyword.length;
+    }
+
+    return spans;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ProductSearchProvider>(
@@ -481,7 +538,12 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                                                               ),
                                                             ),
                                                           ),
-                                                          child: Text(autoComplete),
+                                                          child: Text.rich(
+                                                            TextSpan(
+                                                                children: RegExp(r'^[ㄱ-ㅎ]+$').hasMatch(provider.keyword)
+                                                                    ? highlightInitialMatch(autoComplete, provider.keyword)
+                                                                    : highlightKeyword(autoComplete, provider.keyword)),
+                                                          ),
                                                         ),
                                                       ),
                                                     )
