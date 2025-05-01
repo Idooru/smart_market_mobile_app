@@ -47,7 +47,6 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
   final ProductService productService = locator<ProductService>();
   final FocusNode focusNode = FocusNode();
 
-  late List<String> autoCompletes;
   Future<List<ResponseSearchProduct>>? _getAllProductFuture;
   late Future<List<String>> _getProductAutoCompleteFuture;
 
@@ -56,13 +55,9 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
     super.initState();
     final provider = context.read<ProductSearchProvider>();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      focusNode.requestFocus();
-      provider.setSearchMode(SearchMode.focused);
-    });
+    focusNode.requestFocus();
 
     focusNode.addListener(() {
-      if (!mounted) return;
       if (focusNode.hasFocus && provider.keyword.isNotEmpty) {
         provider.setSearchMode(SearchMode.searching);
       } else if (focusNode.hasFocus) {
@@ -106,15 +101,13 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
   }
 
   void pressCancelButton(ProductSearchProvider provider) {
+    focusNode.requestFocus();
     provider.setKeyword("");
     provider.setSearchMode(SearchMode.focused);
-    focusNode.requestFocus();
   }
 
-  void search(String keyword, ProductSearchProvider provider, RequestProductSearchMode mode, void Function(RequestSearchProducts) callback) {
-    if (keyword.isEmpty) return;
-
-    RequestSearchProducts searchProduct = RequestSearchProducts(mode: mode, autoCompletes: autoCompletes, keyword: keyword);
+  void search(String keyword, ProductSearchProvider provider, void Function(RequestSearchProducts) callback) {
+    RequestSearchProducts searchProduct = RequestSearchProducts(mode: RequestProductSearchMode.manual, keyword: keyword);
 
     if (provider.isSetHistory) {
       provider.appendHistory(keyword);
@@ -123,7 +116,6 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
     provider.setKeyword(keyword);
     provider.setSearchMode(SearchMode.none);
     callback(searchProduct);
-    focusNode.unfocus();
   }
 
   @override
@@ -206,39 +198,37 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                         pinned: true, // 스크롤해도 고정
                         floating: false,
                         delegate: _SearchBarDelegate(
-                          child: Center(
-                            child: Container(
-                              color: Colors.blueGrey[100],
-                              height: 45,
-                              padding: const EdgeInsets.symmetric(horizontal: 5),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: TextField(
-                                      controller: provider.controller,
-                                      textInputAction: TextInputAction.search,
-                                      focusNode: focusNode,
-                                      onChanged: (String keyword) {
-                                        if (keyword.isEmpty) {
-                                          provider.setSearchMode(SearchMode.focused);
-                                        } else {
-                                          provider.setSearchMode(SearchMode.searching);
-                                        }
-                                      },
-                                      onSubmitted: (keyword) => search(keyword, provider, RequestProductSearchMode.manual, updateProductList),
-                                      decoration: const InputDecoration(
-                                        border: InputBorder.none,
-                                        prefixIcon: Icon(Icons.search, color: Colors.black),
-                                        hintText: "상품 이름을 입력하세요.",
-                                      ),
+                          child: Container(
+                            color: Colors.blueGrey[100],
+                            height: 45,
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: TextField(
+                                    controller: provider.controller,
+                                    textInputAction: TextInputAction.search,
+                                    focusNode: focusNode,
+                                    onChanged: (String keyword) {
+                                      if (keyword.isEmpty) {
+                                        provider.setSearchMode(SearchMode.focused);
+                                      } else {
+                                        provider.setSearchMode(SearchMode.searching);
+                                      }
+                                    },
+                                    onSubmitted: (keyword) => search(keyword, provider, updateProductList),
+                                    decoration: const InputDecoration(
+                                      border: InputBorder.none,
+                                      prefixIcon: Icon(Icons.search, color: Colors.black),
+                                      hintText: "상품 이름을 입력하세요.",
                                     ),
                                   ),
-                                  IconButton(
-                                    onPressed: () => pressCancelButton(provider),
-                                    icon: const Icon(Icons.clear, size: 20),
-                                  ),
-                                ],
-                              ),
+                                ),
+                                IconButton(
+                                  onPressed: () => pressCancelButton(provider),
+                                  icon: const Icon(Icons.clear, size: 20),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -276,7 +266,12 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                                   ],
                                 );
                               } else {
-                                return const InternalServerErrorHandlerWidget();
+                                return const Column(
+                                  children: [
+                                    SizedBox(height: 100),
+                                    InternalServerErrorHandlerWidget(),
+                                  ],
+                                );
                               }
                             } else if (snapshot.hasData) {
                               final products = snapshot.data!;
@@ -322,7 +317,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                                     provider.setSearchMode(SearchMode.searching);
                                   }
                                 },
-                                onSubmitted: (String keyword) => search(keyword, provider, RequestProductSearchMode.manual, updateProductList),
+                                onSubmitted: (String keyword) => search(keyword, provider, updateProductList),
                                 decoration: const InputDecoration(
                                   border: InputBorder.none,
                                   prefixIcon: Icon(Icons.search, color: Colors.black),
@@ -354,7 +349,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                                               String history = entry.value;
 
                                               return GestureDetector(
-                                                onTap: () => search(history, provider, RequestProductSearchMode.manual, updateProductList),
+                                                onTap: () => search(history, provider, updateProductList),
                                                 child: Container(
                                                   decoration: const BoxDecoration(
                                                     color: Color.fromARGB(255, 255, 252, 243),
@@ -459,7 +454,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                                     return const InternalServerErrorHandlerWidget();
                                   }
                                 } else {
-                                  autoCompletes = snapshot.data!;
+                                  List<String> autoCompletes = snapshot.data!;
                                   ScrollController scrollController = ScrollController();
 
                                   return SizedBox(
@@ -473,7 +468,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                                                 children: autoCompletes
                                                     .map(
                                                       (autoComplete) => GestureDetector(
-                                                        onTap: () => search(autoComplete, provider, RequestProductSearchMode.manual, updateProductList),
+                                                        onTap: () => search(autoComplete, provider, updateProductList),
                                                         child: Container(
                                                           width: double.infinity,
                                                           padding: const EdgeInsets.all(10),

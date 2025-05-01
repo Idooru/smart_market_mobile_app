@@ -28,12 +28,10 @@ class RequestSearchProduct {
 
 class RequestSearchProducts {
   final RequestProductSearchMode mode;
-  final List<String> autoCompletes;
   final String keyword;
 
   const RequestSearchProducts({
     required this.mode,
-    required this.autoCompletes,
     required this.keyword,
   });
 }

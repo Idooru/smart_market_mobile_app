@@ -34,9 +34,7 @@ class ProductRepositoryImpl extends DioInitializer implements ProductRepository 
   @override
   Future<DataState<List<ResponseSearchProduct>>> searchProduct(RequestSearchProducts args) async {
     try {
-      String url =
-          "$baseUrl/product/search?mode=${translateRequestProductSearchMode(args.mode)}&autoCompletes=${args.autoCompletes.isNotEmpty ? args.autoCompletes.reduce((value, element) => '$value, $element') : ""}&keyword=${args.keyword}";
-
+      String url = "$baseUrl/product/search?mode=${translateRequestProductSearchMode(args.mode)}&keyword=${args.keyword}";
       Response response = await dio.get(url);
 
       List<ResponseSearchProduct> searchProducts = List<Map<String, dynamic>>.from(response.data["result"]).map((data) => ResponseSearchProduct.fromJson(data)).toList();
