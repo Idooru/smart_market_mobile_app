@@ -118,58 +118,91 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
     callback(searchProduct);
   }
 
-  String getInitial(String text) {
-    const int base = 0xAC00;
-    const List<String> initials = ['ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'];
-
-    return text.split('').map((char) {
-      int code = char.codeUnitAt(0) - base;
-      if (code < 0 || code > 11171) return char;
-
-      int initialIndex = code ~/ (21 * 28);
-      return initials[initialIndex];
-    }).join();
-  }
-
   List<TextSpan> highlightInitialMatch(String text, String keyword) {
-    final initials = getInitial(text);
-    final index = initials.indexOf(keyword);
+    if (keyword.trim().isEmpty) return [TextSpan(text: text)];
 
-    if (index == -1 || keyword.isEmpty) {
-      return [TextSpan(text: text)];
+    const int base = 0xAC00;
+    const List<String> initialsList = ['ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'];
+
+    final List<String> initials = [];
+    final List<int> indexMap = [];
+
+    // text에서 초성 리스트와 인덱스를 추출합니다.
+    for (int i = 0; i < text.length; i++) {
+      final char = text[i];
+      final code = char.codeUnitAt(0);
+      if (code >= 0xAC00 && code <= 0xD7A3) {
+        final offset = code - base;
+        final choIdx = offset ~/ (21 * 28);
+        initials.add(initialsList[choIdx]);
+        indexMap.add(i);
+      }
     }
 
+    // keyword에서 공백을 제거한 후, 초성 문자열로 변환
+    final keywordInitials = keyword.replaceAll(RegExp(r'\s+'), '');
+
+    // text의 초성 리스트에서 keywordInitials를 찾습니다.
+    final joinedInitials = initials.join();
+    final matchIndex = joinedInitials.indexOf(keywordInitials);
+
+    if (matchIndex == -1) return [TextSpan(text: text)];
+
+    final matchLength = keywordInitials.length;
+    final startTextIndex = indexMap[matchIndex];
+    final endTextIndex = indexMap[matchIndex + matchLength - 1] + 1;
+
     return [
-      TextSpan(text: text.substring(0, index)),
+      TextSpan(text: text.substring(0, startTextIndex)),
       TextSpan(
-        text: text.substring(index, index + keyword.length),
+        text: text.substring(startTextIndex, endTextIndex),
         style: const TextStyle(fontWeight: FontWeight.bold),
       ),
-      TextSpan(text: text.substring(index + keyword.length)),
+      TextSpan(text: text.substring(endTextIndex)),
     ];
   }
 
   List<TextSpan> highlightKeyword(String text, String keyword) {
+    if (keyword.isEmpty) return [TextSpan(text: text)];
+
+    // 공백 제거한 버전
+    String cleanText = text.replaceAll(RegExp(r'\s+'), '');
+    String cleanKeyword = keyword.replaceAll(RegExp(r'\s+'), '');
+
+    int matchIndex = cleanText.indexOf(cleanKeyword);
+    if (matchIndex == -1) return [TextSpan(text: text)];
+
+    // 원래 text의 인덱스 기준으로 강조할 범위 추적
     final List<TextSpan> spans = [];
-    int start = 0;
+    int cleanIndex = 0;
+    int matchedChars = 0;
+    bool isMatching = false;
 
-    while (true) {
-      final index = text.indexOf(keyword, start);
-      if (index == -1) {
-        spans.add(TextSpan(text: text.substring(start)));
-        break;
+    for (int i = 0; i < text.length; i++) {
+      String char = text[i];
+      if (char.trim().isEmpty) {
+        spans.add(TextSpan(text: char)); // 공백은 그대로 추가
+        continue;
       }
 
-      if (index > start) {
-        spans.add(TextSpan(text: text.substring(start, index)));
+      if (cleanIndex == matchIndex) {
+        isMatching = true;
       }
 
-      spans.add(TextSpan(
-        text: text.substring(index, index + keyword.length),
-        style: const TextStyle(fontWeight: FontWeight.bold),
-      ));
+      if (isMatching && matchedChars < cleanKeyword.length) {
+        spans.add(TextSpan(
+          text: char,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ));
+        matchedChars++;
+      } else {
+        spans.add(TextSpan(text: char));
+      }
 
-      start = index + keyword.length;
+      cleanIndex++;
+      if (matchedChars == cleanKeyword.length) {
+        isMatching = false;
+      }
     }
 
     return spans;
@@ -565,7 +598,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                                                           ),
                                                           child: Text.rich(
                                                             TextSpan(
-                                                                children: RegExp(r'^[ㄱ-ㅎ]+$').hasMatch(provider.keyword)
+                                                                children: RegExp(r'^[ㄱ-ㅎ\s]+$').hasMatch(provider.keyword)
                                                                     ? highlightInitialMatch(autoComplete, provider.keyword)
                                                                     : highlightKeyword(autoComplete, provider.keyword)),
                                                           ),
