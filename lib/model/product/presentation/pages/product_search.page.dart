@@ -123,24 +123,53 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
 
   Widget getTextArea(ProductSearchProvider provider) {
     return Expanded(
-      child: TextField(
-        controller: provider.controller,
-        textInputAction: TextInputAction.search,
-        focusNode: focusNode,
-        onChanged: (String keyword) {
-          if (keyword.isEmpty) {
-            provider.setSearchMode(SearchMode.focused);
-          } else {
-            provider.setSearchMode(SearchMode.searching);
-          }
-        },
-        onSubmitted: (String keyword) => search(keyword, provider, updateProductList),
-        decoration: const InputDecoration(
-          border: InputBorder.none,
-          prefixIcon: Icon(Icons.search, color: Colors.black),
-          hintText: "상품 이름을 입력하세요.",
-        ),
-      ),
+      child: provider.searchMode != SearchMode.none
+          ? TextField(
+              controller: provider.controller,
+              textInputAction: TextInputAction.search,
+              focusNode: focusNode,
+              onChanged: (String keyword) {
+                if (keyword.isEmpty) {
+                  provider.setSearchMode(SearchMode.focused);
+                } else {
+                  provider.setSearchMode(SearchMode.searching);
+                }
+              },
+              onSubmitted: (String keyword) => search(keyword, provider, updateProductList),
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+                prefixIcon: Icon(Icons.search, color: Colors.black),
+                hintText: "상품 이름을 입력하세요.",
+              ),
+            )
+          : GestureDetector(
+              onTap: () {
+                provider.setSearchMode(SearchMode.searching);
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  focusNode.requestFocus();
+                });
+              },
+              child: Container(
+                color: Colors.blueGrey[100],
+                height: 45,
+                padding: const EdgeInsets.all(5),
+                child: Row(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(left: 7, right: 12),
+                      child: Icon(Icons.search, color: Colors.black),
+                    ),
+                    Text(
+                      provider.keyword,
+                      style: const TextStyle(
+                        fontSize: 16, // TextField 내 텍스트 기본 폰트 크기와 일치시킴
+                        color: Colors.black87, // 일반 텍스트 색상
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
     );
   }
 
