@@ -56,7 +56,6 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
     final provider = context.read<ProductSearchProvider>();
 
     focusNode.requestFocus();
-
     focusNode.addListener(() {
       if (focusNode.hasFocus && provider.keyword.isNotEmpty) {
         provider.setSearchMode(SearchMode.searching);
@@ -101,9 +100,12 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
   }
 
   void pressCancelButton(ProductSearchProvider provider) {
-    focusNode.requestFocus();
     provider.setKeyword("");
     provider.setSearchMode(SearchMode.focused);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      focusNode.requestFocus();
+    });
   }
 
   void search(String keyword, ProductSearchProvider provider, void Function(RequestSearchProducts) callback) {
@@ -116,6 +118,30 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
     provider.setKeyword(keyword);
     provider.setSearchMode(SearchMode.none);
     callback(searchProduct);
+    focusNode.unfocus();
+  }
+
+  Widget getTextArea(ProductSearchProvider provider) {
+    return Expanded(
+      child: TextField(
+        controller: provider.controller,
+        textInputAction: TextInputAction.search,
+        focusNode: focusNode,
+        onChanged: (String keyword) {
+          if (keyword.isEmpty) {
+            provider.setSearchMode(SearchMode.focused);
+          } else {
+            provider.setSearchMode(SearchMode.searching);
+          }
+        },
+        onSubmitted: (String keyword) => search(keyword, provider, updateProductList),
+        decoration: const InputDecoration(
+          border: InputBorder.none,
+          prefixIcon: Icon(Icons.search, color: Colors.black),
+          hintText: "상품 이름을 입력하세요.",
+        ),
+      ),
+    );
   }
 
   List<TextSpan> highlightInitialMatch(String text, String keyword) {
@@ -294,26 +320,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                             padding: const EdgeInsets.symmetric(horizontal: 5),
                             child: Row(
                               children: [
-                                Expanded(
-                                  child: TextField(
-                                    controller: provider.controller,
-                                    textInputAction: TextInputAction.search,
-                                    focusNode: focusNode,
-                                    onChanged: (String keyword) {
-                                      if (keyword.isEmpty) {
-                                        provider.setSearchMode(SearchMode.focused);
-                                      } else {
-                                        provider.setSearchMode(SearchMode.searching);
-                                      }
-                                    },
-                                    onSubmitted: (keyword) => search(keyword, provider, updateProductList),
-                                    decoration: const InputDecoration(
-                                      border: InputBorder.none,
-                                      prefixIcon: Icon(Icons.search, color: Colors.black),
-                                      hintText: "상품 이름을 입력하세요.",
-                                    ),
-                                  ),
-                                ),
+                                getTextArea(provider),
                                 IconButton(
                                   onPressed: () => pressCancelButton(provider),
                                   icon: const Icon(Icons.clear, size: 20),
@@ -420,26 +427,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                         padding: const EdgeInsets.symmetric(horizontal: 5),
                         child: Row(
                           children: [
-                            Expanded(
-                              child: TextField(
-                                controller: provider.controller,
-                                textInputAction: TextInputAction.search,
-                                focusNode: focusNode,
-                                onChanged: (String keyword) {
-                                  if (keyword.isEmpty) {
-                                    provider.setSearchMode(SearchMode.focused);
-                                  } else {
-                                    provider.setSearchMode(SearchMode.searching);
-                                  }
-                                },
-                                onSubmitted: (String keyword) => search(keyword, provider, updateProductList),
-                                decoration: const InputDecoration(
-                                  border: InputBorder.none,
-                                  prefixIcon: Icon(Icons.search, color: Colors.black),
-                                  hintText: "상품 이름을 입력하세요.",
-                                ),
-                              ),
-                            ),
+                            getTextArea(provider),
                             IconButton(
                               onPressed: () => pressCancelButton(provider),
                               icon: const Icon(Icons.clear, size: 20),
