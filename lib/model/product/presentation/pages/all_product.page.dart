@@ -5,12 +5,13 @@ import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/widgets/handler/internal_server_error_handler.widget.dart';
 import 'package:smart_market/core/widgets/handler/network_error_handler.widget.dart';
 import 'package:smart_market/core/widgets/handler/loading_handler.widget.dart';
+import 'package:smart_market/model/main/presentation/page/app_main.page.dart';
 import 'package:smart_market/model/product/domain/entities/search_product.entity.dart';
 import 'package:smart_market/model/product/domain/service/product.service.dart';
 import 'package:smart_market/model/product/presentation/state/product_search.provider.dart';
 import 'package:smart_market/model/product/presentation/widgets/product_item.widget.dart';
 import 'package:smart_market/model/product/presentation/widgets/product_filter.dialog.dart';
-import 'package:smart_market/model/product/presentation/widgets/product_search.widget.dart';
+import 'package:smart_market/model/product/presentation/widgets/product_search_bar.widget.dart';
 
 class AllProductPage extends StatefulWidget {
   const AllProductPage({super.key});
@@ -91,7 +92,15 @@ class _AllProductPageState extends State<AllProductPage> {
                                         },
                                       ),
                                     ),
-                                    const ProductSearchButtonWidget(),
+                                    Expanded(
+                                      child: ProductSearchBarWidget(
+                                        title: "상품 검색 하기",
+                                        pressCallback: () {
+                                          final state = context.findAncestorStateOfType<AppMainPageState>();
+                                          state?.tapBottomNavigator(1); // index 1 = ProductSearchPage
+                                        },
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ],

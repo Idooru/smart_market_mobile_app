@@ -13,6 +13,7 @@ import 'package:smart_market/model/product/domain/service/product.service.dart';
 import 'package:smart_market/model/product/presentation/state/product_search.provider.dart';
 import 'package:smart_market/model/product/presentation/widgets/product_filter.dialog.dart';
 import 'package:smart_market/model/product/presentation/widgets/product_item.widget.dart';
+import 'package:smart_market/model/product/presentation/widgets/product_search_bar.widget.dart';
 
 class _SearchBarDelegate extends SliverPersistentHeaderDelegate {
   final Widget child;
@@ -142,33 +143,14 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                 hintText: "상품 이름을 입력하세요.",
               ),
             )
-          : GestureDetector(
-              onTap: () {
+          : ProductSearchBarWidget(
+              title: provider.keyword,
+              pressCallback: () {
                 provider.setSearchMode(SearchMode.searching);
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   focusNode.requestFocus();
                 });
               },
-              child: Container(
-                color: Colors.blueGrey[100],
-                height: 45,
-                padding: const EdgeInsets.all(5),
-                child: Row(
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(left: 7, right: 12),
-                      child: Icon(Icons.search, color: Colors.black),
-                    ),
-                    Text(
-                      provider.keyword,
-                      style: const TextStyle(
-                        fontSize: 16, // TextField 내 텍스트 기본 폰트 크기와 일치시킴
-                        color: Colors.black87, // 일반 텍스트 색상
-                      ),
-                    ),
-                  ],
-                ),
-              ),
             ),
     );
   }
