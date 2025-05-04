@@ -7,8 +7,8 @@ import 'package:smart_market/core/widgets/handler/loading_handler.widget.dart';
 import 'package:smart_market/model/product/domain/entities/detail_product.entity.dart';
 import 'package:smart_market/model/product/domain/service/product.service.dart';
 import 'package:smart_market/model/product/presentation/widgets/display_average_score.widget.dart';
-import 'package:smart_market/model/product/presentation/widgets/product_image_grid.widget.dart';
-import 'package:smart_market/model/product/presentation/widgets/review_item.widget.dart';
+import 'package:smart_market/model/product/presentation/widgets/image/product_image_grid.widget.dart';
+import 'package:smart_market/model/product/presentation/widgets/item/review_item.widget.dart';
 
 class DetailProductPageArgs {
   final String productId;

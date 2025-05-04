@@ -7,7 +7,7 @@ import 'package:smart_market/core/widgets/handler/network_error_handler.widget.d
 import 'package:smart_market/model/product/domain/entities/search_product.entity.dart';
 import 'package:smart_market/model/product/domain/service/product.service.dart';
 import 'package:smart_market/model/product/presentation/state/product_search.provider.dart';
-import 'package:smart_market/model/product/presentation/widgets/product_item.widget.dart';
+import 'package:smart_market/model/product/presentation/widgets/item/product_item.widget.dart';
 
 class ProductSearchResultWidget extends StatelessWidget {
   final ProductService productService = locator<ProductService>();

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:smart_market/core/utils/parse_date.dart';
 import 'package:smart_market/model/product/domain/entities/detail_product.entity.dart';
 import 'package:smart_market/model/product/presentation/widgets/display_average_score.widget.dart';
-import 'package:smart_market/model/product/presentation/widgets/review_image_grid.widget.dart';
+import 'package:smart_market/model/product/presentation/widgets/image/review_image_grid.widget.dart';
 
-import '../pages/review_video_player.page.dart';
+import '../../pages/review_video_player.page.dart';
 
 class ReviewItemWidget extends StatefulWidget {
   final Review review;
