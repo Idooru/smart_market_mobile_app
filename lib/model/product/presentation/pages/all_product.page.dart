@@ -10,8 +10,7 @@ import 'package:smart_market/model/product/domain/entities/search_product.entity
 import 'package:smart_market/model/product/domain/service/product.service.dart';
 import 'package:smart_market/model/product/presentation/state/product_search.provider.dart';
 import 'package:smart_market/model/product/presentation/widgets/product_item.widget.dart';
-import 'package:smart_market/model/product/presentation/widgets/product_filter.dialog.dart';
-import 'package:smart_market/model/product/presentation/widgets/product_search_bar.widget.dart';
+import 'package:smart_market/model/product/presentation/widgets/search/product_button_search_bar.widget.dart';
 
 class AllProductPage extends StatefulWidget {
   const AllProductPage({super.key});
@@ -58,54 +57,21 @@ class _AllProductPageState extends State<AllProductPage> {
 
                   return Consumer<ProductSearchProvider>(builder: (BuildContext context, ProductSearchProvider provider, Widget? child) {
                     return CustomScrollView(
-                      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                       slivers: [
                         SliverAppBar(
                           title: const Text("Smart Market"),
-                          pinned: true,
+                          pinned: false,
                           floating: true,
                           snap: true,
                           backgroundColor: Colors.blueGrey[300],
-                          automaticallyImplyLeading: false,
-                          bottom: PreferredSize(
-                            preferredSize: const Size.fromHeight(45),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      width: 60,
-                                      height: 45,
-                                      color: const Color.fromARGB(255, 39, 40, 41),
-                                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                                      child: IconButton(
-                                        icon: const Icon(
-                                          Icons.filter,
-                                          color: Colors.white,
-                                        ),
-                                        onPressed: () {
-                                          ProductFilterDialog.show(context, (args) {
-                                            setState(() {
-                                              // _getAllProductFuture = productService.getAllProduct(args);
-                                            });
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: ProductSearchBarWidget(
-                                        title: "상품 검색 하기",
-                                        pressCallback: () {
-                                          final state = context.findAncestorStateOfType<AppMainPageState>();
-                                          state?.tapBottomNavigator(1); // index 1 = ProductSearchPage
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
+                        ),
+                        ProductButtonSearchBarWidget(
+                          provider: provider,
+                          searchBarCall: SearchBarCall.main,
+                          pressCallback: () {
+                            final state = context.findAncestorStateOfType<AppMainPageState>();
+                            state?.tapBottomNavigator(1); // index 1 = ProductSearchPage
+                          },
                         ),
                         SliverList(
                           delegate: SliverChildBuilderDelegate(
