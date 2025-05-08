@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
-import 'package:smart_market/model/main/presentation/page/app_main.page.dart';
+import 'package:smart_market/model/main/presentation/pages/navigation.page.dart';
 import 'package:smart_market/model/product/domain/entities/search_product.entity.dart';
 import 'package:smart_market/model/product/domain/service/product.service.dart';
 import 'package:smart_market/model/product/presentation/state/product_search.provider.dart';
@@ -12,8 +12,19 @@ import 'package:smart_market/model/product/presentation/widgets/search/product_s
 import 'package:smart_market/model/product/presentation/widgets/search/product_textfield_search_bar.widget.dart';
 import 'package:smart_market/model/product/presentation/widgets/search/product_searching.widget.dart';
 
+class ProductSearchPageArgs {
+  final String keyword;
+
+  const ProductSearchPageArgs({required this.keyword});
+}
+
 class ProductSearchPage extends StatefulWidget {
-  const ProductSearchPage({super.key});
+  final String? keyword;
+
+  const ProductSearchPage({
+    super.key,
+    this.keyword,
+  });
 
   @override
   State<ProductSearchPage> createState() => _ProductSearchPageState();
@@ -31,16 +42,29 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
     super.initState();
     provider = context.read<ProductSearchProvider>();
 
-    focusNode.requestFocus();
-    focusNode.addListener(() {
-      if (focusNode.hasFocus && provider.keyword.isNotEmpty) {
-        provider.setSearchMode(SearchMode.searching);
-      } else if (focusNode.hasFocus) {
-        provider.setSearchMode(SearchMode.focused);
-      } else {
+    if (widget.keyword != null) {
+      RequestSearchProducts args = RequestSearchProducts(
+        mode: RequestProductSearchMode.category,
+        keyword: widget.keyword!,
+      );
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        provider.setKeyword(widget.keyword!);
         provider.setSearchMode(SearchMode.none);
-      }
-    });
+        updateProductList(args);
+      });
+    } else {
+      focusNode.requestFocus();
+      focusNode.addListener(() {
+        if (focusNode.hasFocus && provider.keyword.isNotEmpty) {
+          provider.setSearchMode(SearchMode.searching);
+        } else if (focusNode.hasFocus) {
+          provider.setSearchMode(SearchMode.focused);
+        } else {
+          provider.setSearchMode(SearchMode.none);
+        }
+      });
+    }
   }
 
   @override
@@ -126,7 +150,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                   leading: IconButton(
                     icon: const Icon(Icons.arrow_back_ios),
                     onPressed: () {
-                      final state = context.findAncestorStateOfType<AppMainPageState>();
+                      final state = context.findAncestorStateOfType<NavigationPageState>();
                       state?.tapBottomNavigator(0); // AllProductPage
                     },
                   ),
@@ -148,7 +172,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                         leading: IconButton(
                           icon: const Icon(Icons.arrow_back_ios),
                           onPressed: () {
-                            final state = context.findAncestorStateOfType<AppMainPageState>();
+                            final state = context.findAncestorStateOfType<NavigationPageState>();
                             state?.tapBottomNavigator(0);
                           },
                         ),
