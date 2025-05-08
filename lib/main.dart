@@ -4,7 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:smart_market/core/common/route.strategy.dart';
 import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
-import 'package:smart_market/model/main/presentation/page/app_main.page.dart';
+import 'package:smart_market/model/main/presentation/pages/navigation.page.dart';
+import 'package:smart_market/model/main/presentation/state/product_main.provider.dart';
 import 'package:smart_market/model/product/presentation/state/product_filtered.provider.dart';
 import 'package:smart_market/model/product/presentation/state/product_search.provider.dart';
 
@@ -15,6 +16,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => ProductMainProvider()),
         ChangeNotifierProvider(create: (context) => ProductFilteredProvider()),
         ChangeNotifierProvider(create: (context) => ProductSearchProvider()),
       ],
@@ -33,7 +35,7 @@ class MyApp extends StatelessWidget {
       theme: themeData,
       routes: {
         '/home': (context) {
-          return const AppMainPage();
+          return const NavigationPage();
         },
       },
       onGenerateRoute: (RouteSettings settings) {
@@ -43,7 +45,7 @@ class MyApp extends StatelessWidget {
         }
         return null;
       },
-      home: const AppMainPage(),
+      home: const NavigationPage(),
     );
   }
 }
