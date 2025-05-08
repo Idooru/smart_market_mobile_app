@@ -1,26 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:smart_market/core/common/route.strategy.dart';
 import 'package:smart_market/model/product/presentation/pages/detail_product.page.dart';
-import 'package:smart_market/model/product/presentation/pages/product_search.page.dart';
 import 'package:smart_market/model/product/presentation/pages/review_video_player.page.dart';
 
 class AllProductRouteStrategy implements RouteStrategy {
   @override
   MaterialPageRoute route(RouteSettings settings) {
     throw UnimplementedError();
-  }
-}
-
-class SearchProductRouteStaregy implements RouteStrategy {
-  @override
-  MaterialPageRoute route(RouteSettings settings) {
-    final args = settings.arguments as ProductSearchPageArgs;
-    return MaterialPageRoute(
-      builder: (context) => ProductSearchPage(
-        keyword: args.keyword,
-      ),
-      settings: settings,
-    );
   }
 }
 

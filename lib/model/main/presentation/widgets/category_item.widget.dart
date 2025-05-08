@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:smart_market/model/product/presentation/pages/product_search.page.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_market/model/main/presentation/pages/navigation.page.dart';
+import 'package:smart_market/model/product/presentation/state/product_search.provider.dart';
 
 class CategoryItemWidget extends StatelessWidget {
   final String title;
@@ -12,10 +14,12 @@ class CategoryItemWidget extends StatelessWidget {
   });
 
   void pressItem(BuildContext context) {
-    Navigator.of(context).pushNamed(
-      "/product_search",
-      arguments: ProductSearchPageArgs(keyword: title),
-    );
+    final provider = context.read<ProductSearchProvider>();
+    provider.setKeyword(title);
+    provider.setSearchMode(SearchMode.none);
+
+    final state = context.findAncestorStateOfType<NavigationPageState>();
+    state?.tapBottomNavigator(1);
   }
 
   @override

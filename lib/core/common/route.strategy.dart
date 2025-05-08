@@ -7,7 +7,6 @@ abstract class RouteStrategy {
 
 final Map<String, RouteStrategy> routeStrategies = {
   "/all_product": AllProductRouteStrategy(),
-  "/product_search": SearchProductRouteStaregy(),
   "/detail_product": DetailProductRouteStrategy(),
   "/review_video_player": ReviewVideoRouteStrategy(),
 };

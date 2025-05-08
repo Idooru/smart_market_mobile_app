@@ -12,12 +12,6 @@ import 'package:smart_market/model/product/presentation/widgets/search/product_s
 import 'package:smart_market/model/product/presentation/widgets/search/product_textfield_search_bar.widget.dart';
 import 'package:smart_market/model/product/presentation/widgets/search/product_searching.widget.dart';
 
-class ProductSearchPageArgs {
-  final String keyword;
-
-  const ProductSearchPageArgs({required this.keyword});
-}
-
 class ProductSearchPage extends StatefulWidget {
   final String? keyword;
 
@@ -42,16 +36,15 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
     super.initState();
     provider = context.read<ProductSearchProvider>();
 
-    if (widget.keyword != null) {
+    if (provider.keyword.isNotEmpty) {
       RequestSearchProducts args = RequestSearchProducts(
         mode: RequestProductSearchMode.category,
-        keyword: widget.keyword!,
+        keyword: provider.keyword,
       );
 
+      updateProductList(args);
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        provider.setKeyword(widget.keyword!);
         provider.setSearchMode(SearchMode.none);
-        updateProductList(args);
       });
     } else {
       focusNode.requestFocus();
