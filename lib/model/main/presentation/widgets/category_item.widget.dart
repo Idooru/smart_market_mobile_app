@@ -6,11 +6,13 @@ import 'package:smart_market/model/product/presentation/state/product_search.pro
 class CategoryItemWidget extends StatelessWidget {
   final String title;
   final EdgeInsets margin;
+  final Icon icon;
 
   const CategoryItemWidget({
     super.key,
     required this.title,
     required this.margin,
+    required this.icon,
   });
 
   void pressItem(BuildContext context) {
@@ -34,8 +36,12 @@ class CategoryItemWidget extends StatelessWidget {
           color: const Color.fromARGB(180, 240, 240, 240),
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Center(
-          child: Text(title),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            icon,
+            Text(title),
+          ],
         ),
       ),
     );

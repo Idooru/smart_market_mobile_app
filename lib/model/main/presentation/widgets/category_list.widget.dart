@@ -23,26 +23,32 @@ class CategoryListWidget extends StatelessWidget {
                 CategoryItemWidget(
                   title: "가전제품",
                   margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                  icon: Icon(Icons.tv),
                 ),
                 CategoryItemWidget(
                   title: "애완동물",
                   margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                  icon: Icon(Icons.pets),
                 ),
                 CategoryItemWidget(
                   title: "음식",
                   margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                  icon: Icon(Icons.food_bank),
                 ),
                 CategoryItemWidget(
                   title: "의류",
                   margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                  icon: Icon(Icons.checkroom),
                 ),
                 CategoryItemWidget(
                   title: "건강",
                   margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                  icon: Icon(Icons.sports_cricket),
                 ),
                 CategoryItemWidget(
                   title: "생활용품",
                   margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                  icon: Icon(Icons.cleaning_services),
                 ),
               ],
             ),
