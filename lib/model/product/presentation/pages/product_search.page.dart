@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/model/main/presentation/pages/navigation.page.dart';
+import 'package:smart_market/model/product/data/const/%08product_category.const.dart';
 import 'package:smart_market/model/product/domain/entities/search_product.entity.dart';
 import 'package:smart_market/model/product/domain/service/product.service.dart';
 import 'package:smart_market/model/product/presentation/state/product_search.provider.dart';
@@ -97,7 +98,10 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
   }
 
   void search(String keyword, ProductSearchProvider provider, void Function(RequestSearchProducts) callback) {
-    RequestSearchProducts searchProduct = RequestSearchProducts(mode: RequestProductSearchMode.manual, keyword: keyword);
+    RequestSearchProducts searchProduct = RequestSearchProducts(
+      mode: productCategory.contains(keyword) ? RequestProductSearchMode.category : RequestProductSearchMode.manual,
+      keyword: keyword,
+    );
 
     if (provider.isSetHistory) {
       provider.appendHistory(keyword);
