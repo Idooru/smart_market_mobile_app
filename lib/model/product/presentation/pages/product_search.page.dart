@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/model/main/presentation/pages/navigation.page.dart';
 import 'package:smart_market/model/product/data/const/%08product_category.const.dart';
@@ -39,6 +40,8 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
     provider = context.read<ProductSearchProvider>();
 
     if (provider.keyword.isNotEmpty) {
+      _keyword = provider.keyword;
+
       RequestSearchProducts args = RequestSearchProducts(
         mode: RequestProductSearchMode.category,
         keyword: provider.keyword,
@@ -83,10 +86,18 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
     );
   }
 
-  void updateProductList(RequestSearchProducts args) {
-    setState(() {
-      getAllProductFuture = productService.getSearchProduct(args);
-    });
+  void updateProductList(RequestSearchProducts args) async {
+    try {
+      List<ResponseSearchProduct> products = await productService.getSearchProduct(args);
+      provider.setProducts(products);
+      provider.setFail(SearchProductFail.none);
+    } on DioFailError catch (err) {
+      if (err.message.contains("Socket")) {
+        provider.setFail(SearchProductFail.socketException);
+      } else {
+        provider.setFail(SearchProductFail.internalServerException);
+      }
+    }
   }
 
   void pressCancelButton(ProductSearchProvider provider) {
@@ -204,16 +215,13 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                       ),
                       ProductSearchResultWidget(
                         provider: provider,
-                        getAllProductFuture: getAllProductFuture!,
                         reconnectCallback: () {
                           RequestSearchProducts searchProduct = RequestSearchProducts(
                             mode: productCategory.contains(_keyword) ? RequestProductSearchMode.category : RequestProductSearchMode.manual,
                             keyword: _keyword!,
                           );
 
-                          setState(() {
-                            getAllProductFuture = productService.getSearchProduct(searchProduct);
-                          });
+                          updateProductList(searchProduct);
                         },
                       ),
                     ],
