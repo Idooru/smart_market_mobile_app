@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:smart_market/core/utils/parse_date.dart';
 import 'package:smart_market/model/product/domain/entities/search_product.entity.dart';
 import 'package:smart_market/model/product/presentation/pages/detail_product.page.dart';
+import 'package:smart_market/model/product/presentation/state/product_filtered.provider.dart';
+import 'package:smart_market/model/product/presentation/widgets/display_average_score.widget.dart';
+import 'package:smart_market/model/product/presentation/widgets/item/highlight_filtered_product.widget.dart';
 
 mixin ProductItem {
   void navigateDetailProductPage(BuildContext context, ResponseSearchProduct product) {
@@ -73,6 +77,34 @@ mixin ProductItem {
         child: Image.network(
           product.imageUrls[0],
           fit: BoxFit.fill,
+        ),
+      ),
+    );
+  }
+
+  Widget getProductDescriptionContainer(ResponseSearchProduct product) {
+    return Expanded(
+      child: Container(
+        margin: const EdgeInsets.only(left: 10),
+        child: Consumer<ProductFilteredProvider>(
+          builder: (BuildContext context, ProductFilteredProvider provider, Widget? child) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                provider.isNameFiltered ? HighlightFilteredProductWidget(textWidget: getNameWidget(product)) : getNameWidget(product),
+                provider.isPriceFiltered ? HighlightFilteredProductWidget(textWidget: getPriceWidget(product)) : getPriceWidget(product),
+                Row(
+                  children: [
+                    provider.isAverageScoreFiltered ? HighlightFilteredProductWidget(textWidget: getAverageScoreText()) : getAverageScoreText(),
+                    DisplayAverageScoreWidget(averageScore: product.averageScore),
+                  ],
+                ),
+                provider.isCategoryFiltered ? HighlightFilteredProductWidget(textWidget: getCategoryText(product)) : getCategoryText(product),
+                provider.isCreatedAtFiltered ? HighlightFilteredProductWidget(textWidget: getCreatedAtText(product)) : getCreatedAtText(product),
+                provider.isReviewFiltered ? HighlightFilteredProductWidget(textWidget: getReviewText(product)) : getReviewText(product),
+              ],
+            );
+          },
         ),
       ),
     );
