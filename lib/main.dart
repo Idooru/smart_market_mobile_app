@@ -5,7 +5,6 @@ import 'package:smart_market/core/common/route.strategy.dart';
 import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/model/main/presentation/pages/navigation.page.dart';
-import 'package:smart_market/model/main/presentation/state/product_main.provider.dart';
 import 'package:smart_market/model/product/presentation/state/product_filtered.provider.dart';
 import 'package:smart_market/model/product/presentation/state/product_search.provider.dart';
 
@@ -16,7 +15,6 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => ProductMainProvider()),
         ChangeNotifierProvider(create: (context) => ProductFilteredProvider()),
         ChangeNotifierProvider(create: (context) => ProductSearchProvider()),
       ],
