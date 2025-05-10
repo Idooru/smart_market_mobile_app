@@ -25,7 +25,7 @@ class ProductGridItemWidget extends StatelessWidget with ProductItem {
         child: Column(
           children: [
             getProductImageContainer(product),
-            getProductDescriptionContainer(product),
+            getProductDescriptionContainer(product, const EdgeInsets.only(left: 10)),
           ],
         ),
       ),

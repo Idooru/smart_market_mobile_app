@@ -27,7 +27,7 @@ class ProductListItemWidget extends StatelessWidget with ProductItem {
         child: Row(
           children: [
             getProductImageContainer(product),
-            getProductDescriptionContainer(product),
+            getProductDescriptionContainer(product, const EdgeInsets.fromLTRB(0, 10, 0, 0)),
           ],
         ),
       ),

@@ -82,10 +82,10 @@ mixin ProductItem {
     );
   }
 
-  Widget getProductDescriptionContainer(ResponseSearchProduct product) {
+  Widget getProductDescriptionContainer(ResponseSearchProduct product, EdgeInsets margin) {
     return Expanded(
       child: Container(
-        margin: const EdgeInsets.only(left: 10),
+        margin: margin,
         child: Consumer<ProductFilteredProvider>(
           builder: (BuildContext context, ProductFilteredProvider provider, Widget? child) {
             return Column(
