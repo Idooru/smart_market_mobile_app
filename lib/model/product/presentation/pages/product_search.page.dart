@@ -28,6 +28,7 @@ class ProductSearchPage extends StatefulWidget {
 class _ProductSearchPageState extends State<ProductSearchPage> {
   final ProductService productService = locator<ProductService>();
   final FocusNode focusNode = FocusNode();
+  String? _keyword;
 
   late ProductSearchProvider provider;
   Future<List<ResponseSearchProduct>>? getAllProductFuture;
@@ -98,6 +99,8 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
   }
 
   void search(String keyword, ProductSearchProvider provider, void Function(RequestSearchProducts) callback) {
+    _keyword = keyword;
+
     RequestSearchProducts searchProduct = RequestSearchProducts(
       mode: productCategory.contains(keyword) ? RequestProductSearchMode.category : RequestProductSearchMode.manual,
       keyword: keyword,
@@ -203,15 +206,13 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                         provider: provider,
                         getAllProductFuture: getAllProductFuture!,
                         reconnectCallback: () {
-                          RequestSearchProduct searchAllProduct = RequestSearchProduct(
-                            align: filterMap["select-algin"] ?? "DESC",
-                            column: filterMap["select-column"] ?? "createdAt",
-                            category: filterMap["select-category"] ?? "전체",
-                            name: provider.keyword,
+                          RequestSearchProducts searchProduct = RequestSearchProducts(
+                            mode: productCategory.contains(_keyword) ? RequestProductSearchMode.category : RequestProductSearchMode.manual,
+                            keyword: _keyword!,
                           );
 
                           setState(() {
-                            getAllProductFuture = productService.getAllProduct(searchAllProduct);
+                            getAllProductFuture = productService.getSearchProduct(searchProduct);
                           });
                         },
                       ),
