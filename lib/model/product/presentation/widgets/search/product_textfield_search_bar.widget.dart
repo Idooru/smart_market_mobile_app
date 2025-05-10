@@ -23,7 +23,6 @@ class ProductTextFieldSearchBarWidget extends StatelessWidget {
     return Container(
       color: Colors.blueGrey[100],
       height: 45,
-      padding: const EdgeInsets.symmetric(horizontal: 5),
       child: Row(
         children: [
           Expanded(
@@ -41,6 +40,8 @@ class ProductTextFieldSearchBarWidget extends StatelessWidget {
               onSubmitted: (String keyword) => search(keyword, provider, updateProductList),
               decoration: const InputDecoration(
                 border: InputBorder.none,
+                isCollapsed: true,
+                contentPadding: EdgeInsets.symmetric(vertical: 11),
                 prefixIcon: Icon(Icons.search, color: Colors.black),
                 hintText: "상품 이름을 입력하세요.",
               ),

@@ -47,7 +47,6 @@ class ProductButtonSearchBarWidget extends StatelessWidget {
       delegate: _SearchBarDelegate(
         child: Container(
           color: Colors.blueGrey[100],
-          padding: const EdgeInsets.symmetric(horizontal: 5),
           child: Row(
             children: [
               Expanded(
