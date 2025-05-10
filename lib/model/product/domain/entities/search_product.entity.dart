@@ -12,17 +12,13 @@ String translateRequestProductSearchMode(RequestProductSearchMode searchMode) {
   return "category";
 }
 
-class RequestSearchProduct {
-  final String align;
-  final String column;
-  final String category;
-  final String? name;
+class RequestConditionalProducts {
+  final int count;
+  final String condition;
 
-  const RequestSearchProduct({
-    required this.align,
-    required this.column,
-    required this.category,
-    this.name,
+  const RequestConditionalProducts({
+    required this.condition,
+    required this.count,
   });
 }
 

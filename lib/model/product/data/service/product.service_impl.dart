@@ -9,9 +9,16 @@ import 'package:smart_market/model/product/domain/service/product.service.dart';
 class ProductServiceImpl implements ProductService {
   final ProductRepository productRepository = locator<ProductRepository>();
 
+  // @override
+  // Future<List<ResponseSearchProduct>> getAllProduct([RequestConditionalProducts? args]) async {
+  //   DataState<List<ResponseSearchProduct>> dataState = await productRepository.fetchAllProducts(args);
+  //   if (dataState.exception != null) throw DioFailError(message: dataState.exception.toString());
+  //   return dataState.data!;
+  // }
+
   @override
-  Future<List<ResponseSearchProduct>> getAllProduct([RequestSearchProduct? args]) async {
-    DataState<List<ResponseSearchProduct>> dataState = await productRepository.fetchAllProducts(args);
+  Future<List<ResponseSearchProduct>> getConditionalProducts(RequestConditionalProducts args) async {
+    DataState<List<ResponseSearchProduct>> dataState = await productRepository.fetchConditionalProducts(args);
     if (dataState.exception != null) throw DioFailError(message: dataState.exception.toString());
     return dataState.data!;
   }

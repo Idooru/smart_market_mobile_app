@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:smart_market/core/common/data_state.dart';
 import 'package:smart_market/core/utils/dio_initializer.dart';
 import 'package:smart_market/model/product/domain/entities/search_product.entity.dart';
@@ -7,26 +6,39 @@ import 'package:smart_market/model/product/domain/entities/detail_product.entity
 import 'package:smart_market/model/product/domain/repository/product.repository.dart';
 
 class ProductRepositoryImpl extends DioInitializer implements ProductRepository {
+  // @override
+  // Future<DataState<List<ResponseSearchProduct>>> fetchAllProducts([RequestConditionalProducts? args]) async {
+  //   try {
+  //     String url;
+
+  //     if (args != null) {
+  //       String validateNameQuery = args.name != null ? "name=${args.name}" : "";
+  //       String validateCategoryQuery = args.category != "전체" ? "category=${args.category}" : "";
+  //       url = "$baseUrl/product/all?align=${args.align}&column=${args.column}&$validateNameQuery&$validateCategoryQuery";
+  //     } else {
+  //       url = "$baseUrl/product/all";
+  //     }
+
+  //     debugPrint("url: $url");
+  //     Response response = await dio.get(url);
+
+  //     List<ResponseSearchProduct> allProducts = List<Map<String, dynamic>>.from(response.data["result"]).map((data) => ResponseSearchProduct.fromJson(data)).toList();
+  //     return DataSuccess(data: allProducts);
+  //   } on DioException catch (err) {
+  //     debugPrint("response: ${err.message}");
+  //     return DataFail(exception: err);
+  //   }
+  // }
+
   @override
-  Future<DataState<List<ResponseSearchProduct>>> fetchAllProducts([RequestSearchProduct? args]) async {
+  Future<DataState<List<ResponseSearchProduct>>> fetchConditionalProducts(RequestConditionalProducts args) async {
     try {
-      String url;
-
-      if (args != null) {
-        String validateNameQuery = args.name != null ? "name=${args.name}" : "";
-        String validateCategoryQuery = args.category != "전체" ? "category=${args.category}" : "";
-        url = "$baseUrl/product/all?align=${args.align}&column=${args.column}&$validateNameQuery&$validateCategoryQuery";
-      } else {
-        url = "$baseUrl/product/all";
-      }
-
-      debugPrint("url: $url");
+      String url = "$baseUrl/product/conditional?count=${args.count}&condition=${args.condition}";
       Response response = await dio.get(url);
 
-      List<ResponseSearchProduct> allProducts = List<Map<String, dynamic>>.from(response.data["result"]).map((data) => ResponseSearchProduct.fromJson(data)).toList();
-      return DataSuccess(data: allProducts);
+      List<ResponseSearchProduct> conditionalProducts = List<Map<String, dynamic>>.from(response.data["result"]).map((data) => ResponseSearchProduct.fromJson(data)).toList();
+      return DataSuccess(data: conditionalProducts);
     } on DioException catch (err) {
-      debugPrint("response: ${err.message}");
       return DataFail(exception: err);
     }
   }
