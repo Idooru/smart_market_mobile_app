@@ -17,7 +17,7 @@ class LoadingHandlerWidget extends StatelessWidget {
           const CircularProgressIndicator(color: Colors.black),
           const SizedBox(width: 15),
           Text(
-            title,
+            title.length > 20 ? '${title.substring(0, 15)}\n${title.substring(15)}' : title,
             style: const TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.bold,
