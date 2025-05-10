@@ -110,6 +110,8 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
   }
 
   void search(String keyword, ProductSearchProvider provider, void Function(RequestSearchProducts) callback) {
+    if (keyword.isEmpty) return;
+
     _keyword = keyword;
 
     RequestSearchProducts searchProduct = RequestSearchProducts(
