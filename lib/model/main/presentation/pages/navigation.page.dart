@@ -36,33 +36,30 @@ class NavigationPageState extends State<NavigationPage> {
           child: pages.elementAt(selectedIndex),
         ),
       ),
-      bottomNavigationBar: SizedBox(
-        height: 95,
-        child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: const Color.fromARGB(255, 207, 207, 207),
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: "main",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.search),
-              label: "search",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart),
-              label: "cart",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.contact_page),
-              label: "profile",
-            ),
-          ],
-          currentIndex: selectedIndex,
-          selectedItemColor: Colors.black,
-          onTap: tapBottomNavigator,
-        ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: const Color.fromARGB(255, 230, 230, 230),
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: "main",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: "search",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart),
+            label: "cart",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.contact_page),
+            label: "profile",
+          ),
+        ],
+        currentIndex: selectedIndex,
+        selectedItemColor: Colors.black,
+        onTap: tapBottomNavigator,
       ),
     );
   }
