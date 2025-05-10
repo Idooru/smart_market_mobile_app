@@ -70,8 +70,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
     super.dispose();
     focusNode.dispose();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      provider.setKeyword("");
-      provider.setSearchMode(SearchMode.focused);
+      provider.clearAll();
     });
   }
 

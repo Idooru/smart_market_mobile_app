@@ -76,8 +76,8 @@ class ProductSearchProvider extends ChangeNotifier {
   }
 
   void clearAll() {
-    _searchMode = SearchMode.none;
-    _searchHistory = [];
+    _searchMode = SearchMode.focused;
+    _controller.text = "";
     _isSetHistory = true;
     _isSuccessSetProducts = false;
     _products = [];
