@@ -66,7 +66,7 @@ class _ProductSearchingWidgetState extends State<ProductSearchingWidget> {
       TextSpan(text: text.substring(0, startTextIndex)),
       TextSpan(
         text: text.substring(startTextIndex, endTextIndex),
-        style: const TextStyle(fontWeight: FontWeight.bold),
+        style: const TextStyle(color: Colors.black),
       ),
       TextSpan(text: text.substring(endTextIndex)),
     ];
@@ -102,7 +102,7 @@ class _ProductSearchingWidgetState extends State<ProductSearchingWidget> {
       if (isMatching && matchedChars < cleanKeyword.length) {
         spans.add(TextSpan(
           text: char,
-          style: const TextStyle(fontWeight: FontWeight.bold),
+          style: const TextStyle(color: Colors.black),
         ));
         matchedChars++;
       } else {
@@ -171,9 +171,11 @@ class _ProductSearchingWidgetState extends State<ProductSearchingWidget> {
                                       ),
                                       child: Text.rich(
                                         TextSpan(
-                                            children: RegExp(r'^[ㄱ-ㅎ\s]+$').hasMatch(widget.provider.keyword)
-                                                ? highlightInitialMatch(autoComplete, widget.provider.keyword)
-                                                : highlightKeyword(autoComplete, widget.provider.keyword)),
+                                          children: RegExp(r'^[ㄱ-ㅎ\s]+$').hasMatch(widget.provider.keyword)
+                                              ? highlightInitialMatch(autoComplete, widget.provider.keyword)
+                                              : highlightKeyword(autoComplete, widget.provider.keyword),
+                                          style: const TextStyle(color: Color.fromARGB(255, 100, 100, 100)),
+                                        ),
                                       ),
                                     ),
                                   ),
