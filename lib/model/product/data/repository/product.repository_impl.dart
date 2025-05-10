@@ -6,30 +6,6 @@ import 'package:smart_market/model/product/domain/entities/detail_product.entity
 import 'package:smart_market/model/product/domain/repository/product.repository.dart';
 
 class ProductRepositoryImpl extends DioInitializer implements ProductRepository {
-  // @override
-  // Future<DataState<List<ResponseSearchProduct>>> fetchAllProducts([RequestConditionalProducts? args]) async {
-  //   try {
-  //     String url;
-
-  //     if (args != null) {
-  //       String validateNameQuery = args.name != null ? "name=${args.name}" : "";
-  //       String validateCategoryQuery = args.category != "전체" ? "category=${args.category}" : "";
-  //       url = "$baseUrl/product/all?align=${args.align}&column=${args.column}&$validateNameQuery&$validateCategoryQuery";
-  //     } else {
-  //       url = "$baseUrl/product/all";
-  //     }
-
-  //     debugPrint("url: $url");
-  //     Response response = await dio.get(url);
-
-  //     List<ResponseSearchProduct> allProducts = List<Map<String, dynamic>>.from(response.data["result"]).map((data) => ResponseSearchProduct.fromJson(data)).toList();
-  //     return DataSuccess(data: allProducts);
-  //   } on DioException catch (err) {
-  //     debugPrint("response: ${err.message}");
-  //     return DataFail(exception: err);
-  //   }
-  // }
-
   @override
   Future<DataState<List<ResponseSearchProduct>>> fetchConditionalProducts(RequestConditionalProducts args) async {
     try {

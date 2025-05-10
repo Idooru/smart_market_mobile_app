@@ -16,17 +16,6 @@ class ProductSearchResultWidget extends StatelessWidget {
     required this.reconnectCallback,
   });
 
-  Widget getNoneProduct(String keyword) {
-    if (keyword.isEmpty) keyword = '""';
-    return Column(
-      children: [
-        const SizedBox(height: 100),
-        Text("$keyword(와)과 상품 필터링 조건에"),
-        const Text(" 해당하는 상품을 찾을 수 없습니다."),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(

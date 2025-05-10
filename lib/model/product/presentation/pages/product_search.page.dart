@@ -32,7 +32,6 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
   String? _keyword;
 
   late ProductSearchProvider provider;
-  Future<List<ResponseSearchProduct>>? getAllProductFuture;
 
   @override
   void initState() {
@@ -72,17 +71,6 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       provider.clearAll();
     });
-  }
-
-  Widget getNoneProduct(String keyword) {
-    if (keyword.isEmpty) keyword = '""';
-    return Column(
-      children: [
-        const SizedBox(height: 100),
-        Text("$keyword(와)과 상품 필터링 조건에"),
-        const Text(" 해당하는 상품을 찾을 수 없습니다."),
-      ],
-    );
   }
 
   void updateProductList(RequestSearchProducts args) async {
