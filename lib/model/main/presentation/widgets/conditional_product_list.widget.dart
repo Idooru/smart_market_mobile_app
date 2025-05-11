@@ -43,7 +43,6 @@ class _ConditionalProductListWidgetState extends State<ConditionalProductListWid
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 320,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -51,57 +50,58 @@ class _ConditionalProductListWidgetState extends State<ConditionalProductListWid
             widget.title,
             style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
           ),
-          Expanded(
-            child: FutureBuilder(
-              future: getConditionalProductFuture,
-              builder: (BuildContext context, AsyncSnapshot<List<ResponseSearchProduct>> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
+          FutureBuilder(
+            future: getConditionalProductFuture,
+            builder: (BuildContext context, AsyncSnapshot<List<ResponseSearchProduct>> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Column(
+                  children: [
+                    const SizedBox(height: 50),
+                    LoadingHandlerWidget(title: "${widget.title} 불러오기.."),
+                    const SizedBox(height: 50),
+                  ],
+                );
+              } else if (snapshot.hasError) {
+                DioFailError error = snapshot.error as DioFailError;
+                if (error.message.contains("Timeout") || error.message.contains('Socket')) {
                   return Column(
                     children: [
-                      const SizedBox(height: 100),
-                      LoadingHandlerWidget(title: "${widget.title} 불러오기.."),
+                      const SizedBox(height: 25),
+                      NetworkErrorHandlerWidget(reconnectCallback: () {
+                        RequestConditionalProducts args = RequestConditionalProducts(
+                          count: 10,
+                          condition: widget.condition,
+                        );
+
+                        setState(() {
+                          getConditionalProductFuture = service.getConditionalProducts(args);
+                        });
+                      }),
+                      const SizedBox(height: 25),
                     ],
                   );
-                } else if (snapshot.hasError) {
-                  DioFailError error = snapshot.error as DioFailError;
-                  if (error.message.contains("Timeout") || error.message.contains('Socket')) {
-                    return Column(
-                      children: [
-                        const SizedBox(height: 25),
-                        NetworkErrorHandlerWidget(reconnectCallback: () {
-                          RequestConditionalProducts args = RequestConditionalProducts(
-                            count: 10,
-                            condition: widget.condition,
-                          );
-
-                          setState(() {
-                            getConditionalProductFuture = service.getConditionalProducts(args);
-                          });
-                        }),
-                      ],
-                    );
-                  } else {
-                    return const Column(
-                      children: [
-                        SizedBox(height: 100),
-                        InternalServerErrorHandlerWidget(),
-                      ],
-                    );
-                  }
-                } else if (snapshot.hasData) {
-                  final products = snapshot.data!;
-
-                  return SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: products.map((product) => ProductGridItemWidget(product: product)).toList(),
-                    ),
-                  );
                 } else {
-                  return const SizedBox.shrink();
+                  return const Column(
+                    children: [
+                      SizedBox(height: 25),
+                      InternalServerErrorHandlerWidget(),
+                      SizedBox(height: 25),
+                    ],
+                  );
                 }
-              },
-            ),
+              } else if (snapshot.hasData) {
+                final products = snapshot.data!;
+
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: products.map((product) => ProductGridItemWidget(product: product)).toList(),
+                  ),
+                );
+              } else {
+                return const SizedBox.shrink();
+              }
+            },
           )
         ],
       ),

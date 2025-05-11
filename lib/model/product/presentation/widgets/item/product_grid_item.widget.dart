@@ -16,7 +16,6 @@ class ProductGridItemWidget extends StatelessWidget with ProductItem {
       onTap: () => navigateDetailProductPage(context, product),
       child: Container(
         width: 150,
-        height: 275,
         margin: const EdgeInsets.all(5),
         decoration: BoxDecoration(
           color: const Color.fromARGB(180, 240, 240, 240),
@@ -25,7 +24,10 @@ class ProductGridItemWidget extends StatelessWidget with ProductItem {
         child: Column(
           children: [
             getProductImageContainer(product),
-            getProductDescriptionContainer(product, const EdgeInsets.only(left: 10)),
+            getProductDescriptionContainer(
+              product,
+              const EdgeInsets.only(left: 10, bottom: 10),
+            ),
           ],
         ),
       ),
