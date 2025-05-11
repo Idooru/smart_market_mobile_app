@@ -14,6 +14,11 @@ import 'package:smart_market/model/product/presentation/widgets/search/product_s
 import 'package:smart_market/model/product/presentation/widgets/search/product_textfield_search_bar.widget.dart';
 import 'package:smart_market/model/product/presentation/widgets/search/product_searching.widget.dart';
 
+enum ViewMode {
+  list,
+  grid,
+}
+
 class ProductSearchPage extends StatefulWidget {
   final String? keyword;
 
@@ -31,12 +36,14 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
   final FocusNode focusNode = FocusNode();
   String? _keyword;
 
+  late ViewMode viewMode;
   late ProductSearchProvider provider;
 
   @override
   void initState() {
     super.initState();
     provider = context.read<ProductSearchProvider>();
+    viewMode = ViewMode.list;
 
     if (provider.keyword.isNotEmpty) {
       _keyword = provider.keyword;
@@ -87,6 +94,16 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
     }
   }
 
+  void updateViewMode() {
+    setState(() {
+      if (viewMode == ViewMode.list) {
+        viewMode = ViewMode.grid;
+      } else {
+        viewMode = ViewMode.list;
+      }
+    });
+  }
+
   void pressCancelButton(ProductSearchProvider provider) {
     provider.setKeyword("");
     provider.setSearchMode(SearchMode.focused);
@@ -129,24 +146,6 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                   flexibleSpace: Container(
                     color: Colors.blueGrey[300], // 스크롤 될 시 색상 변경 방지
                   ),
-                  actions: provider.searchMode == SearchMode.none && provider.keyword.isNotEmpty
-                      ? [
-                          IconButton(
-                            onPressed: () => ProductFilterDialog.show(context, updateProductList),
-                            icon: const Icon(
-                              Icons.tune,
-                              color: Colors.black,
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.view_agenda_outlined,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ]
-                      : [],
                   leading: IconButton(
                     icon: const Icon(Icons.arrow_back_ios),
                     onPressed: () {
@@ -178,18 +177,22 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                         ),
                         title: const Text("Search"),
                         centerTitle: false,
-                        actions: provider.searchMode == SearchMode.none && provider.keyword.isNotEmpty
-                            ? [
-                                IconButton(
-                                  onPressed: () => ProductFilterDialog.show(context, updateProductList),
-                                  icon: const Icon(Icons.tune, color: Colors.black),
-                                ),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(Icons.view_agenda_outlined, color: Colors.black),
-                                ),
-                              ]
-                            : [],
+                        actions: [
+                          IconButton(
+                            onPressed: () => ProductFilterDialog.show(context, updateProductList),
+                            icon: const Icon(
+                              Icons.tune,
+                              color: Colors.black,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: updateViewMode,
+                            icon: Icon(
+                              viewMode == ViewMode.list ? Icons.list : Icons.grid_3x3,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
                       ),
                       ProductButtonSearchBarWidget(
                         provider: provider,
@@ -204,6 +207,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                       ),
                       ProductSearchResultWidget(
                         provider: provider,
+                        viewMode: viewMode,
                         reconnectCallback: () {
                           RequestSearchProducts searchProduct = RequestSearchProducts(
                             mode: productCategory.contains(_keyword) ? RequestProductSearchMode.category : RequestProductSearchMode.manual,
