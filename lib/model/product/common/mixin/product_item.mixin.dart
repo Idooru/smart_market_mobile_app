@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_market/core/utils/parse_date.dart';
 import 'package:smart_market/model/product/domain/entities/search_product.entity.dart';
@@ -26,7 +27,7 @@ mixin ProductItem {
 
   Text getPriceWidget(ResponseSearchProduct product) {
     return Text(
-      "${product.price}원",
+      "${NumberFormat('#,###').format(product.price)}원",
       style: const TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.w500,
