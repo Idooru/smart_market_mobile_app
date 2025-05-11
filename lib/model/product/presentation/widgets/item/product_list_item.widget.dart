@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smart_market/model/product/common/product_item.mixin.dart';
+import 'package:smart_market/model/product/common/mixin/product_item.mixin.dart';
 import 'package:smart_market/model/product/domain/entities/search_product.entity.dart';
 
 class ProductListItemWidget extends StatelessWidget with ProductItem {
