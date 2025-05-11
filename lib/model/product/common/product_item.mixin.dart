@@ -19,6 +19,8 @@ mixin ProductItem {
     return Text(
       product.name,
       style: const TextStyle(fontSize: 18, color: Color.fromARGB(255, 61, 61, 61), fontWeight: FontWeight.w300),
+      overflow: TextOverflow.ellipsis, // overflow 처리
+      maxLines: 1, // 최대 한 줄로 제한
     );
   }
 
@@ -83,29 +85,27 @@ mixin ProductItem {
   }
 
   Widget getProductDescriptionContainer(ResponseSearchProduct product, EdgeInsets margin) {
-    return Expanded(
-      child: Container(
-        margin: margin,
-        child: Consumer<ProductFilteredProvider>(
-          builder: (BuildContext context, ProductFilteredProvider provider, Widget? child) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                provider.isNameFiltered ? HighlightFilteredProductWidget(textWidget: getNameWidget(product)) : getNameWidget(product),
-                provider.isPriceFiltered ? HighlightFilteredProductWidget(textWidget: getPriceWidget(product)) : getPriceWidget(product),
-                Row(
-                  children: [
-                    provider.isAverageScoreFiltered ? HighlightFilteredProductWidget(textWidget: getAverageScoreText()) : getAverageScoreText(),
-                    DisplayAverageScoreWidget(averageScore: product.averageScore),
-                  ],
-                ),
-                provider.isCategoryFiltered ? HighlightFilteredProductWidget(textWidget: getCategoryText(product)) : getCategoryText(product),
-                provider.isCreatedAtFiltered ? HighlightFilteredProductWidget(textWidget: getCreatedAtText(product)) : getCreatedAtText(product),
-                provider.isReviewFiltered ? HighlightFilteredProductWidget(textWidget: getReviewText(product)) : getReviewText(product),
-              ],
-            );
-          },
-        ),
+    return Container(
+      margin: margin,
+      child: Consumer<ProductFilteredProvider>(
+        builder: (BuildContext context, ProductFilteredProvider provider, Widget? child) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              provider.isNameFiltered ? HighlightFilteredProductWidget(textWidget: getNameWidget(product)) : getNameWidget(product),
+              provider.isPriceFiltered ? HighlightFilteredProductWidget(textWidget: getPriceWidget(product)) : getPriceWidget(product),
+              Row(
+                children: [
+                  provider.isAverageScoreFiltered ? HighlightFilteredProductWidget(textWidget: getAverageScoreText()) : getAverageScoreText(),
+                  DisplayAverageScoreWidget(averageScore: product.averageScore),
+                ],
+              ),
+              provider.isCategoryFiltered ? HighlightFilteredProductWidget(textWidget: getCategoryText(product)) : getCategoryText(product),
+              provider.isCreatedAtFiltered ? HighlightFilteredProductWidget(textWidget: getCreatedAtText(product)) : getCreatedAtText(product),
+              provider.isReviewFiltered ? HighlightFilteredProductWidget(textWidget: getReviewText(product)) : getReviewText(product),
+            ],
+          );
+        },
       ),
     );
   }
