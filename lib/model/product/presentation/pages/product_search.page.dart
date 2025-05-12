@@ -6,6 +6,7 @@ import 'package:smart_market/model/main/presentation/pages/navigation.page.dart'
 import 'package:smart_market/model/product/common/const/%08product_category.const.dart';
 import 'package:smart_market/model/product/domain/entities/search_product.entity.dart';
 import 'package:smart_market/model/product/domain/service/product.service.dart';
+import 'package:smart_market/model/product/presentation/state/product_filtered.provider.dart';
 import 'package:smart_market/model/product/presentation/state/product_search.provider.dart';
 import 'package:smart_market/model/product/presentation/widgets/product_filter.dialog.dart';
 import 'package:smart_market/model/product/presentation/widgets/search/product_button_search_bar.widget.dart';
@@ -37,35 +38,37 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
   String? _keyword;
 
   late ViewMode viewMode;
-  late ProductSearchProvider provider;
+  late ProductSearchProvider searchProvider;
+  late ProductFilteredProvider filteredProvider;
 
   @override
   void initState() {
     super.initState();
-    provider = context.read<ProductSearchProvider>();
+    searchProvider = context.read<ProductSearchProvider>();
+    filteredProvider = context.read<ProductFilteredProvider>();
     viewMode = ViewMode.list;
 
-    if (provider.keyword.isNotEmpty) {
-      _keyword = provider.keyword;
+    if (searchProvider.keyword.isNotEmpty) {
+      _keyword = searchProvider.keyword;
 
       RequestSearchProducts args = RequestSearchProducts(
         mode: RequestProductSearchMode.category,
-        keyword: provider.keyword,
+        keyword: searchProvider.keyword,
       );
 
       updateProductList(args);
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        provider.setSearchMode(SearchMode.none);
+        searchProvider.setSearchMode(SearchMode.none);
       });
     } else {
       focusNode.requestFocus();
       focusNode.addListener(() {
-        if (focusNode.hasFocus && provider.keyword.isNotEmpty) {
-          provider.setSearchMode(SearchMode.searching);
+        if (focusNode.hasFocus && searchProvider.keyword.isNotEmpty) {
+          searchProvider.setSearchMode(SearchMode.searching);
         } else if (focusNode.hasFocus) {
-          provider.setSearchMode(SearchMode.focused);
+          searchProvider.setSearchMode(SearchMode.focused);
         } else {
-          provider.setSearchMode(SearchMode.none);
+          searchProvider.setSearchMode(SearchMode.none);
         }
       });
     }
@@ -76,20 +79,21 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
     super.dispose();
     focusNode.dispose();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      provider.clearAll();
+      searchProvider.clearAll();
+      filteredProvider.clearAll();
     });
   }
 
   void updateProductList(RequestSearchProducts args) async {
     try {
       List<ResponseSearchProduct> products = await productService.getSearchProduct(args);
-      provider.setProducts(products);
-      provider.setFail(SearchProductFail.none);
+      searchProvider.setProducts(products);
+      searchProvider.setFail(SearchProductFail.none);
     } on DioFailError catch (err) {
       if (err.message.contains("Socket")) {
-        provider.setFail(SearchProductFail.socketException);
+        searchProvider.setFail(SearchProductFail.socketException);
       } else {
-        provider.setFail(SearchProductFail.internalServerException);
+        searchProvider.setFail(SearchProductFail.internalServerException);
       }
     }
   }
@@ -113,7 +117,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
     });
   }
 
-  void search(String keyword, ProductSearchProvider provider, void Function(RequestSearchProducts) callback) {
+  void search(String keyword, ProductSearchProvider searchProvider, ProductFilteredProvider filteredProvider, void Function(RequestSearchProducts) callback) {
     if (keyword.isEmpty) return;
 
     _keyword = keyword;
@@ -123,14 +127,15 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
       keyword: keyword,
     );
 
-    if (provider.isSetHistory) {
-      provider.appendHistory(keyword);
+    if (searchProvider.isSetHistory) {
+      searchProvider.appendHistory(keyword);
     }
 
-    provider.setKeyword(keyword);
-    provider.setSearchMode(SearchMode.none);
+    searchProvider.setKeyword(keyword);
+    searchProvider.setSearchMode(SearchMode.none);
     callback(searchProduct);
     focusNode.unfocus();
+    filteredProvider.setIsFiltered(false);
   }
 
   @override
@@ -179,7 +184,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                         centerTitle: false,
                         actions: [
                           IconButton(
-                            onPressed: () => ProductFilterDialog.show(context, updateProductList),
+                            onPressed: () => ProductFilterDialog.show(context),
                             icon: const Icon(
                               Icons.tune,
                               color: Colors.black,
@@ -206,7 +211,6 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                         pressCancelButton: pressCancelButton,
                       ),
                       ProductSearchResultWidget(
-                        provider: provider,
                         viewMode: viewMode,
                         reconnectCallback: () {
                           RequestSearchProducts searchProduct = RequestSearchProducts(
@@ -222,7 +226,6 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                 : Column(
                     children: [
                       ProductTextFieldSearchBarWidget(
-                        provider: provider,
                         focusNode: focusNode,
                         pressCancelButton: pressCancelButton,
                         search: search,
@@ -231,14 +234,12 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                       (() {
                         if (provider.searchMode == SearchMode.focused) {
                           return ProductSearchFocusedWidget(
-                            provider: provider,
                             search: search,
                             updateProductList: updateProductList,
                           );
                         } // 자동 완성 표시
                         else if (provider.searchMode == SearchMode.searching) {
                           return ProductSearchingWidget(
-                            provider: provider,
                             search: search,
                             updateProductList: updateProductList,
                           );

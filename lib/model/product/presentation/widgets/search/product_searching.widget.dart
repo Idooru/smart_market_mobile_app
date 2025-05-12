@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/widgets/common/custom_scrollbar.widget.dart';
@@ -6,16 +7,15 @@ import 'package:smart_market/core/widgets/handler/internal_server_error_handler.
 import 'package:smart_market/core/widgets/handler/network_error_handler.widget.dart';
 import 'package:smart_market/model/product/domain/entities/search_product.entity.dart';
 import 'package:smart_market/model/product/domain/service/product.service.dart';
+import 'package:smart_market/model/product/presentation/state/product_filtered.provider.dart';
 import 'package:smart_market/model/product/presentation/state/product_search.provider.dart';
 
 class ProductSearchingWidget extends StatefulWidget {
-  final ProductSearchProvider provider;
-  final void Function(String keyword, ProductSearchProvider provider, void Function(RequestSearchProducts) callback) search;
+  final void Function(String keyword, ProductSearchProvider searchProvider, ProductFilteredProvider filteredProvider, void Function(RequestSearchProducts) callback) search;
   final void Function(RequestSearchProducts args) updateProductList;
 
   const ProductSearchingWidget({
     super.key,
-    required this.provider,
     required this.search,
     required this.updateProductList,
   });
@@ -120,78 +120,82 @@ class _ProductSearchingWidgetState extends State<ProductSearchingWidget> {
 
   @override
   Widget build(BuildContext context) {
-    _getProductAutoCompleteFuture = productService.getProductAutocomplete(widget.provider.keyword);
+    return Consumer2<ProductSearchProvider, ProductFilteredProvider>(
+      builder: (BuildContext context, ProductSearchProvider searchProvider, ProductFilteredProvider filteredProvider, Widget? child) {
+        _getProductAutoCompleteFuture = productService.getProductAutocomplete(searchProvider.keyword);
 
-    return Expanded(
-      child: ColoredBox(
-        color: const Color.fromARGB(255, 235, 235, 235),
-        child: FutureBuilder(
-          future: _getProductAutoCompleteFuture,
-          builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const SizedBox.shrink();
-            } else if (snapshot.hasError) {
-              DioFailError error = snapshot.error as DioFailError;
-              if (error.message.contains("Timeout") || error.message.contains('Socket')) {
-                return NetworkErrorHandlerWidget(reconnectCallback: () {
-                  setState(() {
-                    _getProductAutoCompleteFuture = productService.getProductAutocomplete(widget.provider.keyword);
-                  });
-                });
-              } else {
-                return const InternalServerErrorHandlerWidget();
-              }
-            } else {
-              List<String> autoCompletes = snapshot.data!;
-              ScrollController scrollController = ScrollController();
+        return Expanded(
+          child: ColoredBox(
+            color: const Color.fromARGB(255, 235, 235, 235),
+            child: FutureBuilder(
+              future: _getProductAutoCompleteFuture,
+              builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const SizedBox.shrink();
+                } else if (snapshot.hasError) {
+                  DioFailError error = snapshot.error as DioFailError;
+                  if (error.message.contains("Timeout") || error.message.contains('Socket')) {
+                    return NetworkErrorHandlerWidget(reconnectCallback: () {
+                      setState(() {
+                        _getProductAutoCompleteFuture = productService.getProductAutocomplete(searchProvider.keyword);
+                      });
+                    });
+                  } else {
+                    return const InternalServerErrorHandlerWidget();
+                  }
+                } else {
+                  List<String> autoCompletes = snapshot.data!;
+                  ScrollController scrollController = ScrollController();
 
-              return SizedBox(
-                width: double.infinity,
-                child: autoCompletes.isNotEmpty
-                    ? CustomScrollbarWidget(
-                        scrollController: scrollController,
-                        childWidget: SingleChildScrollView(
-                          controller: scrollController,
-                          child: Column(
-                            children: autoCompletes
-                                .map(
-                                  (autoComplete) => GestureDetector(
-                                    onTap: () => widget.search(autoComplete, widget.provider, widget.updateProductList),
-                                    child: Container(
-                                      width: double.infinity,
-                                      padding: const EdgeInsets.all(10),
-                                      decoration: const BoxDecoration(
-                                        color: Color.fromARGB(255, 245, 245, 245),
-                                        border: Border(
-                                          bottom: BorderSide(
-                                            color: Colors.grey, // 밑줄 색
-                                            width: 0.2, // 밑줄 두께
+                  return SizedBox(
+                    width: double.infinity,
+                    child: autoCompletes.isNotEmpty
+                        ? CustomScrollbarWidget(
+                            scrollController: scrollController,
+                            childWidget: SingleChildScrollView(
+                              controller: scrollController,
+                              child: Column(
+                                children: autoCompletes
+                                    .map(
+                                      (autoComplete) => GestureDetector(
+                                        onTap: () => widget.search(autoComplete, searchProvider, filteredProvider, widget.updateProductList),
+                                        child: Container(
+                                          width: double.infinity,
+                                          padding: const EdgeInsets.all(10),
+                                          decoration: const BoxDecoration(
+                                            color: Color.fromARGB(255, 245, 245, 245),
+                                            border: Border(
+                                              bottom: BorderSide(
+                                                color: Colors.grey, // 밑줄 색
+                                                width: 0.2, // 밑줄 두께
+                                              ),
+                                            ),
+                                          ),
+                                          child: Text.rich(
+                                            TextSpan(
+                                              children: RegExp(r'^[ㄱ-ㅎ\s]+$').hasMatch(searchProvider.keyword)
+                                                  ? highlightInitialMatch(autoComplete, searchProvider.keyword)
+                                                  : highlightKeyword(autoComplete, searchProvider.keyword),
+                                              style: const TextStyle(color: Color.fromARGB(255, 100, 100, 100)),
+                                            ),
                                           ),
                                         ),
                                       ),
-                                      child: Text.rich(
-                                        TextSpan(
-                                          children: RegExp(r'^[ㄱ-ㅎ\s]+$').hasMatch(widget.provider.keyword)
-                                              ? highlightInitialMatch(autoComplete, widget.provider.keyword)
-                                              : highlightKeyword(autoComplete, widget.provider.keyword),
-                                          style: const TextStyle(color: Color.fromARGB(255, 100, 100, 100)),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                )
-                                .toList(),
+                                    )
+                                    .toList(),
+                              ),
+                            ),
+                          )
+                        : const Center(
+                            child: Text("해당 이름의 상품이 존재하지 않습니다."),
                           ),
-                        ),
-                      )
-                    : const Center(
-                        child: Text("해당 이름의 상품이 존재하지 않습니다."),
-                      ),
-              );
-            }
-          },
-        ),
-      ),
+                  );
+                }
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 }

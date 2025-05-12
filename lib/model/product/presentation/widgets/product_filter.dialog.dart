@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_market/core/widgets/common/radio.widget.dart';
+import 'package:smart_market/model/product/common/const/%08product_category.const.dart';
 import 'package:smart_market/model/product/domain/entities/search_product.entity.dart';
 import 'package:smart_market/model/product/presentation/state/product_filtered.provider.dart';
 import 'package:smart_market/model/product/presentation/state/product_search.provider.dart';
@@ -8,37 +9,28 @@ import 'package:smart_market/model/product/presentation/state/product_search.pro
 final Map<String, String> filterMap = {};
 
 class ProductFilterDialog {
-  static void show(BuildContext context, void Function(RequestSearchProducts) filterCallback) {
+  static void show(BuildContext context) {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (BuildContext context) => Dialog(
-        child: ProductFilterDialogWidget(
-          filterCallback: filterCallback,
-        ),
+      builder: (BuildContext context) => const Dialog(
+        child: ProductFilterDialogWidget(),
       ),
     );
   }
 }
 
 class ProductFilterDialogWidget extends StatefulWidget {
-  final void Function(RequestSearchProducts) filterCallback;
-
-  const ProductFilterDialogWidget({
-    super.key,
-    required this.filterCallback,
-  });
+  const ProductFilterDialogWidget({super.key});
 
   @override
-  State<ProductFilterDialogWidget> createState() => ProductFIlterDialogWidgetState();
+  State<ProductFilterDialogWidget> createState() => ProductFilterDialogWidgetState();
 }
 
-class ProductFIlterDialogWidgetState extends State<ProductFilterDialogWidget> {
+class ProductFilterDialogWidgetState extends State<ProductFilterDialogWidget> {
   String _selectedAlign = filterMap["select-align"] ?? "DESC";
   String _selectedColumn = filterMap["select-column"] ?? "createdAt";
   String _selectedCategory = filterMap["select-category"] ?? "전체";
-
-  late ProductFilteredProvider productFilteredProvider;
 
   void initFilterMap() {
     setState(() {
@@ -48,29 +40,43 @@ class ProductFIlterDialogWidgetState extends State<ProductFilterDialogWidget> {
     });
   }
 
-  void clickToFind(
+  void filterProduct(
     ProductFilteredProvider filteredProvider,
     ProductSearchProvider searchProvider,
   ) {
-    // filterMap["select-align"] = _selectedAlign;
-    // filterMap["select-column"] = _selectedColumn;
-    // filterMap["select-category"] = _selectedCategory;
+    List<ResponseSearchProduct> products = searchProvider.products;
+    List<ResponseSearchProduct> sortedProducts = _selectedCategory != "전체" ? products.where((product) => product.category == _selectedCategory).toList() : products;
 
-    // RequestSearchProducts searchAllProduct = RequestSearchProducts(
-    //   align: _selectedAlign,
-    //   column: _selectedColumn,
-    //   category: _selectedCategory,
-    //   name: searchProvider.keyword,
-    // );
+    sortedProducts.sort((a, b) {
+      Map<String, Comparable Function(ResponseSearchProduct)> keyExtractors = {
+        "createdAt": (product) => product.createdAt,
+        "name": (product) => product.name,
+        "price": (product) => product.price,
+        "review": (product) => product.reviewCount,
+        "score": (product) => product.averageScore,
+      };
 
-    // filteredProvider.clearFiltered();
-    // filteredProvider.setFiltering(_selectedColumn, _selectedCategory != "전체");
+      final extractor = keyExtractors[_selectedColumn];
+      if (extractor == null) return 0;
 
-    // searchProvider.setSearchMode(SearchMode.none);
+      final aValue = extractor(a);
+      final bValue = extractor(b);
 
-    // widget.filterCallback(searchAllProduct);
+      return _selectedAlign == "ASC" ? aValue.compareTo(bValue) : bValue.compareTo(aValue);
+    });
 
-    // Navigator.pop(context);
+    filteredProvider.setProducts(sortedProducts);
+
+    filterMap["select-align"] = _selectedAlign;
+    filterMap["select-column"] = _selectedColumn;
+    filterMap["select-category"] = _selectedCategory;
+
+    filteredProvider.clearChanged();
+    filteredProvider.setColumnChanged(_selectedColumn);
+    filteredProvider.setCategoryChanged(_selectedCategory != "전체");
+    bool isChanged = !(_selectedAlign == "DESC" && _selectedColumn == "createdAt" && _selectedCategory == "전체");
+    filteredProvider.setIsFiltered(isChanged);
+    Navigator.pop(context);
   }
 
   @override
@@ -185,48 +191,18 @@ class ProductFIlterDialogWidgetState extends State<ProductFilterDialogWidget> {
                   RadioGeneratorWidget(
                     args: RadioGenerateArgs(
                       title: "카테고리",
-                      radioWidgets: [
-                        RadioItemWidget(
-                          optionTitle: "전체",
-                          value: "전체",
-                          groupValue: _selectedCategory,
-                          selectRadioCallback: (value) {
-                            setState(() {
-                              _selectedCategory = value!;
-                            });
-                          },
-                        ),
-                        RadioItemWidget(
-                          optionTitle: "애완동물",
-                          value: "애완동물",
-                          groupValue: _selectedCategory,
-                          selectRadioCallback: (value) {
-                            setState(() {
-                              _selectedCategory = value!;
-                            });
-                          },
-                        ),
-                        RadioItemWidget(
-                          optionTitle: "가전제품",
-                          value: "가전제품",
-                          groupValue: _selectedCategory,
-                          selectRadioCallback: (value) {
-                            setState(() {
-                              _selectedCategory = value!;
-                            });
-                          },
-                        ),
-                        RadioItemWidget(
-                          optionTitle: "음식",
-                          value: "음식",
-                          groupValue: _selectedCategory,
-                          selectRadioCallback: (value) {
-                            setState(() {
-                              _selectedCategory = value!;
-                            });
-                          },
-                        )
-                      ],
+                      radioWidgets: productCategory
+                          .map((category) => RadioItemWidget(
+                                optionTitle: category,
+                                value: category,
+                                groupValue: _selectedCategory,
+                                selectRadioCallback: (value) {
+                                  setState(() {
+                                    _selectedCategory = value!;
+                                  });
+                                },
+                              ))
+                          .toList(),
                     ),
                   ),
                   GestureDetector(
@@ -269,7 +245,7 @@ class ProductFIlterDialogWidgetState extends State<ProductFilterDialogWidget> {
                 Consumer2<ProductFilteredProvider, ProductSearchProvider>(
                   builder: (BuildContext context, ProductFilteredProvider filteredProvider, ProductSearchProvider searchProvider, Widget? child) {
                     return TextButton(
-                      onPressed: () => clickToFind(filteredProvider, searchProvider),
+                      onPressed: () => filterProduct(filteredProvider, searchProvider),
                       child: const Text(
                         '찾기',
                         style: TextStyle(
