@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:smart_market/model/main/presentation/pages/main.page.dart';
 import 'package:smart_market/model/main/presentation/pages/test.page.dart';
 import 'package:smart_market/model/main/presentation/pages/test2.page.dart';
 import 'package:smart_market/model/product/presentation/pages/product_search.page.dart';
+import 'package:smart_market/model/user/presentation/pages/login.page.dart';
+import 'package:smart_market/model/user/presentation/state/login.provider.dart';
+import 'package:smart_market/model/user/presentation/widgets/invitation_login.dialog.dart';
 
 class NavigationPage extends StatefulWidget {
   const NavigationPage({super.key});
@@ -14,17 +18,33 @@ class NavigationPage extends StatefulWidget {
 class NavigationPageState extends State<NavigationPage> {
   int selectedIndex = 0;
 
-  List<Widget> pages = [
-    const MainPage(),
-    const ProductSearchPage(),
-    const Test2Widget(),
-    const TestWidget(),
-  ];
+  late LoginProvider loginProvider;
+  late List<Widget> pages;
 
-  void tapBottomNavigator(int index) {
+  @override
+  void initState() {
+    super.initState();
+    loginProvider = context.read<LoginProvider>();
+    pages = [
+      const MainPage(),
+      const ProductSearchPage(),
+      if (loginProvider.isLogined) const TestWidget() else const LoginPage(),
+      if (loginProvider.isLogined) const Test2Widget() else const LoginPage(),
+    ];
+  }
+
+  void updateSelectedIndex(int index) {
     setState(() {
       selectedIndex = index;
     });
+  }
+
+  void tapBottomNavigator(int index) {
+    if (index == 2 || index == 3) {
+      InvitationLoginDialog.show(context, index, updateSelectedIndex);
+    } else {
+      updateSelectedIndex(index);
+    }
   }
 
   @override
