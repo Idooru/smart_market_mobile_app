@@ -6,7 +6,7 @@ import 'package:smart_market/model/product/domain/entities/search_product.entity
 import 'package:smart_market/model/product/presentation/pages/detail_product.page.dart';
 import 'package:smart_market/model/product/presentation/state/product_filtered.provider.dart';
 import 'package:smart_market/model/product/presentation/widgets/display_average_score.widget.dart';
-import 'package:smart_market/model/product/presentation/widgets/item/highlight_filtered_product.widget.dart';
+// import 'package:smart_market/model/product/presentation/widgets/item/highlight_filtered_product.widget.dart';
 
 mixin ProductItem {
   void navigateDetailProductPage(BuildContext context, ResponseSearchProduct product) {
@@ -93,17 +93,17 @@ mixin ProductItem {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              provider.isNameFiltered ? HighlightFilteredProductWidget(textWidget: getNameWidget(product)) : getNameWidget(product),
-              provider.isPriceFiltered ? HighlightFilteredProductWidget(textWidget: getPriceWidget(product)) : getPriceWidget(product),
+              getNameWidget(product), // provider.isNameFiltered ? HighlightFilteredProductWidget(textWidget: getNameWidget(product)) : getNameWidget(product), hightlight 임시 해제
+              getPriceWidget(product), // provider.isPriceFiltered ? HighlightFilteredProductWidget(textWidget: getPriceWidget(product)) : getPriceWidget(product), hightlight 임시 해제
               Row(
                 children: [
-                  provider.isAverageScoreFiltered ? HighlightFilteredProductWidget(textWidget: getAverageScoreText()) : getAverageScoreText(),
+                  getAverageScoreText(), // provider.isAverageScoreFiltered ? HighlightFilteredProductWidget(textWidget: getAverageScoreText()) : getAverageScoreText(), hightlight 임시 해제
                   DisplayAverageScoreWidget(averageScore: product.averageScore),
                 ],
               ),
-              provider.isCategoryFiltered ? HighlightFilteredProductWidget(textWidget: getCategoryText(product)) : getCategoryText(product),
-              provider.isCreatedAtFiltered ? HighlightFilteredProductWidget(textWidget: getCreatedAtText(product)) : getCreatedAtText(product),
-              provider.isReviewFiltered ? HighlightFilteredProductWidget(textWidget: getReviewText(product)) : getReviewText(product),
+              getCategoryText(product), // provider.isCategoryFiltered ? HighlightFilteredProductWidget(textWidget: getCategoryText(product)) : getCategoryText(product), hightlight 임시 해제
+              getCreatedAtText(product), // provider.isCreatedAtFiltered ? HighlightFilteredProductWidget(textWidget: getCreatedAtText(product)) : getCreatedAtText(product), hightlight 임시 해제
+              getReviewText(product), // provider.isReviewFiltered ? HighlightFilteredProductWidget(textWidget: getReviewText(product)) : getReviewText(product), hightlight 임시 해제
             ],
           );
         },
