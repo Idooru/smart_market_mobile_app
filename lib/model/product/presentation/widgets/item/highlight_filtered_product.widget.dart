@@ -31,7 +31,7 @@ class _HighlightFilteredProductWidgetState extends State<HighlightFilteredProduc
         setState(() {
           _showShimmer = false;
         });
-        productFilteredProvider.clearFiltered();
+        productFilteredProvider.clearAll();
       }
     });
   }
