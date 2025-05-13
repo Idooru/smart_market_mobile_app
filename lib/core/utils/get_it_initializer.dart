@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_market/model/product/data/repository/product.repository_impl.dart';
 import 'package:smart_market/model/product/data/service/product.service_impl.dart';
 import 'package:smart_market/model/product/domain/repository/product.repository.dart';
@@ -10,7 +11,10 @@ import 'package:smart_market/model/user/domain/service/user.service.dart';
 
 GetIt locator = GetIt.instance;
 
-void initLocator() {
+Future<void> initLocator() async {
+  final prefs = await SharedPreferences.getInstance();
+
+  locator.registerLazySingleton<SharedPreferences>(() => prefs);
   locator.registerLazySingleton<ProductService>(() => ProductServiceImpl());
   locator.registerLazySingleton<ProductRepository>(() => ProductRepositoryImpl());
   locator.registerLazySingleton<UserService>(() => UserServiceImpl());
