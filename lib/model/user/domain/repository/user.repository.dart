@@ -3,4 +3,5 @@ import 'package:smart_market/model/user/domain/entities/login.entity.dart';
 
 abstract interface class UserRepository {
   Future<DataState<String>> login(RequestLogin args);
+  Future<DataState<void>> logout(String accessToken);
 }

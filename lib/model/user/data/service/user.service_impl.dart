@@ -18,4 +18,14 @@ class UserServiceImpl implements UserService {
     _prefs = await SharedPreferences.getInstance();
     _prefs.setString('access-token', dataState.data!);
   }
+
+  @override
+  Future<void> logout() async {
+    _prefs = await SharedPreferences.getInstance();
+    String? accessToken = _prefs.getString("access-token");
+
+    DataState<void> dataState = await _userRepository.logout(accessToken!);
+    if (dataState.exception != null) throw DioFailError(message: dataState.exception.toString());
+    _prefs.remove("access-token");
+  }
 }

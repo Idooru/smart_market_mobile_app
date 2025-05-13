@@ -14,14 +14,27 @@ class UserRepositoryImpl extends DioInitializer implements UserRepository {
       Response response = await dio.post(
         url,
         options: Options(
-          headers: {
-            'Authorization': 'Basic ${base64Encode(utf8.encode('${args.email}:${args.password}'))}',
-          },
+          headers: {'Authorization': 'Basic ${base64Encode(utf8.encode('${args.email}:${args.password}'))}'},
         ),
       );
 
       String accessToken = response.headers["access-token"]![0];
       return DataSuccess(data: accessToken);
+    } on DioException catch (err) {
+      return DataFail(exception: err);
+    }
+  }
+
+  @override
+  Future<DataState<void>> logout(String accessToken) async {
+    try {
+      String url = "$baseUrl/user/logout";
+      await dio.delete(
+        url,
+        options: Options(headers: {'access-token': accessToken}),
+      );
+
+      return const DataSuccess(data: null);
     } on DioException catch (err) {
       return DataFail(exception: err);
     }
