@@ -23,9 +23,9 @@ class NavigationPageState extends State<NavigationPage> {
     });
   }
 
-  Future<void> tapBottomNavigator(int index) async {
+  void tapBottomNavigator(int index) {
     final capturedContext = context; // await 전에 context 저장
-    bool isLogined = await checkIsLogined();
+    bool isLogined = checkIsLogined();
     if ((index == 2 || index == 3) && !isLogined) {
       if (!context.mounted) return;
       InvitationLoginDialog.show(capturedContext, index, updateSelectedIndex);
@@ -36,56 +36,45 @@ class NavigationPageState extends State<NavigationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: checkIsLogined(),
-      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-        if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        bool isLogined = snapshot.data!;
-
-        List<Widget> pages = [
-          const MainPage(),
-          const ProductSearchPage(),
-          isLogined ? const TestWidget() : const LoginPage(),
-          isLogined ? const ClientProfilePage() : const LoginPage(),
-        ];
-
-        return Scaffold(
-          body: ColoredBox(
-            color: Colors.blueGrey[300]!,
-            child: SafeArea(
-              child: pages.elementAt(selectedIndex),
-            ),
+    bool isLogined = checkIsLogined();
+    List<Widget> pages = [
+      const MainPage(),
+      const ProductSearchPage(),
+      isLogined ? const TestWidget() : const LoginPage(),
+      isLogined ? const ClientProfilePage() : const LoginPage(),
+    ];
+    return Scaffold(
+      body: ColoredBox(
+        color: Colors.blueGrey[300]!,
+        child: SafeArea(
+          child: pages.elementAt(selectedIndex),
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: const Color.fromARGB(255, 230, 230, 230),
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: "main",
           ),
-          bottomNavigationBar: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            backgroundColor: const Color.fromARGB(255, 230, 230, 230),
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: "main",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.search),
-                label: "search",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_cart),
-                label: "cart",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.contact_page),
-                label: "profile",
-              ),
-            ],
-            currentIndex: selectedIndex,
-            selectedItemColor: Colors.black,
-            onTap: tapBottomNavigator,
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: "search",
           ),
-        );
-      },
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart),
+            label: "cart",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.contact_page),
+            label: "profile",
+          ),
+        ],
+        currentIndex: selectedIndex,
+        selectedItemColor: Colors.black,
+        onTap: tapBottomNavigator,
+      ),
     );
   }
 }

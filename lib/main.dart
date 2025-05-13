@@ -9,6 +9,7 @@ import 'package:smart_market/model/product/presentation/state/product_filtered.p
 import 'package:smart_market/model/product/presentation/state/product_search.provider.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   initLocator();
   await dotenv.load(fileName: 'assets/config/.env');
 

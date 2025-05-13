@@ -1,7 +1,8 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:smart_market/core/utils/get_it_initializer.dart';
 
-Future<bool> checkIsLogined() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  String? accessToken = prefs.getString("access-token");
+bool checkIsLogined() {
+  SharedPreferences db = locator<SharedPreferences>();
+  String? accessToken = db.getString("access-token");
   return accessToken != null;
 }

@@ -7,25 +7,23 @@ import 'package:smart_market/model/user/domain/repository/user.repository.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
 
 class UserServiceImpl implements UserService {
+  final SharedPreferences _db = locator<SharedPreferences>();
   final UserRepository _userRepository = locator<UserRepository>();
-  late SharedPreferences _prefs;
 
   @override
   Future<void> login(RequestLogin args) async {
     DataState<String> dataState = await _userRepository.login(args);
     if (dataState.exception != null) throw DioFailError(message: dataState.exception.toString());
 
-    _prefs = await SharedPreferences.getInstance();
-    _prefs.setString('access-token', dataState.data!);
+    _db.setString('access-token', dataState.data!);
   }
 
   @override
   Future<void> logout() async {
-    _prefs = await SharedPreferences.getInstance();
-    String? accessToken = _prefs.getString("access-token");
+    String? accessToken = _db.getString("access-token");
 
     DataState<void> dataState = await _userRepository.logout(accessToken!);
     if (dataState.exception != null) throw DioFailError(message: dataState.exception.toString());
-    _prefs.remove("access-token");
+    _db.remove("access-token");
   }
 }
