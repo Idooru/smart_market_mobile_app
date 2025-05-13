@@ -1,0 +1,29 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
+import 'package:smart_market/core/common/data_state.dart';
+import 'package:smart_market/core/utils/dio_initializer.dart';
+import 'package:smart_market/model/user/domain/entities/login.entity.dart';
+import 'package:smart_market/model/user/domain/repository/user.repository.dart';
+
+class UserRepositoryImpl extends DioInitializer implements UserRepository {
+  @override
+  Future<DataState<String>> login(RequestLogin args) async {
+    try {
+      String url = "$baseUrl/user/login";
+      Response response = await dio.post(
+        url,
+        options: Options(
+          headers: {
+            'Authorization': 'Basic ${base64Encode(utf8.encode('${args.email}:${args.password}'))}',
+          },
+        ),
+      );
+
+      String accessToken = response.headers["access-token"]![0];
+      return DataSuccess(data: accessToken);
+    } on DioException catch (err) {
+      return DataFail(exception: err);
+    }
+  }
+}
