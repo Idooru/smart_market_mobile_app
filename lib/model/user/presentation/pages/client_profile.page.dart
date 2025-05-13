@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/model/main/presentation/pages/navigation.page.dart';
+import 'package:smart_market/model/user/domain/entities/profile.entity.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
 
 class ClientProfilePage extends StatefulWidget {
@@ -45,7 +46,18 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
           ),
         ],
       ),
-      body: Container(),
+      body: FutureBuilder(
+        future: _userService.getProfile(),
+        builder: (BuildContext context, AsyncSnapshot<ResponseProfile> snapshot) {
+          if (snapshot.hasData) {
+            ResponseProfile profile = snapshot.data!;
+            return Center(
+              child: Text("안녕하세요, ${profile.nickName}님!"),
+            );
+          }
+          return Container();
+        },
+      ),
     );
   }
 }
