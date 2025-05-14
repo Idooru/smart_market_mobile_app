@@ -10,7 +10,7 @@ import 'package:smart_market/model/product/presentation/state/product_search.pro
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  initLocator();
+  await initLocator();
   await dotenv.load(fileName: 'assets/config/.env');
 
   runApp(
