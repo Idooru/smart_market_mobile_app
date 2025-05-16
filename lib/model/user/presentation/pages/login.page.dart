@@ -63,6 +63,10 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  void pressRegister() {
+    Navigator.of(context).pushNamed("/register");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -159,7 +163,7 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   TextButton(
-                    onPressed: () {},
+                    onPressed: pressRegister,
                     child: const Text(
                       "회원가입",
                       style: TextStyle(color: Colors.black),

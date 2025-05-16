@@ -70,7 +70,9 @@ class EditPasswordWidgetState extends State<EditPasswordWidget> with EditWidget 
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        getTitle("비밀번호"),
         getEditWidget(
           TextField(
             obscureText: true,
@@ -101,7 +103,7 @@ class EditPasswordWidgetState extends State<EditPasswordWidget> with EditWidget 
             ),
           ),
         ),
-        if ((!_isValid) && _errorMessage.isNotEmpty) getErrorArea(_errorMessage)
+        if (!_isValid && _errorMessage.isNotEmpty) getErrorArea(_errorMessage)
       ],
     );
   }

@@ -25,14 +25,15 @@ class EditAddressWidgetState extends State<EditAddressWidget> with EditWidget im
   final TextEditingController addressController = TextEditingController();
   final UserValidateService _userValidateService = locator<UserValidateService>();
   late EditProfileProvider _provider;
+  late bool _isValid;
 
-  bool _isValid = true;
   String _errorMessage = "";
 
   @override
   void initState() {
     super.initState();
     _provider = context.read<EditProfileProvider>();
+    _isValid = widget.beforeAddress != null;
 
     if (widget.beforeAddress != null) addressController.text = widget.beforeAddress!;
 
@@ -89,7 +90,9 @@ class EditAddressWidgetState extends State<EditAddressWidget> with EditWidget im
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        getTitle("배송지"),
         getEditWidget(
           TextField(
             focusNode: _focusNode,
@@ -97,10 +100,10 @@ class EditAddressWidgetState extends State<EditAddressWidget> with EditWidget im
             textInputAction: TextInputAction.done,
             style: getInputTextStyle(),
             onChanged: detectInput,
-            decoration: getInputDecoration(Icons.home, _isValid),
+            decoration: getInputDecoration(Icons.home, _isValid, "배송지를 입력하세요."),
           ),
         ),
-        if (!_isValid) getErrorArea(_errorMessage),
+        if (!_isValid && _errorMessage.isNotEmpty) Center(child: getErrorArea(_errorMessage)),
       ],
     );
   }

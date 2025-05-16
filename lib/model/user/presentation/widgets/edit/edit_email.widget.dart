@@ -25,14 +25,15 @@ class EditEmailWidgetState extends State<EditEmailWidget> with EditWidget implem
   final TextEditingController emailController = TextEditingController();
   final UserValidateService _userValidateService = locator<UserValidateService>();
   late EditProfileProvider _provider;
+  late bool _isValid;
 
-  bool _isValid = true;
   String _errorMessage = "";
 
   @override
   void initState() {
     super.initState();
     _provider = context.read<EditProfileProvider>();
+    _isValid = widget.beforeEmail != null;
 
     if (widget.beforeEmail != null) emailController.text = widget.beforeEmail!;
 
@@ -41,7 +42,7 @@ class EditEmailWidgetState extends State<EditEmailWidget> with EditWidget implem
     });
 
     _focusNode.addListener(() {
-      if (!_focusNode.hasFocus && emailController.text.isEmpty) {
+      if (!_focusNode.hasFocus && emailController.text.isEmpty && widget.beforeEmail != null) {
         emailController.text = widget.beforeEmail!;
         setState(() {
           _isValid = true;
@@ -89,7 +90,9 @@ class EditEmailWidgetState extends State<EditEmailWidget> with EditWidget implem
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        getTitle("이메일"),
         getEditWidget(
           TextField(
             focusNode: _focusNode,
@@ -97,10 +100,10 @@ class EditEmailWidgetState extends State<EditEmailWidget> with EditWidget implem
             textInputAction: TextInputAction.next,
             style: getInputTextStyle(),
             onChanged: detectInput,
-            decoration: getInputDecoration(Icons.email, _isValid),
+            decoration: getInputDecoration(Icons.email, _isValid, "이메일을 입력하세요."),
           ),
         ),
-        if (!_isValid) getErrorArea(_errorMessage)
+        if (!_isValid && _errorMessage.isNotEmpty) getErrorArea(_errorMessage)
       ],
     );
   }

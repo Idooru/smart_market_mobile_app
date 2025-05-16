@@ -25,13 +25,14 @@ class EditPhoneNumberWidgetState extends State<EditPhoneNumberWidget> with EditW
   final TextEditingController phoneNumberController = TextEditingController();
   final UserValidateService _userValidateService = locator<UserValidateService>();
   late EditProfileProvider _provider;
+  late bool _isValid;
 
-  bool _isValid = true;
   String _errorMessage = "";
 
   @override
   void initState() {
     super.initState();
+    _isValid = widget.beforePhoneNumber != null;
     _provider = context.read<EditProfileProvider>();
 
     if (widget.beforePhoneNumber != null) phoneNumberController.text = widget.beforePhoneNumber!;
@@ -89,7 +90,9 @@ class EditPhoneNumberWidgetState extends State<EditPhoneNumberWidget> with EditW
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        getTitle("전화번호"),
         getEditWidget(
           TextField(
             focusNode: _focusNode,
@@ -97,10 +100,10 @@ class EditPhoneNumberWidgetState extends State<EditPhoneNumberWidget> with EditW
             textInputAction: TextInputAction.next,
             style: getInputTextStyle(),
             onChanged: detectInput,
-            decoration: getInputDecoration(Icons.phone, _isValid),
+            decoration: getInputDecoration(Icons.phone, _isValid, "전화번호를 입력하세요."),
           ),
         ),
-        if (!_isValid) getErrorArea(_errorMessage),
+        if (!_isValid && _errorMessage.isNotEmpty) getErrorArea(_errorMessage),
       ],
     );
   }

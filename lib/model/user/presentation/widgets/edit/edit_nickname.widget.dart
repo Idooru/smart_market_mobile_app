@@ -25,15 +25,15 @@ class EditNickNameWidgetState extends State<EditNickNameWidget> with EditWidget 
   final TextEditingController nickNameController = TextEditingController();
   final UserValidateService _userValidateService = locator<UserValidateService>();
   late EditProfileProvider _provider;
+  late bool _isValid;
 
-  bool _isValid = true;
   String _errorMessage = "";
 
   @override
   void initState() {
     super.initState();
-    _focusNode.requestFocus();
     _provider = context.read<EditProfileProvider>();
+    _isValid = widget.beforeNickName != null;
 
     if (widget.beforeNickName != null) nickNameController.text = widget.beforeNickName!;
 
@@ -90,7 +90,9 @@ class EditNickNameWidgetState extends State<EditNickNameWidget> with EditWidget 
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        getTitle("닉네임"),
         getEditWidget(
           TextField(
             focusNode: _focusNode,
@@ -98,10 +100,10 @@ class EditNickNameWidgetState extends State<EditNickNameWidget> with EditWidget 
             textInputAction: TextInputAction.next,
             style: getInputTextStyle(),
             onChanged: detectInput,
-            decoration: getInputDecoration(Icons.tag, _isValid),
+            decoration: getInputDecoration(Icons.tag, _isValid, "닉네임을 입력하세요."),
           ),
         ),
-        if (!_isValid) getErrorArea(_errorMessage)
+        if (!_isValid && _errorMessage.isNotEmpty) getErrorArea(_errorMessage)
       ],
     );
   }
