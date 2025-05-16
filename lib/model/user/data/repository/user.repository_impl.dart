@@ -56,4 +56,36 @@ class UserRepositoryImpl extends DioInitializer implements UserRepository {
       return DataFail(exception: err);
     }
   }
+
+  @override
+  Future<DataState<void>> updateProfile(String accessToken, RequestUpdateProfile args) async {
+    try {
+      String url = "$baseUrl/user/me";
+      await dio.put(
+        url,
+        data: args.toJson(),
+        options: Options(headers: {'access-token': accessToken}),
+      );
+
+      return const DataSuccess(data: null);
+    } on DioException catch (err) {
+      return DataFail(exception: err);
+    }
+  }
+
+  @override
+  Future<DataState<void>> modifyPassword(String accessToken, String password) async {
+    try {
+      String url = "$baseUrl/user/me/password";
+      await dio.patch(
+        url,
+        data: {"password": password},
+        options: Options(headers: {'access-token': accessToken}),
+      );
+
+      return const DataSuccess(data: null);
+    } on DioException catch (err) {
+      return DataFail(exception: err);
+    }
+  }
 }

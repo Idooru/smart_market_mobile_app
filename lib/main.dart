@@ -7,6 +7,7 @@ import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/model/main/presentation/pages/navigation.page.dart';
 import 'package:smart_market/model/product/presentation/state/product_filtered.provider.dart';
 import 'package:smart_market/model/product/presentation/state/product_search.provider.dart';
+import 'package:smart_market/model/user/presentation/state/edit_profile.provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +19,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => ProductFilteredProvider()),
         ChangeNotifierProvider(create: (context) => ProductSearchProvider()),
+        ChangeNotifierProvider(create: (context) => EditProfileProvider()),
       ],
       child: const MyApp(),
     ),

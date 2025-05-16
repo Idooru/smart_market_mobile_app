@@ -33,4 +33,18 @@ class UserServiceImpl implements UserService {
     if (dataState.exception != null) throw DioFailError(message: dataState.exception.toString());
     return dataState.data!;
   }
+
+  @override
+  Future<void> updateProfile(RequestUpdateProfile args) async {
+    String? accessToken = _db.getString("access-token");
+    DataState<void> dataState = await _userRepository.updateProfile(accessToken!, args);
+    if (dataState.exception != null) throw DioFailError(message: dataState.exception.toString());
+  }
+
+  @override
+  Future<void> modifyPassword(String password) async {
+    String? accessToken = _db.getString("access-token");
+    DataState<void> dataState = await _userRepository.modifyPassword(accessToken!, password);
+    if (dataState.exception != null) throw DioFailError(message: dataState.exception.toString());
+  }
 }

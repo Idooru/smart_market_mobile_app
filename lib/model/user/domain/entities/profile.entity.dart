@@ -1,3 +1,26 @@
+class RequestUpdateProfile {
+  final String nickName;
+  final String phoneNumber;
+  final String address;
+  final String email;
+
+  const RequestUpdateProfile({
+    required this.nickName,
+    required this.phoneNumber,
+    required this.address,
+    required this.email,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'nickName': nickName,
+      'phoneNumber': phoneNumber,
+      'address': address,
+      'email': email,
+    };
+  }
+}
+
 class ResponseProfile {
   final String id;
   final String role;

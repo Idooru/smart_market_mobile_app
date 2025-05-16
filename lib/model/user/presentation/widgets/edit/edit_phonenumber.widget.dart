@@ -1,0 +1,107 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_market/core/common/validate.entity.dart';
+import 'package:smart_market/core/errors/dio_fail.error.dart';
+import 'package:smart_market/core/utils/get_it_initializer.dart';
+import 'package:smart_market/model/user/common/interface/edit_detector.interface.dart';
+import 'package:smart_market/model/user/common/mixin/edit_widget.mixin.dart';
+import 'package:smart_market/model/user/domain/service/user_validate.service.dart';
+import 'package:smart_market/model/user/presentation/state/edit_profile.provider.dart';
+
+class EditPhoneNumberWidget extends StatefulWidget {
+  final String? beforePhoneNumber;
+
+  const EditPhoneNumberWidget({
+    super.key,
+    this.beforePhoneNumber,
+  });
+
+  @override
+  State<EditPhoneNumberWidget> createState() => EditPhoneNumberWidgetState();
+}
+
+class EditPhoneNumberWidgetState extends State<EditPhoneNumberWidget> with EditWidget implements EditDetector {
+  final FocusNode _focusNode = FocusNode();
+  final TextEditingController phoneNumberController = TextEditingController();
+  final UserValidateService _userValidateService = locator<UserValidateService>();
+  late EditProfileProvider _provider;
+
+  bool _isValid = true;
+  String _errorMessage = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _provider = context.read<EditProfileProvider>();
+
+    if (widget.beforePhoneNumber != null) phoneNumberController.text = widget.beforePhoneNumber!;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _provider.setIsPhoneNumberValid(_isValid);
+    });
+
+    _focusNode.addListener(() {
+      if (!_focusNode.hasFocus && phoneNumberController.text.isEmpty && widget.beforePhoneNumber != null) {
+        phoneNumberController.text = widget.beforePhoneNumber!;
+        setState(() {
+          _isValid = true;
+          _errorMessage = "";
+        });
+
+        _provider.setIsPhoneNumberValid(_isValid);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    phoneNumberController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Future<void> detectInput(String? _) async {
+    bool isValidLocal;
+    String errorMessage;
+
+    try {
+      ResponseValidate result = await _userValidateService.validatePhoneNumber(
+        beforePhoneNumber: widget.beforePhoneNumber,
+        currentPhoneNumber: phoneNumberController.text,
+      );
+
+      isValidLocal = result.isValidate;
+      errorMessage = result.message;
+    } on DioFailError catch (_) {
+      isValidLocal = false;
+      errorMessage = "서버 에러";
+    }
+
+    setState(() {
+      _isValid = isValidLocal;
+      _errorMessage = errorMessage;
+    });
+
+    _provider.setIsPhoneNumberValid(_isValid);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        getEditWidget(
+          TextField(
+            focusNode: _focusNode,
+            controller: phoneNumberController,
+            textInputAction: TextInputAction.next,
+            style: getInputTextStyle(),
+            onChanged: detectInput,
+            decoration: getInputDecoration(Icons.phone, _isValid),
+          ),
+        ),
+        if (!_isValid) getErrorArea(_errorMessage),
+      ],
+    );
+  }
+}

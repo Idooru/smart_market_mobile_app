@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/model/main/presentation/pages/navigation.page.dart';
-import 'package:smart_market/model/user/domain/entities/profile.entity.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
+import 'package:smart_market/model/user/presentation/widgets/profile/basic_profile.widget.dart';
 
 class ClientProfilePage extends StatefulWidget {
   const ClientProfilePage({super.key});
@@ -29,9 +29,7 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Profile",
-        ),
+        title: const Text("Profile"),
         centerTitle: false,
         flexibleSpace: Container(
           color: Colors.blueGrey[300], // 스크롤 될 시 색상 변경 방지
@@ -46,17 +44,15 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
           ),
         ],
       ),
-      body: FutureBuilder(
-        future: _userService.getProfile(),
-        builder: (BuildContext context, AsyncSnapshot<ResponseProfile> snapshot) {
-          if (snapshot.hasData) {
-            ResponseProfile profile = snapshot.data!;
-            return Center(
-              child: Text("안녕하세요, ${profile.nickName}님!"),
-            );
-          }
-          return Container();
-        },
+      body: const SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+          child: Column(
+            children: [
+              BasicProfileWidget(),
+            ],
+          ),
+        ),
       ),
     );
   }

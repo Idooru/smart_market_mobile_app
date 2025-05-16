@@ -1,0 +1,107 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_market/core/common/validate.entity.dart';
+import 'package:smart_market/core/errors/dio_fail.error.dart';
+import 'package:smart_market/core/utils/get_it_initializer.dart';
+import 'package:smart_market/model/user/common/interface/edit_detector.interface.dart';
+import 'package:smart_market/model/user/common/mixin/edit_widget.mixin.dart';
+import 'package:smart_market/model/user/domain/service/user_validate.service.dart';
+import 'package:smart_market/model/user/presentation/state/edit_profile.provider.dart';
+
+class EditAddressWidget extends StatefulWidget {
+  final String? beforeAddress;
+
+  const EditAddressWidget({
+    super.key,
+    this.beforeAddress,
+  });
+
+  @override
+  State<EditAddressWidget> createState() => EditAddressWidgetState();
+}
+
+class EditAddressWidgetState extends State<EditAddressWidget> with EditWidget implements EditDetector {
+  final FocusNode _focusNode = FocusNode();
+  final TextEditingController addressController = TextEditingController();
+  final UserValidateService _userValidateService = locator<UserValidateService>();
+  late EditProfileProvider _provider;
+
+  bool _isValid = true;
+  String _errorMessage = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _provider = context.read<EditProfileProvider>();
+
+    if (widget.beforeAddress != null) addressController.text = widget.beforeAddress!;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _provider.setIsAddressValid(_isValid);
+    });
+
+    _focusNode.addListener(() {
+      if (!_focusNode.hasFocus && addressController.text.isEmpty && widget.beforeAddress != null) {
+        addressController.text = widget.beforeAddress!;
+        setState(() {
+          _isValid = true;
+          _errorMessage = "";
+        });
+
+        _provider.setIsAddressValid(_isValid);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    addressController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Future<void> detectInput(String? _) async {
+    bool isValidLocal;
+    String errorMessage;
+
+    try {
+      ResponseValidate result = await _userValidateService.validateAddress(
+        beforeAddress: widget.beforeAddress,
+        currentAddress: addressController.text,
+      );
+
+      isValidLocal = result.isValidate;
+      errorMessage = result.message;
+    } on DioFailError catch (_) {
+      isValidLocal = false;
+      errorMessage = "서버 에러";
+    }
+
+    setState(() {
+      _isValid = isValidLocal;
+      _errorMessage = errorMessage;
+    });
+
+    _provider.setIsAddressValid(_isValid);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        getEditWidget(
+          TextField(
+            focusNode: _focusNode,
+            controller: addressController,
+            textInputAction: TextInputAction.done,
+            style: getInputTextStyle(),
+            onChanged: detectInput,
+            decoration: getInputDecoration(Icons.home, _isValid),
+          ),
+        ),
+        if (!_isValid) getErrorArea(_errorMessage),
+      ],
+    );
+  }
+}

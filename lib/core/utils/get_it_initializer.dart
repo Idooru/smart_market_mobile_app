@@ -5,9 +5,13 @@ import 'package:smart_market/model/product/data/service/product.service_impl.dar
 import 'package:smart_market/model/product/domain/repository/product.repository.dart';
 import 'package:smart_market/model/product/domain/service/product.service.dart';
 import 'package:smart_market/model/user/data/repository/user.repository_impl.dart';
+import 'package:smart_market/model/user/data/repository/user_validate.repository_impl.dart';
 import 'package:smart_market/model/user/data/service/user.service_impl.dart';
+import 'package:smart_market/model/user/data/service/user_validate.service_impl.dart';
 import 'package:smart_market/model/user/domain/repository/user.repository.dart';
+import 'package:smart_market/model/user/domain/repository/user_validate.repository.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
+import 'package:smart_market/model/user/domain/service/user_validate.service.dart';
 
 GetIt locator = GetIt.instance;
 
@@ -19,4 +23,6 @@ Future<void> initLocator() async {
   locator.registerLazySingleton<ProductRepository>(() => ProductRepositoryImpl());
   locator.registerLazySingleton<UserService>(() => UserServiceImpl());
   locator.registerLazySingleton<UserRepository>(() => UserRepositoryImpl());
+  locator.registerLazySingleton<UserValidateService>(() => UserValidateServiceImpl());
+  locator.registerLazySingleton<UserValidateRepository>(() => UserValidateRepositoryImpl());
 }
