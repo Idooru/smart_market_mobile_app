@@ -40,6 +40,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   Future<void> pressEditProfile() async {
     NavigatorState navigator = Navigator.of(context);
+    ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
     RequestUpdateProfile args = RequestUpdateProfile(
       nickName: _nickNameKey.currentState!.nickNameController.text,
       phoneNumber: _phoneNumberKey.currentState!.phoneNumberController.text,
@@ -50,6 +51,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     try {
       await _userService.updateProfile(args);
       navigator.pop(true);
+      scaffoldMessenger.showSnackBar(const SnackBar(content: Text("프로필을 수정하였습니다.")));
     } on DioFailError catch (_) {
       setState(() {
         _hasError = true;

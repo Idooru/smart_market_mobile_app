@@ -23,10 +23,12 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
   Future<void> pressEditPassword() async {
     try {
       NavigatorState navigator = Navigator.of(context);
+      ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
       String password = _passwordKey.currentState!.matchPasswordController.text;
 
       await _userService.modifyPassword(password);
       navigator.pop();
+      scaffoldMessenger.showSnackBar(const SnackBar(content: Text("비밀번호를 수정하였습니다.")));
     } on DioFailError catch (_) {
       setState(() {
         _hasError = true;
