@@ -1,5 +1,11 @@
-class DioFailError extends Error {
-  final String message;
+import 'package:dio/dio.dart';
 
-  DioFailError({required this.message});
+class DioFailError extends Error {
+  String? message;
+  Response<dynamic>? response;
+
+  DioFailError({
+    this.message,
+    this.response,
+  });
 }

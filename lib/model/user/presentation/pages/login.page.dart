@@ -54,10 +54,14 @@ class _LoginPageState extends State<LoginPage> {
       _passwordFocusNode.unfocus();
       setState(() {
         _hasError = true;
-        if (err.message.contains("bad response") || err.message.contains("400")) {
-          _errorMessage = "이메일 비밀번호 일치하지 않음";
+        if (err.message == "none connection") {
+          _errorMessage = "서버와 연결되지 않습니다.";
+        } else if (err.response!.data["statusCode"] == 400) {
+          _errorMessage = err.response!.data["reason"];
+        } else if (err.response!.data["statusCode"] == 500) {
+          _errorMessage = "서버 내부에서 에러가 발생하였습니다.";
         } else {
-          _errorMessage = "서버 에러";
+          _errorMessage = "원인 모를 에러가 발생하였습니다.";
         }
       });
     }

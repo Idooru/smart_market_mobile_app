@@ -90,8 +90,8 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
       searchProvider.setProducts(products);
       searchProvider.setFail(SearchProductFail.none);
     } on DioFailError catch (err) {
-      if (err.message.contains("Socket")) {
-        searchProvider.setFail(SearchProductFail.socketException);
+      if (err.message == "none connection") {
+        searchProvider.setFail(SearchProductFail.noneConnectionException);
       } else {
         searchProvider.setFail(SearchProductFail.internalServerException);
       }

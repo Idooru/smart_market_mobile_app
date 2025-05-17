@@ -73,8 +73,8 @@ class _BasicProfileWidgetState extends State<BasicProfileWidget> {
             ],
           );
         } else if (snapshot.hasError) {
-          DioFailError error = snapshot.error as DioFailError;
-          if (error.message.contains("Timeout") || error.message.contains('Socket')) {
+          DioFailError err = snapshot.error as DioFailError;
+          if (err.message == "none connection") {
             return Column(
               children: [
                 const SizedBox(height: 25),

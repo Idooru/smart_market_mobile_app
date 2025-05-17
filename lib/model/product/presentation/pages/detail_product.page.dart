@@ -56,8 +56,8 @@ class _DetailProductPageState extends State<DetailProductPage> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const LoadingHandlerWidget(title: "상품 상세 데이터 불러오기..");
             } else if (snapshot.hasError) {
-              DioFailError error = snapshot.error as DioFailError;
-              if (error.message.contains("Timeout") || error.message.contains('Socket')) {
+              DioFailError err = snapshot.error as DioFailError;
+              if (err.message == "none connection") {
                 return NetworkErrorHandlerWidget(reconnectCallback: () {
                   setState(() {
                     _getDetailProductFuture = productService.getDetailProduct(widget.productId);

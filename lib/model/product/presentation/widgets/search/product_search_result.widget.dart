@@ -48,7 +48,7 @@ class ProductSearchResultWidget extends StatelessWidget {
       builder: (BuildContext context, ProductSearchProvider searchProvider, ProductFilteredProvider filteredProvider, Widget? child) {
         return SliverToBoxAdapter(
           child: FutureBuilder(
-            future: Future.delayed(Duration(milliseconds: searchProvider.fail == SearchProductFail.socketException ? 3000 : 300)),
+            future: Future.delayed(Duration(milliseconds: searchProvider.fail == SearchProductFail.noneConnectionException ? 3000 : 300)),
             builder: (context, snapshot) {
               List<ResponseSearchProduct> products = filteredProvider.isFiltered ? filteredProvider.products : searchProvider.products;
               if (snapshot.connectionState != ConnectionState.done) {
@@ -59,7 +59,7 @@ class ProductSearchResultWidget extends StatelessWidget {
                   ],
                 );
               } else {
-                if (searchProvider.fail == SearchProductFail.socketException) {
+                if (searchProvider.fail == SearchProductFail.noneConnectionException) {
                   return Column(
                     children: [
                       const SizedBox(height: 100),

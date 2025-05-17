@@ -133,8 +133,8 @@ class _ProductSearchingWidgetState extends State<ProductSearchingWidget> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const SizedBox.shrink();
                 } else if (snapshot.hasError) {
-                  DioFailError error = snapshot.error as DioFailError;
-                  if (error.message.contains("Timeout") || error.message.contains('Socket')) {
+                  DioFailError err = snapshot.error as DioFailError;
+                  if (err.message == "none connection") {
                     return NetworkErrorHandlerWidget(reconnectCallback: () {
                       setState(() {
                         _getProductAutoCompleteFuture = productService.getProductAutocomplete(searchProvider.keyword);

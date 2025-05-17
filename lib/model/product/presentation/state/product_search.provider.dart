@@ -11,7 +11,7 @@ enum SearchMode {
 
 enum SearchProductFail {
   none,
-  socketException,
+  noneConnectionException,
   internalServerException,
 }
 
