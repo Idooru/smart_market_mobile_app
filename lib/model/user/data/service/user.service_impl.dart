@@ -4,12 +4,19 @@ import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/model/user/domain/entities/login.entity.dart';
 import 'package:smart_market/model/user/domain/entities/profile.entity.dart';
+import 'package:smart_market/model/user/domain/entities/register.entity.dart';
 import 'package:smart_market/model/user/domain/repository/user.repository.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
 
 class UserServiceImpl implements UserService {
   final SharedPreferences _db = locator<SharedPreferences>();
   final UserRepository _userRepository = locator<UserRepository>();
+
+  @override
+  Future<void> register(RequestRegister args) async {
+    DataState<void> dataState = await _userRepository.register(args);
+    if (dataState.exception != null) throw DioFailError(message: dataState.exception.toString());
+  }
 
   @override
   Future<void> login(RequestLogin args) async {

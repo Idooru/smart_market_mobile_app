@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
+import 'package:smart_market/model/user/domain/entities/register.entity.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
 import 'package:smart_market/model/user/presentation/state/edit_profile.provider.dart';
 import 'package:smart_market/model/user/presentation/widgets/edit/edit_address.widget.dart';
@@ -30,7 +32,35 @@ class _RegisterPageState extends State<RegisterPage> {
   final GlobalKey<EditAddressWidgetState> _addressKey = GlobalKey<EditAddressWidgetState>();
   final GlobalKey<EditPhoneNumberWidgetState> _phoneNumberKey = GlobalKey<EditPhoneNumberWidgetState>();
 
-  Future<void> pressRegister() async {}
+  bool _hasError = false;
+  String _errorMessage = "";
+
+  Future<void> pressRegister() async {
+    NavigatorState navigator = Navigator.of(context);
+    ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
+    RequestRegister args = RequestRegister(
+      realName: _realNameKey.currentState!.realNameController.text,
+      gender: _genderKey.currentState!.selectedGender,
+      birth: _birthKey.currentState!.selectedDate,
+      nickName: _nickNameKey.currentState!.nickNameController.text,
+      email: _emailKey.currentState!.emailController.text,
+      password: _passwordKey.currentState!.matchPasswordController.text,
+      phoneNumber: _phoneNumberKey.currentState!.phoneNumberController.text,
+      address: _addressKey.currentState!.addressController.text,
+      role: "client",
+    );
+
+    try {
+      await _userService.register(args);
+      navigator.pop();
+      scaffoldMessenger.showSnackBar(const SnackBar(content: Text('회원가입이 완료되었습니다.')));
+    } on DioFailError catch (_) {
+      setState(() {
+        _hasError = true;
+        _errorMessage = "서버 에러";
+      });
+    }
+  }
 
   GestureDetector getRegisterButton(EditProfileProvider provider) {
     bool isAllValid = provider.isRealNameValid &&
@@ -101,7 +131,13 @@ class _RegisterPageState extends State<RegisterPage> {
                   EditNickNameWidget(key: _nickNameKey),
                   EditAddressWidget(key: _addressKey),
                   EditPhoneNumberWidget(key: _phoneNumberKey),
-                  getRegisterButton(provider)
+                  getRegisterButton(provider),
+                  if (_hasError)
+                    Center(
+                        child: Text(
+                      _errorMessage,
+                      style: const TextStyle(color: Colors.red),
+                    )),
                 ],
               ),
             ),
