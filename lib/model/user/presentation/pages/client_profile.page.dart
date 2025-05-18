@@ -16,9 +16,12 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
   final UserService _userService = locator<UserService>();
 
   Future<void> pressLogout() async {
+    ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
+
     try {
       final state = context.findAncestorStateOfType<NavigationPageState>();
       await _userService.logout();
+      scaffoldMessenger.showSnackBar(const SnackBar(content: Text('로그아웃이 완료되었습니다.')));
       state?.tapBottomNavigator(0);
     } on DioFailError catch (err) {
       debugPrint("err: $err");
