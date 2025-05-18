@@ -41,6 +41,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> pressLogin() async {
+    ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
     RequestLogin args = RequestLogin(
       email: _emailController.text,
       password: _passwordController.text,
@@ -50,6 +51,7 @@ class _LoginPageState extends State<LoginPage> {
       final state = context.findAncestorStateOfType<NavigationPageState>();
       await _userService.login(args);
       state?.tapBottomNavigator(0); // AllProductPage
+      scaffoldMessenger.showSnackBar(const SnackBar(content: Text('로그인이 완료되었습니다.')));
     } on DioFailError catch (err) {
       _passwordFocusNode.unfocus();
       setState(() {
