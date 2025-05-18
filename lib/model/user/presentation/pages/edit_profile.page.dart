@@ -157,7 +157,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                   EditEmailWidget(beforeEmail: widget.profile.email, key: _emailKey),
                   EditPhoneNumberWidget(beforePhoneNumber: widget.profile.phoneNumber, key: _phoneNumberKey),
-                  EditAddressWidget(beforeAddress: widget.profile.address, key: _addressKey),
+                  EditAddressWidget(beforeAddress: widget.profile.address, key: _addressKey, isLastWidget: true),
                   getEditProfileButton(provider),
                   if (_hasError)
                     Center(

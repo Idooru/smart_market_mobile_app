@@ -11,10 +11,12 @@ import 'package:smart_market/model/user/presentation/state/edit_profile.provider
 
 class EditAddressWidget extends StatefulWidget {
   final String? beforeAddress;
+  final bool isLastWidget;
 
   const EditAddressWidget({
     super.key,
     this.beforeAddress,
+    this.isLastWidget = false,
   });
 
   @override
@@ -101,7 +103,7 @@ class EditAddressWidgetState extends EditWidgetState<EditAddressWidget> with Edi
           TextField(
             focusNode: _focusNode,
             controller: addressController,
-            textInputAction: TextInputAction.next,
+            textInputAction: widget.isLastWidget ? TextInputAction.done : TextInputAction.next,
             style: getInputTextStyle(),
             onChanged: detectInput,
             decoration: getInputDecoration(Icons.home, _isValid, "배송지를 입력하세요."),

@@ -11,8 +11,13 @@ import 'package:smart_market/model/user/presentation/state/edit_profile.provider
 
 class EditNickNameWidget extends StatefulWidget {
   final String? beforeNickName;
+  final bool isLastWidget;
 
-  const EditNickNameWidget({super.key, this.beforeNickName});
+  const EditNickNameWidget({
+    super.key,
+    this.beforeNickName,
+    this.isLastWidget = false,
+  });
 
   @override
   State<EditNickNameWidget> createState() => EditNickNameWidgetState();
@@ -98,7 +103,7 @@ class EditNickNameWidgetState extends EditWidgetState<EditNickNameWidget> with E
           TextField(
             focusNode: _focusNode,
             controller: nickNameController,
-            textInputAction: TextInputAction.next,
+            textInputAction: widget.isLastWidget ? TextInputAction.done : TextInputAction.next,
             style: getInputTextStyle(),
             onChanged: detectInput,
             decoration: getInputDecoration(Icons.tag, _isValid, "닉네임을 입력하세요."),

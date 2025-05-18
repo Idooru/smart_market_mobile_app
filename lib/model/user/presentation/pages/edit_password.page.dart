@@ -57,7 +57,10 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
                 children: [
                   FocusEditWidget<EditPasswordWidgetState>(
                     editWidgetKey: _passwordKey,
-                    editWidget: EditPasswordWidget(key: _passwordKey),
+                    editWidget: EditPasswordWidget(
+                      key: _passwordKey,
+                      isLastWidget: true,
+                    ),
                   ),
                   GestureDetector(
                     onTap: provider.isPasswordValid ? pressEditPassword : () {},

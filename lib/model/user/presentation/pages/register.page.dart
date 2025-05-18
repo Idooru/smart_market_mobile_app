@@ -134,7 +134,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   EditPasswordWidget(key: _passwordKey),
                   EditNickNameWidget(key: _nickNameKey),
                   EditAddressWidget(key: _addressKey),
-                  EditPhoneNumberWidget(key: _phoneNumberKey),
+                  EditPhoneNumberWidget(key: _phoneNumberKey, isLastWidget: true),
                   getRegisterButton(provider),
                   if (_hasError)
                     Center(

@@ -10,7 +10,12 @@ import 'package:smart_market/model/user/domain/service/user_validate.service.dar
 import 'package:smart_market/model/user/presentation/state/edit_profile.provider.dart';
 
 class EditPasswordWidget extends StatefulWidget {
-  const EditPasswordWidget({super.key});
+  final bool isLastWidget;
+
+  const EditPasswordWidget({
+    super.key,
+    this.isLastWidget = false,
+  });
 
   @override
   State<EditPasswordWidget> createState() => EditPasswordWidgetState();
@@ -100,7 +105,7 @@ class EditPasswordWidgetState extends EditWidgetState<EditPasswordWidget> with E
             obscureText: true,
             controller: matchPasswordController,
             focusNode: _newMatchPasswordFocusNode,
-            textInputAction: TextInputAction.next,
+            textInputAction: widget.isLastWidget ? TextInputAction.done : TextInputAction.next,
             style: getInputTextStyle(),
             onChanged: detectInput,
             decoration: InputDecoration(

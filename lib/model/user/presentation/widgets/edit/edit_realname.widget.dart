@@ -6,7 +6,12 @@ import 'package:smart_market/model/user/common/mixin/edit_widget.mixin.dart';
 import 'package:smart_market/model/user/presentation/state/edit_profile.provider.dart';
 
 class EditRealNameWidget extends StatefulWidget {
-  const EditRealNameWidget({super.key});
+  final bool isLastWidget;
+
+  const EditRealNameWidget({
+    super.key,
+    this.isLastWidget = false,
+  });
 
   @override
   State<EditRealNameWidget> createState() => EditRealNameWidgetState();
@@ -76,7 +81,7 @@ class EditRealNameWidgetState extends EditWidgetState<EditRealNameWidget> with E
           TextField(
             focusNode: _focusNode,
             controller: realNameController,
-            textInputAction: TextInputAction.next,
+            textInputAction: widget.isLastWidget ? TextInputAction.done : TextInputAction.next,
             style: getInputTextStyle(),
             onChanged: detectInput,
             decoration: getInputDecoration(Icons.person, _isValid, "이름을 입력하세요."),

@@ -11,10 +11,12 @@ import 'package:smart_market/model/user/presentation/state/edit_profile.provider
 
 class EditPhoneNumberWidget extends StatefulWidget {
   final String? beforePhoneNumber;
+  final bool isLastWidget;
 
   const EditPhoneNumberWidget({
     super.key,
     this.beforePhoneNumber,
+    this.isLastWidget = false,
   });
 
   @override
@@ -101,7 +103,7 @@ class EditPhoneNumberWidgetState extends EditWidgetState<EditPhoneNumberWidget> 
           TextField(
             focusNode: _focusNode,
             controller: phoneNumberController,
-            textInputAction: TextInputAction.next,
+            textInputAction: widget.isLastWidget ? TextInputAction.done : TextInputAction.next,
             style: getInputTextStyle(),
             onChanged: detectInput,
             decoration: getInputDecoration(Icons.phone, _isValid, "전화번호를 입력하세요."),

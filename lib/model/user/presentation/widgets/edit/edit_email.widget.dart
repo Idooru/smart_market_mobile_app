@@ -11,8 +11,13 @@ import 'package:smart_market/model/user/presentation/state/edit_profile.provider
 
 class EditEmailWidget extends StatefulWidget {
   final String? beforeEmail;
+  final bool isLastWidget;
 
-  const EditEmailWidget({super.key, this.beforeEmail});
+  const EditEmailWidget({
+    super.key,
+    this.beforeEmail,
+    this.isLastWidget = false,
+  });
 
   @override
   State<EditEmailWidget> createState() => EditEmailWidgetState();
@@ -98,7 +103,7 @@ class EditEmailWidgetState extends EditWidgetState<EditEmailWidget> with EditWid
           TextField(
             focusNode: _focusNode,
             controller: emailController,
-            textInputAction: TextInputAction.next,
+            textInputAction: widget.isLastWidget ? TextInputAction.done : TextInputAction.next,
             style: getInputTextStyle(),
             onChanged: detectInput,
             decoration: getInputDecoration(Icons.email, _isValid, "이메일을 입력하세요."),
