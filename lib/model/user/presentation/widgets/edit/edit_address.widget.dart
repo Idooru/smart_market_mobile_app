@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:smart_market/core/common/validate.entity.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
+import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
 import 'package:smart_market/model/user/common/interface/edit_detector.interface.dart';
 import 'package:smart_market/model/user/common/mixin/edit_widget.mixin.dart';
 import 'package:smart_market/model/user/domain/service/user_validate.service.dart';
@@ -20,7 +21,7 @@ class EditAddressWidget extends StatefulWidget {
   State<EditAddressWidget> createState() => EditAddressWidgetState();
 }
 
-class EditAddressWidgetState extends State<EditAddressWidget> with EditWidget implements EditDetector {
+class EditAddressWidgetState extends EditWidgetState<EditAddressWidget> with EditWidget implements EditDetector {
   final FocusNode _focusNode = FocusNode();
   final TextEditingController addressController = TextEditingController();
   final UserValidateService _userValidateService = locator<UserValidateService>();
@@ -28,6 +29,9 @@ class EditAddressWidgetState extends State<EditAddressWidget> with EditWidget im
   late bool _isValid;
 
   String _errorMessage = "";
+
+  @override
+  FocusNode get focusNode => _focusNode;
 
   @override
   void initState() {
@@ -97,7 +101,7 @@ class EditAddressWidgetState extends State<EditAddressWidget> with EditWidget im
           TextField(
             focusNode: _focusNode,
             controller: addressController,
-            textInputAction: TextInputAction.done,
+            textInputAction: TextInputAction.next,
             style: getInputTextStyle(),
             onChanged: detectInput,
             decoration: getInputDecoration(Icons.home, _isValid, "배송지를 입력하세요."),

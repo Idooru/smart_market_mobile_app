@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
+import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
 import 'package:smart_market/model/user/domain/entities/profile.entity.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
 import 'package:smart_market/model/user/presentation/state/edit_profile.provider.dart';
@@ -150,7 +151,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 5),
-                  EditNickNameWidget(beforeNickName: widget.profile.nickName, key: _nickNameKey),
+                  FocusEditWidget<EditNickNameWidgetState>(
+                    editWidgetKey: _nickNameKey,
+                    editWidget: EditNickNameWidget(beforeNickName: widget.profile.nickName, key: _nickNameKey),
+                  ),
                   EditEmailWidget(beforeEmail: widget.profile.email, key: _emailKey),
                   EditPhoneNumberWidget(beforePhoneNumber: widget.profile.phoneNumber, key: _phoneNumberKey),
                   EditAddressWidget(beforeAddress: widget.profile.address, key: _addressKey),

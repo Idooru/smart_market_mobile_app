@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
 import 'package:smart_market/model/user/common/interface/edit_detector.interface.dart';
 import 'package:smart_market/model/user/common/mixin/edit_widget.mixin.dart';
 import 'package:smart_market/model/user/presentation/state/edit_profile.provider.dart';
@@ -11,13 +12,16 @@ class EditRealNameWidget extends StatefulWidget {
   State<EditRealNameWidget> createState() => EditRealNameWidgetState();
 }
 
-class EditRealNameWidgetState extends State<EditRealNameWidget> with EditWidget implements EditDetector {
+class EditRealNameWidgetState extends EditWidgetState<EditRealNameWidget> with EditWidget implements EditDetector {
   final FocusNode _focusNode = FocusNode();
   final TextEditingController realNameController = TextEditingController();
   late EditProfileProvider _provider;
 
   bool _isValid = false;
   String _errorMessage = "";
+
+  @override
+  FocusNode get focusNode => _focusNode;
 
   @override
   void initState() {

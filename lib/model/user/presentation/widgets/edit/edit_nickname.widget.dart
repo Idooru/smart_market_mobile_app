@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:smart_market/core/common/validate.entity.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
+import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
 import 'package:smart_market/model/user/common/interface/edit_detector.interface.dart';
 import 'package:smart_market/model/user/common/mixin/edit_widget.mixin.dart';
 import 'package:smart_market/model/user/domain/service/user_validate.service.dart';
@@ -11,16 +12,13 @@ import 'package:smart_market/model/user/presentation/state/edit_profile.provider
 class EditNickNameWidget extends StatefulWidget {
   final String? beforeNickName;
 
-  const EditNickNameWidget({
-    super.key,
-    this.beforeNickName,
-  });
+  const EditNickNameWidget({super.key, this.beforeNickName});
 
   @override
   State<EditNickNameWidget> createState() => EditNickNameWidgetState();
 }
 
-class EditNickNameWidgetState extends State<EditNickNameWidget> with EditWidget implements EditDetector {
+class EditNickNameWidgetState extends EditWidgetState<EditNickNameWidget> with EditWidget implements EditDetector {
   final FocusNode _focusNode = FocusNode();
   final TextEditingController nickNameController = TextEditingController();
   final UserValidateService _userValidateService = locator<UserValidateService>();
@@ -28,6 +26,9 @@ class EditNickNameWidgetState extends State<EditNickNameWidget> with EditWidget 
   late bool _isValid;
 
   String _errorMessage = "";
+
+  @override
+  FocusNode get focusNode => _focusNode;
 
   @override
   void initState() {

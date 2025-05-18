@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:smart_market/core/common/validate.entity.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
+import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
 import 'package:smart_market/model/user/common/interface/edit_detector.interface.dart';
 import 'package:smart_market/model/user/common/mixin/edit_widget.mixin.dart';
 import 'package:smart_market/model/user/domain/service/user_validate.service.dart';
@@ -15,7 +16,9 @@ class EditPasswordWidget extends StatefulWidget {
   State<EditPasswordWidget> createState() => EditPasswordWidgetState();
 }
 
-class EditPasswordWidgetState extends State<EditPasswordWidget> with EditWidget implements EditDetector {
+class EditPasswordWidgetState extends EditWidgetState<EditPasswordWidget> with EditWidget implements EditDetector {
+  final FocusNode _newPasswordFocusNode = FocusNode();
+  final FocusNode _newMatchPasswordFocusNode = FocusNode();
   final TextEditingController newPasswordController = TextEditingController();
   final TextEditingController matchPasswordController = TextEditingController();
   final UserValidateService _userValidateService = locator<UserValidateService>();
@@ -23,6 +26,9 @@ class EditPasswordWidgetState extends State<EditPasswordWidget> with EditWidget 
 
   bool _isValid = false;
   String _errorMessage = "";
+
+  @override
+  FocusNode get focusNode => _newPasswordFocusNode;
 
   @override
   void initState() {
@@ -77,6 +83,7 @@ class EditPasswordWidgetState extends State<EditPasswordWidget> with EditWidget 
           TextField(
             obscureText: true,
             controller: newPasswordController,
+            focusNode: _newPasswordFocusNode,
             textInputAction: TextInputAction.next,
             style: getInputTextStyle(),
             onChanged: detectInput,
@@ -92,7 +99,8 @@ class EditPasswordWidgetState extends State<EditPasswordWidget> with EditWidget 
           TextField(
             obscureText: true,
             controller: matchPasswordController,
-            textInputAction: TextInputAction.done,
+            focusNode: _newMatchPasswordFocusNode,
+            textInputAction: TextInputAction.next,
             style: getInputTextStyle(),
             onChanged: detectInput,
             decoration: InputDecoration(
