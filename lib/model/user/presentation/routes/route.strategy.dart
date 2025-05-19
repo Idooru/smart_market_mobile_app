@@ -2,13 +2,46 @@ import 'package:flutter/material.dart';
 import 'package:smart_market/core/common/route.strategy.dart';
 import 'package:smart_market/model/user/presentation/pages/edit_password.page.dart';
 import 'package:smart_market/model/user/presentation/pages/edit_profile.page.dart';
+import 'package:smart_market/model/user/presentation/pages/find_email.page.dart';
+import 'package:smart_market/model/user/presentation/pages/login.page.dart';
 import 'package:smart_market/model/user/presentation/pages/register.page.dart';
+import 'package:smart_market/model/user/presentation/pages/reset_password.page.dart';
+
+class LoginRouteStrategy implements RouteStrategy {
+  @override
+  MaterialPageRoute route(RouteSettings settings) {
+    return MaterialPageRoute(
+      builder: (context) => const LoginPage(),
+      settings: settings,
+    );
+  }
+}
 
 class RegisterRouteStrategy implements RouteStrategy {
   @override
   MaterialPageRoute route(RouteSettings settings) {
     return MaterialPageRoute(
       builder: (context) => const RegisterPage(),
+      settings: settings,
+    );
+  }
+}
+
+class FindEmailRouteStrategy implements RouteStrategy {
+  @override
+  MaterialPageRoute route(RouteSettings settings) {
+    return MaterialPageRoute(
+      builder: (context) => const FindEmailPage(),
+      settings: settings,
+    );
+  }
+}
+
+class ResetPasswordRouteStrategy implements RouteStrategy {
+  @override
+  MaterialPageRoute route(RouteSettings settings) {
+    return MaterialPageRoute(
+      builder: (context) => const ResetPasswordPage(),
       settings: settings,
     );
   }

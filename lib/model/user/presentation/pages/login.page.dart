@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
-import 'package:smart_market/model/main/presentation/pages/navigation.page.dart';
 import 'package:smart_market/model/user/domain/entities/login.entity.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
 
@@ -41,6 +40,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> pressLogin() async {
+    NavigatorState navigator = Navigator.of(context);
     ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
     RequestLogin args = RequestLogin(
       email: _emailController.text,
@@ -48,9 +48,8 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     try {
-      final state = context.findAncestorStateOfType<NavigationPageState>();
       await _userService.login(args);
-      state?.tapBottomNavigator(0); // AllProductPage
+      navigator.pop();
       scaffoldMessenger.showSnackBar(const SnackBar(content: Text('로그인이 완료되었습니다.')));
     } on DioFailError catch (err) {
       _passwordFocusNode.unfocus();
@@ -71,6 +70,14 @@ class _LoginPageState extends State<LoginPage> {
 
   void pressRegister() {
     Navigator.of(context).pushNamed("/register");
+  }
+
+  void pressFindEmail() {
+    Navigator.of(context).pushNamed("/find_email");
+  }
+
+  void pressResetPassword() {
+    Navigator.of(context).pushNamed("/reset_password");
   }
 
   @override
@@ -164,7 +171,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 13),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -175,10 +182,31 @@ class _LoginPageState extends State<LoginPage> {
                       style: TextStyle(color: Colors.black),
                     ),
                   ),
+                  const SizedBox(
+                    height: 20,
+                    child: VerticalDivider(
+                      color: Colors.grey,
+                      thickness: 1,
+                    ),
+                  ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: pressFindEmail,
                     child: const Text(
-                      "이메일 & 비밀번호 찾기",
+                      "이메일 찾기",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                    child: VerticalDivider(
+                      color: Colors.grey,
+                      thickness: 1,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: pressResetPassword,
+                    child: const Text(
+                      "비밀번호 초기화",
                       style: TextStyle(color: Colors.black),
                     ),
                   ),

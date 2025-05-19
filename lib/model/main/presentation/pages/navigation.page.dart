@@ -28,7 +28,7 @@ class NavigationPageState extends State<NavigationPage> {
     bool isLogined = checkIsLogined();
     if ((index == 2 || index == 3) && !isLogined) {
       if (!context.mounted) return;
-      InvitationLoginDialog.show(capturedContext, index, updateSelectedIndex);
+      InvitationLoginDialog.show(capturedContext, index);
     } else {
       updateSelectedIndex(index);
     }

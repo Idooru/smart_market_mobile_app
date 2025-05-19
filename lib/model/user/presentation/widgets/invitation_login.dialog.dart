@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 
 class InvitationLoginDialog {
-  static void show(BuildContext context, int index, void Function(int) callback) {
+  static void show(BuildContext context, int index) {
     showDialog(
       context: context,
       builder: (BuildContext context) => Dialog(
-        child: InvitationLoginDialogWidget(
-          index: index,
-          callback: callback,
-        ),
+        child: InvitationLoginDialogWidget(index: index),
       ),
     );
   }
@@ -16,12 +13,10 @@ class InvitationLoginDialog {
 
 class InvitationLoginDialogWidget extends StatefulWidget {
   final int index;
-  final void Function(int) callback;
 
   const InvitationLoginDialogWidget({
     super.key,
     required this.index,
-    required this.callback,
   });
 
   @override
@@ -50,8 +45,8 @@ class _InvitationLoginDialogWidgetState extends State<InvitationLoginDialogWidge
             ),
             GestureDetector(
               onTap: () {
-                widget.callback(widget.index);
                 Navigator.of(context).pop();
+                Navigator.of(context).pushNamed("/login");
               },
               child: Container(
                 margin: const EdgeInsets.all(10),

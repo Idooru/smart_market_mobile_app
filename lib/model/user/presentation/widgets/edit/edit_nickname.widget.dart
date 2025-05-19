@@ -12,11 +12,13 @@ import 'package:smart_market/model/user/presentation/state/edit_profile.provider
 class EditNickNameWidget extends StatefulWidget {
   final String? beforeNickName;
   final bool isLastWidget;
+  final bool hasDuplicateValidation;
 
   const EditNickNameWidget({
     super.key,
     this.beforeNickName,
     this.isLastWidget = false,
+    this.hasDuplicateValidation = true,
   });
 
   @override
@@ -76,6 +78,7 @@ class EditNickNameWidgetState extends EditWidgetState<EditNickNameWidget> with E
       ResponseValidate result = await _userValidateService.validateNickName(
         beforeNickName: widget.beforeNickName,
         currentNickName: nickNameController.text,
+        hasDuplicateValidation: widget.hasDuplicateValidation,
       );
 
       isValidLocal = result.isValidate;

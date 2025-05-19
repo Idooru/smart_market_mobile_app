@@ -12,11 +12,13 @@ import 'package:smart_market/model/user/presentation/state/edit_profile.provider
 class EditEmailWidget extends StatefulWidget {
   final String? beforeEmail;
   final bool isLastWidget;
+  final bool hasDuplicateValidation;
 
   const EditEmailWidget({
     super.key,
     this.beforeEmail,
     this.isLastWidget = false,
+    this.hasDuplicateValidation = true,
   });
 
   @override
@@ -76,6 +78,7 @@ class EditEmailWidgetState extends EditWidgetState<EditEmailWidget> with EditWid
       ResponseValidate result = await _userValidateService.validateEmail(
         beforeEmail: widget.beforeEmail,
         currentEmail: emailController.text,
+        hasDuplicateValidation: widget.hasDuplicateValidation,
       );
 
       isValidLocal = result.isValidate;

@@ -2,9 +2,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_market/core/common/data_state.dart';
 import 'package:smart_market/core/common/service.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
+import 'package:smart_market/model/user/domain/entities/find_email.entity.dart';
 import 'package:smart_market/model/user/domain/entities/login.entity.dart';
 import 'package:smart_market/model/user/domain/entities/profile.entity.dart';
 import 'package:smart_market/model/user/domain/entities/register.entity.dart';
+import 'package:smart_market/model/user/domain/entities/reset_password.entity.dart';
 import 'package:smart_market/model/user/domain/repository/user.repository.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
 
@@ -15,6 +17,19 @@ class UserServiceImpl extends Service implements UserService {
   @override
   Future<void> register(RequestRegister args) async {
     DataState<void> dataState = await _userRepository.register(args);
+    if (dataState.exception != null) throwDioFailError(dataState);
+  }
+
+  @override
+  Future<String> findEmail(RequestFindEmail args) async {
+    DataState<String> dataState = await _userRepository.findEmail(args);
+    if (dataState.exception != null) throwDioFailError(dataState);
+    return dataState.data!;
+  }
+
+  @override
+  Future<void> resetPassword(RequestResetPassword args) async {
+    DataState<void> dataState = await _userRepository.resetPassword(args);
     if (dataState.exception != null) throwDioFailError(dataState);
   }
 

@@ -12,11 +12,13 @@ import 'package:smart_market/model/user/presentation/state/edit_profile.provider
 class EditPhoneNumberWidget extends StatefulWidget {
   final String? beforePhoneNumber;
   final bool isLastWidget;
+  final bool hasDuplicateValidation;
 
   const EditPhoneNumberWidget({
     super.key,
     this.beforePhoneNumber,
     this.isLastWidget = false,
+    this.hasDuplicateValidation = true,
   });
 
   @override
@@ -76,6 +78,7 @@ class EditPhoneNumberWidgetState extends EditWidgetState<EditPhoneNumberWidget> 
       ResponseValidate result = await _userValidateService.validatePhoneNumber(
         beforePhoneNumber: widget.beforePhoneNumber,
         currentPhoneNumber: phoneNumberController.text,
+        hasDuplicateValidation: widget.hasDuplicateValidation,
       );
 
       isValidLocal = result.isValidate;

@@ -10,7 +10,10 @@ final Map<String, RouteStrategy> routeStrategies = {
   "/all_product": AllProductRouteStrategy(),
   "/detail_product": DetailProductRouteStrategy(),
   "/review_video_player": ReviewVideoRouteStrategy(),
+  "/login": LoginRouteStrategy(),
   "/register": RegisterRouteStrategy(),
+  "/find_email": FindEmailRouteStrategy(),
+  "/reset_password": ResetPasswordRouteStrategy(),
   "/edit_profile": EditProfileRouteStrategy(),
   "/edit_password": EditPasswordRouteStrategy(),
 };

@@ -6,9 +6,10 @@ import 'package:smart_market/model/user/domain/repository/user_validate.reposito
 
 class UserValidateRepositoryImpl extends DioInitializer implements UserValidateRepository {
   @override
-  Future<DataState<ResponseValidate>> validateNickName(String? beforeNickName, String currentNickName) async {
+  Future<DataState<ResponseValidate>> validateNickName(String? beforeNickName, String currentNickName, bool hasDuplicateValidation) async {
     try {
-      String url = "$baseUrl/user/validate/nickname?${beforeNickName != null ? "before-nickname=$beforeNickName" : ""}&current-nickname=$currentNickName";
+      String url =
+          "$baseUrl/user/validate/nickname?${beforeNickName != null ? "before-nickname=$beforeNickName" : ""}&current-nickname=$currentNickName&has-duplicate-validation=$hasDuplicateValidation";
       Response response = await dio.get(url);
 
       ResponseValidate responseValidate = ResponseValidate.fromJson(response.data);
@@ -19,9 +20,10 @@ class UserValidateRepositoryImpl extends DioInitializer implements UserValidateR
   }
 
   @override
-  Future<DataState<ResponseValidate>> validatePhoneNumber(String? beforePhoneNumber, String currentPhoneNumber) async {
+  Future<DataState<ResponseValidate>> validatePhoneNumber(String? beforePhoneNumber, String currentPhoneNumber, bool hasDuplicateValidation) async {
     try {
-      String url = "$baseUrl/user/validate/phonenumber?${beforePhoneNumber != null ? "before-phonenumber=$beforePhoneNumber" : ""}&current-phonenumber=$currentPhoneNumber";
+      String url =
+          "$baseUrl/user/validate/phonenumber?${beforePhoneNumber != null ? "before-phonenumber=$beforePhoneNumber" : ""}&current-phonenumber=$currentPhoneNumber&has-duplicate-validation=$hasDuplicateValidation";
       Response response = await dio.get(url);
 
       ResponseValidate responseValidate = ResponseValidate.fromJson(response.data);
@@ -45,9 +47,9 @@ class UserValidateRepositoryImpl extends DioInitializer implements UserValidateR
   }
 
   @override
-  Future<DataState<ResponseValidate>> validateEmail(String? beforeEmail, String currentEmail) async {
+  Future<DataState<ResponseValidate>> validateEmail(String? beforeEmail, String currentEmail, bool hasDuplicateValidation) async {
     try {
-      String url = "$baseUrl/user/validate/email?${beforeEmail != null ? "before-email=$beforeEmail" : ""}&current-email=$currentEmail";
+      String url = "$baseUrl/user/validate/email?${beforeEmail != null ? "before-email=$beforeEmail" : ""}&current-email=$currentEmail&has-duplicate-validation=$hasDuplicateValidation";
       Response response = await dio.get(url);
 
       ResponseValidate responseValidate = ResponseValidate.fromJson(response.data);

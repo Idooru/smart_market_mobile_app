@@ -10,15 +10,15 @@ class UserValidateServiceImpl extends Service implements UserValidateService {
   final UserValidateRepository _userRepository = locator<UserValidateRepository>();
 
   @override
-  Future<ResponseValidate> validateNickName({String? beforeNickName, required String currentNickName}) async {
-    DataState<ResponseValidate> dataState = await _userRepository.validateNickName(beforeNickName, currentNickName);
+  Future<ResponseValidate> validateNickName({String? beforeNickName, required String currentNickName, required bool hasDuplicateValidation}) async {
+    DataState<ResponseValidate> dataState = await _userRepository.validateNickName(beforeNickName, currentNickName, hasDuplicateValidation);
     if (dataState.exception != null) throwDioFailError(dataState);
     return dataState.data!;
   }
 
   @override
-  Future<ResponseValidate> validatePhoneNumber({String? beforePhoneNumber, required String currentPhoneNumber}) async {
-    DataState<ResponseValidate> dataState = await _userRepository.validatePhoneNumber(beforePhoneNumber, currentPhoneNumber);
+  Future<ResponseValidate> validatePhoneNumber({String? beforePhoneNumber, required String currentPhoneNumber, required bool hasDuplicateValidation}) async {
+    DataState<ResponseValidate> dataState = await _userRepository.validatePhoneNumber(beforePhoneNumber, currentPhoneNumber, hasDuplicateValidation);
     if (dataState.exception != null) throwDioFailError(dataState);
     return dataState.data!;
   }
@@ -31,8 +31,8 @@ class UserValidateServiceImpl extends Service implements UserValidateService {
   }
 
   @override
-  Future<ResponseValidate> validateEmail({String? beforeEmail, required String currentEmail}) async {
-    DataState<ResponseValidate> dataState = await _userRepository.validateEmail(beforeEmail, currentEmail);
+  Future<ResponseValidate> validateEmail({String? beforeEmail, required String currentEmail, required bool hasDuplicateValidation}) async {
+    DataState<ResponseValidate> dataState = await _userRepository.validateEmail(beforeEmail, currentEmail, hasDuplicateValidation);
     if (dataState.exception != null) throwDioFailError(dataState);
     return dataState.data!;
   }
