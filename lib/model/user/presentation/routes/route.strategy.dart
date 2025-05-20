@@ -7,6 +7,15 @@ import 'package:smart_market/model/user/presentation/pages/login.page.dart';
 import 'package:smart_market/model/user/presentation/pages/register.page.dart';
 import 'package:smart_market/model/user/presentation/pages/reset_password.page.dart';
 
+final Map<String, RouteStrategy> userRouteStrategies = {
+  "/login": LoginRouteStrategy(),
+  "/register": RegisterRouteStrategy(),
+  "/find_email": FindEmailRouteStrategy(),
+  "/reset_password": ResetPasswordRouteStrategy(),
+  "/edit_profile": EditProfileRouteStrategy(),
+  "/edit_password": EditPasswordRouteStrategy(),
+};
+
 class LoginRouteStrategy implements RouteStrategy {
   @override
   MaterialPageRoute route(RouteSettings settings) {

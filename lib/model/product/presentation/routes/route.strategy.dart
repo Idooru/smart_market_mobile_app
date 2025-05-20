@@ -3,6 +3,12 @@ import 'package:smart_market/core/common/route.strategy.dart';
 import 'package:smart_market/model/product/presentation/pages/detail_product.page.dart';
 import 'package:smart_market/model/product/presentation/pages/review_video_player.page.dart';
 
+final Map<String, RouteStrategy> productRouteStrategies = {
+  "/all_product": AllProductRouteStrategy(),
+  "/detail_product": DetailProductRouteStrategy(),
+  "/review_video_player": ReviewVideoRouteStrategy(),
+};
+
 class AllProductRouteStrategy implements RouteStrategy {
   @override
   MaterialPageRoute route(RouteSettings settings) {
