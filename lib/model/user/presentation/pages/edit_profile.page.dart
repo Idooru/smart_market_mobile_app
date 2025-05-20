@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
+import 'package:smart_market/core/widgets/common/common_button_bar.widget.dart';
+import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.dart';
 import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
 import 'package:smart_market/model/user/domain/entities/profile.entity.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
@@ -61,74 +63,23 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
-  GestureDetector getEditProfileButton(EditProfileProvider provider) {
+  ConditionalButtonBarWidget getEditProfileButton(EditProfileProvider provider) {
     bool isAllValid = provider.isNickNameValid && provider.isEmailValid && provider.isPhoneNumberValid && provider.isAddressValid;
 
-    return GestureDetector(
-      onTap: isAllValid ? pressEditProfile : () {},
-      child: Container(
-        height: 50,
-        margin: const EdgeInsets.only(bottom: 10),
-        decoration: BoxDecoration(
-          color: isAllValid ? Colors.blue : const Color.fromARGB(255, 190, 190, 190),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.person,
-              size: 19,
-              color: Colors.white,
-            ),
-            SizedBox(
-              width: 5,
-            ),
-            Text(
-              "프로필 수정하기",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 17,
-              ),
-            )
-          ],
-        ),
-      ),
+    return ConditionalButtonBarWidget(
+      icon: Icons.person,
+      title: "프로필 수정하기",
+      isValid: isAllValid,
+      pressCallback: pressEditProfile,
     );
   }
 
-  GestureDetector getNavigateEditPasswordButton() {
-    return GestureDetector(
-      onTap: () {
-        Navigator.of(context).pushNamed("/edit_password");
-      },
-      child: Container(
-        height: 50,
-        decoration: BoxDecoration(
-          color: Colors.amber,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.lock,
-              size: 19,
-              color: Colors.white,
-            ),
-            SizedBox(
-              width: 5,
-            ),
-            Text(
-              "비밀번호 수정하기",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 17,
-              ),
-            )
-          ],
-        ),
-      ),
+  CommonButtonBarWidget getNavigateEditPasswordButton() {
+    return CommonButtonBarWidget(
+      icon: Icons.lock,
+      backgroundColor: Colors.amber,
+      title: "비밀번호 수정하기",
+      pressCallback: () => Navigator.of(context).pushNamed("/edit_password"),
     );
   }
 

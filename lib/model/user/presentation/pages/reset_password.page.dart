@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
+import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.dart';
 import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
 import 'package:smart_market/model/user/domain/entities/reset_password.entity.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
@@ -50,6 +51,15 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     }
   }
 
+  ConditionalButtonBarWidget getResetPasswordButton(EditProfileProvider provider) {
+    return ConditionalButtonBarWidget(
+      icon: Icons.lock,
+      title: "비밀번호 초기화하기",
+      isValid: provider.isPasswordValid,
+      pressCallback: pressResetPassword,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<EditProfileProvider>(
@@ -72,36 +82,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                     editWidget: EditEmailWidget(key: _emailKey, hasDuplicateValidation: false),
                   ),
                   EditPasswordWidget(key: _passwordKey, isLastWidget: true),
-                  GestureDetector(
-                    onTap: provider.isPasswordValid ? pressResetPassword : () {},
-                    child: Container(
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: provider.isPasswordValid ? Colors.blue : const Color.fromARGB(255, 190, 190, 190),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.lock,
-                            size: 19,
-                            color: Colors.white,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            "비밀번호 초기화하기",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 17,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
+                  getResetPasswordButton(provider),
                   const SizedBox(height: 10),
                   if (_hasError)
                     Center(

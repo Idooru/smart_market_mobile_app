@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
+import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.dart';
 import 'package:smart_market/model/user/domain/entities/login.entity.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
 
@@ -80,6 +81,15 @@ class _LoginPageState extends State<LoginPage> {
     Navigator.of(context).pushNamed("/reset_password");
   }
 
+  ConditionalButtonBarWidget getLoginButton() {
+    return ConditionalButtonBarWidget(
+      backgroundColor: Colors.blueAccent,
+      title: "로그인 하기",
+      isValid: _isValidForm,
+      pressCallback: pressLogin,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -153,25 +163,7 @@ class _LoginPageState extends State<LoginPage> {
                   style: const TextStyle(color: Colors.red),
                 )),
               const SizedBox(height: 10),
-              GestureDetector(
-                onTap: _isValidForm ? pressLogin : () {},
-                child: Container(
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: _isValidForm ? Colors.blueAccent : const Color.fromARGB(180, 200, 200, 200),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "Login",
-                      style: TextStyle(
-                        color: _isValidForm ? Colors.black : Colors.grey,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 13),
+              getLoginButton(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

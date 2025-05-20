@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
+import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.dart';
 import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
 import 'package:smart_market/model/user/domain/entities/register.entity.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
@@ -63,7 +64,7 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
-  GestureDetector getRegisterButton(EditProfileProvider provider) {
+  ConditionalButtonBarWidget getRegisterButton(EditProfileProvider provider) {
     bool isAllValid = provider.isRealNameValid &&
         provider.isGenderValid &&
         provider.isBirthBalid &&
@@ -73,36 +74,12 @@ class _RegisterPageState extends State<RegisterPage> {
         provider.isPhoneNumberValid &&
         provider.isAddressValid;
 
-    return GestureDetector(
-      onTap: isAllValid ? pressRegister : () {},
-      child: Container(
-        height: 50,
-        margin: const EdgeInsets.only(top: 10, bottom: 10),
-        decoration: BoxDecoration(
-          color: isAllValid ? Colors.blue : const Color.fromARGB(255, 190, 190, 190),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.person,
-              size: 19,
-              color: Colors.white,
-            ),
-            SizedBox(
-              width: 5,
-            ),
-            Text(
-              "회원가입 하기",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 17,
-              ),
-            )
-          ],
-        ),
-      ),
+    return ConditionalButtonBarWidget(
+      icon: Icons.person,
+      backgroundColor: Colors.red,
+      title: "회원가입 하기",
+      isValid: isAllValid,
+      pressCallback: pressRegister,
     );
   }
 
@@ -135,7 +112,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   EditNickNameWidget(key: _nickNameKey),
                   EditAddressWidget(key: _addressKey),
                   EditPhoneNumberWidget(key: _phoneNumberKey, isLastWidget: true),
+                  const SizedBox(height: 10),
                   getRegisterButton(provider),
+                  const SizedBox(height: 20),
                   if (_hasError)
                     Center(
                         child: Text(

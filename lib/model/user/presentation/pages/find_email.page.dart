@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
+import 'package:smart_market/core/widgets/common/common_button_bar.widget.dart';
+import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.dart';
 import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
 import 'package:smart_market/model/user/domain/entities/find_email.entity.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
@@ -84,42 +86,16 @@ class _FindEmailPageState extends State<FindEmailPage> {
             child: Text(_email),
           ),
         ),
-        GestureDetector(
-          onTap: () {
-            Navigator.of(context).pushNamed("/reset_password");
-          },
-          child: Container(
-            height: 50,
-            margin: const EdgeInsets.only(top: 10, bottom: 10),
-            decoration: BoxDecoration(
-              color: Colors.amber,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.lock,
-                  size: 19,
-                  color: Colors.white,
-                ),
-                SizedBox(width: 5),
-                Text(
-                  "비밀번호 초기화하기",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 17,
-                  ),
-                )
-              ],
-            ),
-          ),
-        )
+        CommonButtonBarWidget(
+          icon: Icons.lock,
+          title: "비밀번호 초기화하기",
+          pressCallback: () => Navigator.of(context).pushNamed("/reset_password"),
+        ),
       ],
     );
   }
 
-  GestureDetector getFindEmailButton(EditProfileProvider provider) {
+  ConditionalButtonBarWidget getFindEmailButton(EditProfileProvider provider) {
     bool isAllValid = provider.isRealNameValid && provider.isPhoneNumberValid;
 
     // 이메일을 한번 찾은 후 다시 이메일 찾기를 시도할 때 필드가 유효하지 않으면 이전에 찾은 이메일을 가려버림
@@ -129,36 +105,11 @@ class _FindEmailPageState extends State<FindEmailPage> {
       });
     });
 
-    return GestureDetector(
-      onTap: isAllValid ? pressFindEmail : () {},
-      child: Container(
-        height: 50,
-        margin: const EdgeInsets.only(top: 10, bottom: 10),
-        decoration: BoxDecoration(
-          color: isAllValid ? Colors.blue : const Color.fromARGB(255, 190, 190, 190),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.email,
-              size: 19,
-              color: Colors.white,
-            ),
-            SizedBox(
-              width: 5,
-            ),
-            Text(
-              "이메일 찾기",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 17,
-              ),
-            )
-          ],
-        ),
-      ),
+    return ConditionalButtonBarWidget(
+      icon: Icons.email,
+      title: "이메일 찾기",
+      isValid: isAllValid,
+      pressCallback: pressFindEmail,
     );
   }
 
@@ -189,6 +140,7 @@ class _FindEmailPageState extends State<FindEmailPage> {
                     hasDuplicateValidation: false,
                   ),
                   getFindEmailButton(provider),
+                  const SizedBox(height: 10),
                   if (_hasError)
                     Center(
                         child: Text(
