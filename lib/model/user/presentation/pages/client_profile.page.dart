@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
+import 'package:smart_market/model/account/presentation/widgets/account_list.widget.dart';
 import 'package:smart_market/model/main/presentation/pages/navigation.page.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
 import 'package:smart_market/model/user/presentation/widgets/profile/basic_profile.widget.dart';
@@ -53,6 +54,7 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
           child: Column(
             children: [
               BasicProfileWidget(),
+              AccountListWidget(),
             ],
           ),
         ),
