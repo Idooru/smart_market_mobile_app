@@ -61,16 +61,18 @@ class EditBirthWidgetState extends State<EditBirthWidget> with EditWidget {
                 size: 19,
                 color: _isValid ? Colors.green : Colors.red,
               ),
+              const SizedBox(width: 15),
               Expanded(
                 child: TextButton(
                   onPressed: pressSelectDate,
                   style: TextButton.styleFrom(
                     padding: EdgeInsets.zero,
+                    alignment: Alignment.centerLeft,
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
                   child: Text(
                     !_isValid ? "날짜 선택" : selectedDate.toString(),
-                    style: const TextStyle(color: Colors.black),
+                    style: const TextStyle(fontSize: 16, color: Color.fromARGB(255, 90, 90, 90)),
                   ),
                 ),
               ),
