@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
 import 'package:smart_market/model/user/common/interface/edit_detector.interface.dart';
 import 'package:smart_market/model/user/common/mixin/edit_widget.mixin.dart';
-import 'package:smart_market/model/user/presentation/state/edit_profile.provider.dart';
+import 'package:smart_market/model/user/presentation/state/edit_user_column.provider.dart';
 
 class EditRealNameWidget extends StatefulWidget {
   final bool isLastWidget;
@@ -20,7 +20,7 @@ class EditRealNameWidget extends StatefulWidget {
 class EditRealNameWidgetState extends EditWidgetState<EditRealNameWidget> with EditWidget implements EditDetector {
   final FocusNode _focusNode = FocusNode();
   final TextEditingController realNameController = TextEditingController();
-  late EditProfileProvider _provider;
+  late EditUserColumnProvider _provider;
 
   bool _isValid = false;
   String _errorMessage = "";
@@ -31,7 +31,7 @@ class EditRealNameWidgetState extends EditWidgetState<EditRealNameWidget> with E
   @override
   void initState() {
     super.initState();
-    _provider = context.read<EditProfileProvider>();
+    _provider = context.read<EditUserColumnProvider>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _provider.setIsRealNameValid(_isValid);

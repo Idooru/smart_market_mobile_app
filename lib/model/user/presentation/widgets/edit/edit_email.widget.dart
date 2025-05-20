@@ -7,7 +7,7 @@ import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
 import 'package:smart_market/model/user/common/interface/edit_detector.interface.dart';
 import 'package:smart_market/model/user/common/mixin/edit_widget.mixin.dart';
 import 'package:smart_market/model/user/domain/service/user_validate.service.dart';
-import 'package:smart_market/model/user/presentation/state/edit_profile.provider.dart';
+import 'package:smart_market/model/user/presentation/state/edit_user_column.provider.dart';
 
 class EditEmailWidget extends StatefulWidget {
   final String? beforeEmail;
@@ -29,7 +29,7 @@ class EditEmailWidgetState extends EditWidgetState<EditEmailWidget> with EditWid
   final FocusNode _focusNode = FocusNode();
   final TextEditingController emailController = TextEditingController();
   final UserValidateService _userValidateService = locator<UserValidateService>();
-  late EditProfileProvider _provider;
+  late EditUserColumnProvider _provider;
   late bool _isValid;
 
   String _errorMessage = "";
@@ -40,7 +40,7 @@ class EditEmailWidgetState extends EditWidgetState<EditEmailWidget> with EditWid
   @override
   void initState() {
     super.initState();
-    _provider = context.read<EditProfileProvider>();
+    _provider = context.read<EditUserColumnProvider>();
     _isValid = widget.beforeEmail != null;
 
     if (widget.beforeEmail != null) emailController.text = widget.beforeEmail!;

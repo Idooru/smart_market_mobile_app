@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_market/core/widgets/common/radio.widget.dart';
 import 'package:smart_market/model/user/common/mixin/edit_widget.mixin.dart';
-import 'package:smart_market/model/user/presentation/state/edit_profile.provider.dart';
+import 'package:smart_market/model/user/presentation/state/edit_user_column.provider.dart';
 
 class EditGenderWidget extends StatefulWidget {
   const EditGenderWidget({super.key});
@@ -12,14 +12,14 @@ class EditGenderWidget extends StatefulWidget {
 }
 
 class EditGenderWidgetState extends State<EditGenderWidget> with EditWidget {
-  late EditProfileProvider provider;
+  late EditUserColumnProvider provider;
 
   String selectedGender = "male";
 
   @override
   void initState() {
     super.initState();
-    provider = context.read<EditProfileProvider>();
+    provider = context.read<EditUserColumnProvider>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       provider.setIsGenderValid(true);

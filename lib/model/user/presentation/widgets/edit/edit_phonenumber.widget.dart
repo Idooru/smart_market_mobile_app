@@ -7,7 +7,7 @@ import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
 import 'package:smart_market/model/user/common/interface/edit_detector.interface.dart';
 import 'package:smart_market/model/user/common/mixin/edit_widget.mixin.dart';
 import 'package:smart_market/model/user/domain/service/user_validate.service.dart';
-import 'package:smart_market/model/user/presentation/state/edit_profile.provider.dart';
+import 'package:smart_market/model/user/presentation/state/edit_user_column.provider.dart';
 
 class EditPhoneNumberWidget extends StatefulWidget {
   final String? beforePhoneNumber;
@@ -29,7 +29,7 @@ class EditPhoneNumberWidgetState extends EditWidgetState<EditPhoneNumberWidget> 
   final FocusNode _focusNode = FocusNode();
   final TextEditingController phoneNumberController = TextEditingController();
   final UserValidateService _userValidateService = locator<UserValidateService>();
-  late EditProfileProvider _provider;
+  late EditUserColumnProvider _provider;
   late bool _isValid;
 
   String _errorMessage = "";
@@ -41,7 +41,7 @@ class EditPhoneNumberWidgetState extends EditWidgetState<EditPhoneNumberWidget> 
   void initState() {
     super.initState();
     _isValid = widget.beforePhoneNumber != null;
-    _provider = context.read<EditProfileProvider>();
+    _provider = context.read<EditUserColumnProvider>();
 
     if (widget.beforePhoneNumber != null) phoneNumberController.text = widget.beforePhoneNumber!;
 

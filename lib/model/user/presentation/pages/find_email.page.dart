@@ -7,7 +7,7 @@ import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.d
 import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
 import 'package:smart_market/model/user/domain/entities/find_email.entity.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
-import 'package:smart_market/model/user/presentation/state/edit_profile.provider.dart';
+import 'package:smart_market/model/user/presentation/state/edit_user_column.provider.dart';
 import 'package:smart_market/model/user/presentation/widgets/edit/edit_phonenumber.widget.dart';
 import 'package:smart_market/model/user/presentation/widgets/edit/edit_realname.widget.dart';
 
@@ -95,7 +95,7 @@ class _FindEmailPageState extends State<FindEmailPage> {
     );
   }
 
-  ConditionalButtonBarWidget getFindEmailButton(EditProfileProvider provider) {
+  ConditionalButtonBarWidget getFindEmailButton(EditUserColumnProvider provider) {
     bool isAllValid = provider.isRealNameValid && provider.isPhoneNumberValid;
 
     // 이메일을 한번 찾은 후 다시 이메일 찾기를 시도할 때 필드가 유효하지 않으면 이전에 찾은 이메일을 가려버림
@@ -115,8 +115,8 @@ class _FindEmailPageState extends State<FindEmailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<EditProfileProvider>(
-      builder: (BuildContext context, EditProfileProvider provider, Widget? child) {
+    return Consumer<EditUserColumnProvider>(
+      builder: (BuildContext context, EditUserColumnProvider provider, Widget? child) {
         return Scaffold(
           appBar: AppBar(
             title: const Text("Find Email"),

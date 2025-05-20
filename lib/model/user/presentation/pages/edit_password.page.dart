@@ -4,7 +4,7 @@ import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
-import 'package:smart_market/model/user/presentation/state/edit_profile.provider.dart';
+import 'package:smart_market/model/user/presentation/state/edit_user_column.provider.dart';
 import 'package:smart_market/model/user/presentation/widgets/edit/edit_password.widget.dart';
 
 class EditPasswordPage extends StatefulWidget {
@@ -40,8 +40,8 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<EditProfileProvider>(
-      builder: (BuildContext context, EditProfileProvider provider, Widget? child) {
+    return Consumer<EditUserColumnProvider>(
+      builder: (BuildContext context, EditUserColumnProvider provider, Widget? child) {
         return Scaffold(
           appBar: AppBar(
             title: const Text("Edit Password"),

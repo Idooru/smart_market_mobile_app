@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_market/model/user/common/mixin/edit_widget.mixin.dart';
-import 'package:smart_market/model/user/presentation/state/edit_profile.provider.dart';
+import 'package:smart_market/model/user/presentation/state/edit_user_column.provider.dart';
 
 class EditBirthWidget extends StatefulWidget {
   const EditBirthWidget({super.key});
@@ -12,7 +12,7 @@ class EditBirthWidget extends StatefulWidget {
 }
 
 class EditBirthWidgetState extends State<EditBirthWidget> with EditWidget {
-  late EditProfileProvider _provider;
+  late EditUserColumnProvider _provider;
   late bool _isValid = false;
 
   String selectedDate = "";
@@ -20,7 +20,7 @@ class EditBirthWidgetState extends State<EditBirthWidget> with EditWidget {
   @override
   void initState() {
     super.initState();
-    _provider = context.read<EditProfileProvider>();
+    _provider = context.read<EditUserColumnProvider>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _provider.setIsBirthValid(_isValid);

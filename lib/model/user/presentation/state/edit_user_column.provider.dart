@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-class EditProfileProvider extends ChangeNotifier {
+class EditUserColumnProvider extends ChangeNotifier {
   bool _isRealNameValid = false;
   bool _isBirthValid = false;
   bool _isGenderValid = false;

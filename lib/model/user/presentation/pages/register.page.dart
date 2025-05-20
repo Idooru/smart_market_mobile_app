@@ -6,7 +6,7 @@ import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.d
 import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
 import 'package:smart_market/model/user/domain/entities/register.entity.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
-import 'package:smart_market/model/user/presentation/state/edit_profile.provider.dart';
+import 'package:smart_market/model/user/presentation/state/edit_user_column.provider.dart';
 import 'package:smart_market/model/user/presentation/widgets/edit/edit_address.widget.dart';
 import 'package:smart_market/model/user/presentation/widgets/edit/edit_birth.widget.dart';
 import 'package:smart_market/model/user/presentation/widgets/edit/edit_email.widget.dart';
@@ -64,7 +64,7 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
-  ConditionalButtonBarWidget getRegisterButton(EditProfileProvider provider) {
+  ConditionalButtonBarWidget getRegisterButton(EditUserColumnProvider provider) {
     bool isAllValid = provider.isRealNameValid &&
         provider.isGenderValid &&
         provider.isBirthBalid &&
@@ -85,8 +85,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<EditProfileProvider>(
-      builder: (BuildContext context, EditProfileProvider provider, Widget? child) {
+    return Consumer<EditUserColumnProvider>(
+      builder: (BuildContext context, EditUserColumnProvider provider, Widget? child) {
         return Scaffold(
           appBar: AppBar(
             title: const Text("Register"),
