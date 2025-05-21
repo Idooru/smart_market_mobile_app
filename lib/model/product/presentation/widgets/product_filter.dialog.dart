@@ -85,7 +85,7 @@ class ProductFilterDialogWidgetState extends State<ProductFilterDialogWidget> {
       width: 250,
       height: 285,
       decoration: BoxDecoration(
-        color: Colors.grey[200], // 연한 회색 배경
+        color: const Color.fromARGB(255, 15, 7, 7), // 연한 회색 배경
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(

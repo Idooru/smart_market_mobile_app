@@ -32,6 +32,17 @@ class _AccountListWidgetState extends State<AccountListWidget> {
     _getAccountsFuture = _accountService.getAccounts(args);
   }
 
+  void updateAccounts() {
+    RequestAccounts args = const RequestAccounts(
+      align: "DESC",
+      column: "createdAt",
+    );
+
+    setState(() {
+      _getAccountsFuture = _accountService.getAccounts(args);
+    });
+  }
+
   SizedBox getEmptyAccountMessage() {
     return const SizedBox(
       width: double.infinity,
@@ -140,21 +151,29 @@ class _AccountListWidgetState extends State<AccountListWidget> {
                 children: (() {
                   if (accounts.isNotEmpty) {
                     return [
-                      ...accounts.map((account) => AccountItemWidget(account: account)),
+                      ...accounts.map((account) => AccountItemWidget(
+                            account: account,
+                            updateCallback: updateAccounts,
+                          )),
                       CommonButtonBarWidget(
                         icon: Icons.account_balance_outlined,
-                        title: "계좌 생성하기",
+                        title: "계좌 등록하기",
                         pressCallback: () {},
                       ),
                     ];
                   } else if (accounts.length > 5) {
-                    return accounts.map((account) => AccountItemWidget(account: account)).toList();
+                    return accounts
+                        .map((account) => AccountItemWidget(
+                              account: account,
+                              updateCallback: updateAccounts,
+                            ))
+                        .toList();
                   } else {
                     return [
                       getEmptyAccountMessage(),
                       CommonButtonBarWidget(
                         icon: Icons.account_balance_outlined,
-                        title: "계좌 생성하기",
+                        title: "계좌 등록하기",
                         pressCallback: () {},
                       )
                     ];
