@@ -26,7 +26,7 @@ class AccountItemWidget extends StatefulWidget {
 class _AccountItemWidgetState extends State<AccountItemWidget> {
   final AccountService _accountService = locator<AccountService>();
 
-  void HandleAccountTransactionError(DioFailError err) {
+  void handleAccountTransactionError(DioFailError err) {
     Navigator.of(context);
     HandleAccountTransactionErrorDialog.show(context, err: err);
   }
@@ -42,7 +42,7 @@ class _AccountItemWidgetState extends State<AccountItemWidget> {
         await _accountService.deposit(args);
         widget.updateCallback();
       } on DioFailError catch (err) {
-        HandleAccountTransactionError(err);
+        handleAccountTransactionError(err);
       }
     }
 
@@ -66,7 +66,7 @@ class _AccountItemWidgetState extends State<AccountItemWidget> {
         await _accountService.withdraw(args);
         widget.updateCallback();
       } on DioFailError catch (err) {
-        HandleAccountTransactionError(err);
+        handleAccountTransactionError(err);
       }
     }
 
