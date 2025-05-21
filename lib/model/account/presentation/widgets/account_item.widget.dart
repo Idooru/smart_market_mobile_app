@@ -27,7 +27,6 @@ class _AccountItemWidgetState extends State<AccountItemWidget> {
   final AccountService _accountService = locator<AccountService>();
 
   void handleAccountTransactionError(DioFailError err) {
-    Navigator.of(context);
     HandleAccountTransactionErrorDialog.show(context, err: err);
   }
 
@@ -79,16 +78,30 @@ class _AccountItemWidgetState extends State<AccountItemWidget> {
     );
   }
 
-  void pressSetMainAccount() {
+  void pressSetMainAccount() async {
     NavigatorState navigator = Navigator.of(context);
-    // ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
-    navigator.pop();
+
+    try {
+      await _accountService.setMainAccount(widget.account.id);
+      widget.updateCallback();
+      navigator.pop();
+    } on DioFailError catch (err) {
+      navigator.pop();
+      handleAccountTransactionError(err);
+    }
   }
 
-  void pressDeleteAccount() {
+  void pressDeleteAccount() async {
     NavigatorState navigator = Navigator.of(context);
-    // ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
-    navigator.pop();
+
+    try {
+      await _accountService.deleteAccount(widget.account.id);
+      widget.updateCallback();
+      navigator.pop();
+    } on DioFailError catch (err) {
+      navigator.pop();
+      handleAccountTransactionError(err);
+    }
   }
 
   void pressTrailingIcon() {

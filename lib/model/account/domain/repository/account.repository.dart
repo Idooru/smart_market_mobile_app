@@ -6,4 +6,6 @@ abstract interface class AccountRepository {
   Future<DataState<List<ResponseAccount>>> fetchAccounts(String accessToken, RequestAccounts args);
   Future<DataState<void>> deposit(String accessToken, RequestAccountTransaction args);
   Future<DataState<void>> withdraw(String accessToken, RequestAccountTransaction args);
+  Future<DataState<void>> setMainAccount(String accessToken, String id);
+  Future<DataState<void>> deleteAccount(String accessToken, String id);
 }

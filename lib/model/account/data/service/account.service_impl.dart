@@ -32,4 +32,18 @@ class AccountServiceImpl extends Service implements AccountService {
     DataState<void> dataState = await _accountRepository.withdraw(accessToken!, args);
     if (dataState.exception != null) throwDioFailError(dataState);
   }
+
+  @override
+  Future<void> setMainAccount(String id) async {
+    String? accessToken = _db.getString("access-token");
+    DataState<void> dataState = await _accountRepository.setMainAccount(accessToken!, id);
+    if (dataState.exception != null) throwDioFailError(dataState);
+  }
+
+  @override
+  Future<void> deleteAccount(String id) async {
+    String? accessToken = _db.getString("access-token");
+    DataState<void> dataState = await _accountRepository.deleteAccount(accessToken!, id);
+    if (dataState.exception != null) throwDioFailError(dataState);
+  }
 }

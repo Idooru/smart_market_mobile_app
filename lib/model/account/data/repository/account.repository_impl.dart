@@ -53,4 +53,34 @@ class AccountRepositoryImpl extends DioInitializer implements AccountRepository 
       return DataFail(exception: err);
     }
   }
+
+  @override
+  Future<DataState<void>> setMainAccount(String accessToken, String id) async {
+    try {
+      String url = "$baseUrl/account/$id/main-account";
+      await dio.patch(
+        url,
+        options: Options(headers: {'access-token': accessToken}),
+      );
+
+      return const DataSuccess(data: null);
+    } on DioException catch (err) {
+      return DataFail(exception: err);
+    }
+  }
+
+  @override
+  Future<DataState<void>> deleteAccount(String accessToken, String id) async {
+    try {
+      String url = "$baseUrl/account/$id";
+      await dio.delete(
+        url,
+        options: Options(headers: {'access-token': accessToken}),
+      );
+
+      return const DataSuccess(data: null);
+    } on DioException catch (err) {
+      return DataFail(exception: err);
+    }
+  }
 }
