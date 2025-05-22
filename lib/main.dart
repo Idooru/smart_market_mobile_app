@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:smart_market/core/common/route.strategy.dart';
 import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
+import 'package:smart_market/model/account/presentation/state/create_account.provider.dart';
 import 'package:smart_market/model/main/presentation/pages/navigation.page.dart';
 import 'package:smart_market/model/product/presentation/state/product_filtered.provider.dart';
 import 'package:smart_market/model/product/presentation/state/product_search.provider.dart';
@@ -20,6 +21,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => ProductFilteredProvider()),
         ChangeNotifierProvider(create: (context) => ProductSearchProvider()),
         ChangeNotifierProvider(create: (context) => EditUserColumnProvider()),
+        ChangeNotifierProvider(create: (context) => CreateAccountProvider()),
       ],
       child: const MyApp(),
     ),

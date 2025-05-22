@@ -1,9 +1,13 @@
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_market/model/account/data/repository/account.repository_impl.dart';
+import 'package:smart_market/model/account/data/repository/account_validate.repository_impl.dart';
 import 'package:smart_market/model/account/data/service/account.service_impl.dart';
+import 'package:smart_market/model/account/data/service/account_validate.service_impl.dart';
 import 'package:smart_market/model/account/domain/repository/account.repository.dart';
+import 'package:smart_market/model/account/domain/repository/account_validate.repository.dart';
 import 'package:smart_market/model/account/domain/service/account.service.dart';
+import 'package:smart_market/model/account/domain/service/account_validate.service.dart';
 import 'package:smart_market/model/product/data/repository/product.repository_impl.dart';
 import 'package:smart_market/model/product/data/service/product.service_impl.dart';
 import 'package:smart_market/model/product/domain/repository/product.repository.dart';
@@ -31,4 +35,6 @@ Future<void> initLocator() async {
   locator.registerLazySingleton<UserValidateRepository>(() => UserValidateRepositoryImpl());
   locator.registerLazySingleton<AccountService>(() => AccountServiceImpl());
   locator.registerLazySingleton<AccountRepository>(() => AccountRepositoryImpl());
+  locator.registerLazySingleton<AccountValidateService>(() => AccountValidateServiceImpl());
+  locator.registerLazySingleton<AccountValidateRepository>(() => AccountValidateRepositoryImpl());
 }

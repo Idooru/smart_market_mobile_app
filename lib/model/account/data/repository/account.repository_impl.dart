@@ -3,6 +3,7 @@ import 'package:smart_market/core/common/data_state.dart';
 import 'package:smart_market/core/utils/dio_initializer.dart';
 import 'package:smart_market/model/account/domain/entities/account.entity.dart';
 import 'package:smart_market/model/account/domain/entities/account_transaction.entity.dart';
+import 'package:smart_market/model/account/domain/entities/create_account.entity.dart';
 import 'package:smart_market/model/account/domain/repository/account.repository.dart';
 
 class AccountRepositoryImpl extends DioInitializer implements AccountRepository {
@@ -76,6 +77,22 @@ class AccountRepositoryImpl extends DioInitializer implements AccountRepository 
       await dio.delete(
         url,
         options: Options(headers: {'access-token': accessToken}),
+      );
+
+      return const DataSuccess(data: null);
+    } on DioException catch (err) {
+      return DataFail(exception: err);
+    }
+  }
+
+  @override
+  Future<DataState<void>> createAccount(String accessToken, RequestCreateAccount args) async {
+    try {
+      String url = "$baseUrl/account";
+      await dio.post(
+        url,
+        data: args.toJson(),
+        options: Options(headers: {"access-token": accessToken}),
       );
 
       return const DataSuccess(data: null);

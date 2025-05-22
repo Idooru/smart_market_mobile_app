@@ -3,6 +3,7 @@ import 'package:smart_market/core/common/data_state.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/model/account/domain/entities/account.entity.dart';
 import 'package:smart_market/model/account/domain/entities/account_transaction.entity.dart';
+import 'package:smart_market/model/account/domain/entities/create_account.entity.dart';
 import 'package:smart_market/model/account/domain/repository/account.repository.dart';
 import 'package:smart_market/model/account/domain/service/account.service.dart';
 import 'package:smart_market/core/common/service.dart';
@@ -44,6 +45,13 @@ class AccountServiceImpl extends Service implements AccountService {
   Future<void> deleteAccount(String id) async {
     String? accessToken = _db.getString("access-token");
     DataState<void> dataState = await _accountRepository.deleteAccount(accessToken!, id);
+    if (dataState.exception != null) throwDioFailError(dataState);
+  }
+
+  @override
+  Future<void> createAccount(RequestCreateAccount args) async {
+    String? accessToken = _db.getString("access-token");
+    DataState<void> dataState = await _accountRepository.createAccount(accessToken!, args);
     if (dataState.exception != null) throwDioFailError(dataState);
   }
 }

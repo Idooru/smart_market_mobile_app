@@ -24,12 +24,7 @@ class _AccountListWidgetState extends State<AccountListWidget> {
   void initState() {
     super.initState();
 
-    RequestAccounts args = const RequestAccounts(
-      align: "DESC",
-      column: "createdAt",
-    );
-
-    _getAccountsFuture = _accountService.getAccounts(args);
+    updateAccounts();
   }
 
   void updateAccounts() {
@@ -88,6 +83,14 @@ class _AccountListWidgetState extends State<AccountListWidget> {
         ),
       ),
     );
+  }
+
+  Future<void> pressCreateAccount() async {
+    final result = await Navigator.of(context).pushNamed("/create_account");
+
+    if (result == true) {
+      updateAccounts();
+    }
   }
 
   @override
@@ -158,10 +161,10 @@ class _AccountListWidgetState extends State<AccountListWidget> {
                       CommonButtonBarWidget(
                         icon: Icons.account_balance_outlined,
                         title: "계좌 등록하기",
-                        pressCallback: () {},
+                        pressCallback: pressCreateAccount,
                       ),
                     ];
-                  } else if (accounts.length > 5) {
+                  } else if (accounts.length >= 5) {
                     return accounts
                         .map((account) => AccountItemWidget(
                               account: account,
@@ -174,7 +177,7 @@ class _AccountListWidgetState extends State<AccountListWidget> {
                       CommonButtonBarWidget(
                         icon: Icons.account_balance_outlined,
                         title: "계좌 등록하기",
-                        pressCallback: () {},
+                        pressCallback: pressCreateAccount,
                       )
                     ];
                   }
