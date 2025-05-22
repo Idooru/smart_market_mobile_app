@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_market/core/common/input_widget.mixin.dart';
+import 'package:smart_market/core/common/network_handler.mixin.dart';
 import 'package:smart_market/core/common/validate.entity.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
@@ -21,7 +22,7 @@ class EditAccountNumberWidget extends StatefulWidget {
   State<EditAccountNumberWidget> createState() => EditAccountNumberWidgetState();
 }
 
-class EditAccountNumberWidgetState extends EditWidgetState<EditAccountNumberWidget> with InputWidget implements EditDetector {
+class EditAccountNumberWidgetState extends EditWidgetState<EditAccountNumberWidget> with InputWidget, NetWorkHandler implements EditDetector {
   final FocusNode _focusNode = FocusNode();
   final TextEditingController accountNumberController = TextEditingController();
   final AccountValidateService _accountValidateService = locator<AccountValidateService>();
@@ -58,9 +59,9 @@ class EditAccountNumberWidgetState extends EditWidgetState<EditAccountNumberWidg
 
       isValid = result.isValidate;
       errorMessage = result.message;
-    } on DioFailError catch (_) {
+    } on DioFailError catch (err) {
       isValid = false;
-      errorMessage = "서버 에러";
+      errorMessage = branchErrorMessage(err);
     }
 
     setState(() {

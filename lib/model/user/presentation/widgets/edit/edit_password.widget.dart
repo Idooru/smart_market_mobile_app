@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_market/core/common/input_widget.mixin.dart';
+import 'package:smart_market/core/common/network_handler.mixin.dart';
 import 'package:smart_market/core/common/validate.entity.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
@@ -21,7 +22,7 @@ class EditPasswordWidget extends StatefulWidget {
   State<EditPasswordWidget> createState() => EditPasswordWidgetState();
 }
 
-class EditPasswordWidgetState extends EditWidgetState<EditPasswordWidget> with InputWidget implements EditDetector {
+class EditPasswordWidgetState extends EditWidgetState<EditPasswordWidget> with InputWidget, NetWorkHandler implements EditDetector {
   final FocusNode _newPasswordFocusNode = FocusNode();
   final FocusNode _newMatchPasswordFocusNode = FocusNode();
   final TextEditingController newPasswordController = TextEditingController();
@@ -65,9 +66,9 @@ class EditPasswordWidgetState extends EditWidgetState<EditPasswordWidget> with I
 
       isValidLocal = result.isValidate;
       errorMessage = result.message;
-    } on DioFailError catch (_) {
+    } on DioFailError catch (err) {
       isValidLocal = false;
-      errorMessage = "서버 에러";
+      errorMessage = branchErrorMessage(err);
     }
 
     setState(() {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_market/core/common/network_handler.mixin.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.dart';
@@ -29,7 +30,7 @@ class CreateAccountPage extends StatefulWidget {
   State<CreateAccountPage> createState() => _CreateAccountPageState();
 }
 
-class _CreateAccountPageState extends State<CreateAccountPage> {
+class _CreateAccountPageState extends State<CreateAccountPage> with NetWorkHandler {
   final AccountService _accountService = locator<AccountService>();
   final GlobalKey<SelectBankWidgetState> _bankKey = GlobalKey<SelectBankWidgetState>();
   final GlobalKey<EditAccountNumberWidgetState> _accountNumberKey = GlobalKey<EditAccountNumberWidgetState>();
@@ -75,10 +76,10 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
       await _accountService.createAccount(args);
       navigator.pop(true);
       scaffoldMessenger.showSnackBar(const SnackBar(content: Text('계좌 생성이 완료되었습니다.')));
-    } on DioFailError catch (_) {
+    } on DioFailError catch (err) {
       setState(() {
         _hasError = true;
-        _errorMessage = "서버 에러";
+        _errorMessage = branchErrorMessage(err);
       });
     }
   }
@@ -120,12 +121,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                   ),
                   const SizedBox(height: 10),
                   getCreateAccountButton(provider),
-                  if (_hasError)
-                    Center(
-                        child: Text(
-                      _errorMessage,
-                      style: const TextStyle(color: Colors.red),
-                    )),
+                  if (_hasError) getErrorMessageWidget(_errorMessage),
                 ],
               ),
             ),

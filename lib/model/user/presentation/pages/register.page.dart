@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_market/core/common/network_handler.mixin.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.dart';
@@ -23,7 +24,7 @@ class RegisterPage extends StatefulWidget {
   State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _RegisterPageState extends State<RegisterPage> with NetWorkHandler {
   final UserService _userService = locator<UserService>();
   final GlobalKey<EditRealNameWidgetState> _realNameKey = GlobalKey<EditRealNameWidgetState>();
   final GlobalKey<EditGenderWidgetState> _genderKey = GlobalKey<EditGenderWidgetState>();
@@ -56,10 +57,10 @@ class _RegisterPageState extends State<RegisterPage> {
       await _userService.register(args);
       navigator.pop();
       scaffoldMessenger.showSnackBar(const SnackBar(content: Text('회원가입이 완료되었습니다.')));
-    } on DioFailError catch (_) {
+    } on DioFailError catch (err) {
       setState(() {
         _hasError = true;
-        _errorMessage = "서버 에러";
+        _errorMessage = branchErrorMessage(err);
       });
     }
   }
@@ -115,12 +116,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   const SizedBox(height: 10),
                   getRegisterButton(provider),
                   const SizedBox(height: 20),
-                  if (_hasError)
-                    Center(
-                        child: Text(
-                      _errorMessage,
-                      style: const TextStyle(color: Colors.red),
-                    )),
+                  if (_hasError) getErrorMessageWidget(_errorMessage),
                 ],
               ),
             ),
