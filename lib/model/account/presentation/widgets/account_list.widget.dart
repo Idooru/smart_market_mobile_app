@@ -152,14 +152,14 @@ class _AccountListWidgetState extends State<AccountListWidget> {
               const SizedBox(height: 10),
               Column(
                 children: (() {
-                  if (accounts.length >= 5) {
+                  if (accounts.isNotEmpty && accounts.length >= 5) {
                     return accounts
                         .map((account) => AccountItemWidget(
                               account: account,
                               updateCallback: updateAccounts,
                             ))
                         .toList();
-                  } else if (accounts.length < 6) {
+                  } else if (accounts.isNotEmpty && accounts.length <= 4) {
                     return [
                       ...accounts.map((account) => AccountItemWidget(
                             account: account,
