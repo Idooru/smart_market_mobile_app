@@ -152,7 +152,14 @@ class _AccountListWidgetState extends State<AccountListWidget> {
               const SizedBox(height: 10),
               Column(
                 children: (() {
-                  if (accounts.isNotEmpty) {
+                  if (accounts.length >= 5) {
+                    return accounts
+                        .map((account) => AccountItemWidget(
+                              account: account,
+                              updateCallback: updateAccounts,
+                            ))
+                        .toList();
+                  } else if (accounts.length < 6) {
                     return [
                       ...accounts.map((account) => AccountItemWidget(
                             account: account,
@@ -164,13 +171,6 @@ class _AccountListWidgetState extends State<AccountListWidget> {
                         pressCallback: pressCreateAccount,
                       ),
                     ];
-                  } else if (accounts.length >= 5) {
-                    return accounts
-                        .map((account) => AccountItemWidget(
-                              account: account,
-                              updateCallback: updateAccounts,
-                            ))
-                        .toList();
                   } else {
                     return [
                       getEmptyAccountMessage(),
