@@ -11,8 +11,19 @@ import 'package:smart_market/model/account/presentation/widgets/edit_account_num
 import 'package:smart_market/model/account/presentation/widgets/select_bank.widget.dart';
 import 'package:smart_market/model/account/presentation/widgets/set_main_account.widget.dart';
 
+class CreateAccountPageArgs {
+  final bool isAccountsEmpty;
+
+  const CreateAccountPageArgs({required this.isAccountsEmpty});
+}
+
 class CreateAccountPage extends StatefulWidget {
-  const CreateAccountPage({super.key});
+  final bool isAccountsEmpty;
+
+  const CreateAccountPage({
+    super.key,
+    required this.isAccountsEmpty,
+  });
 
   @override
   State<CreateAccountPage> createState() => _CreateAccountPageState();
@@ -103,7 +114,10 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                   SelectBankWidget(key: _bankKey),
                   EditAccountNumberWidget(key: _accountNumberKey),
                   DepositWidget(key: _depositKey),
-                  SetMainAccountWidget(key: _setMainAccountKey),
+                  SetMainAccountWidget(
+                    key: _setMainAccountKey,
+                    isAccountsEmpty: widget.isAccountsEmpty,
+                  ),
                   const SizedBox(height: 10),
                   getCreateAccountButton(provider),
                   if (_hasError)

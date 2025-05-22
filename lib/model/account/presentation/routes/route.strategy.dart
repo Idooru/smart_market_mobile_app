@@ -9,8 +9,11 @@ final Map<String, RouteStrategy> accountRouteStrategies = {
 class CreateAccountStrategy implements RouteStrategy {
   @override
   MaterialPageRoute route(RouteSettings settings) {
+    final args = settings.arguments as CreateAccountPageArgs;
     return MaterialPageRoute(
-      builder: (context) => const CreateAccountPage(),
+      builder: (context) => CreateAccountPage(
+        isAccountsEmpty: args.isAccountsEmpty,
+      ),
       settings: settings,
     );
   }

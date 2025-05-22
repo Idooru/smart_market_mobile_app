@@ -7,6 +7,7 @@ import 'package:smart_market/core/widgets/handler/loading_handler.widget.dart';
 import 'package:smart_market/core/widgets/handler/network_error_handler.widget.dart';
 import 'package:smart_market/model/account/domain/entities/account.entity.dart';
 import 'package:smart_market/model/account/domain/service/account.service.dart';
+import 'package:smart_market/model/account/presentation/pages/create_account.page.dart';
 import 'package:smart_market/model/account/presentation/widgets/account_item.widget.dart';
 
 class AccountListWidget extends StatefulWidget {
@@ -85,8 +86,11 @@ class _AccountListWidgetState extends State<AccountListWidget> {
     );
   }
 
-  Future<void> pressCreateAccount() async {
-    final result = await Navigator.of(context).pushNamed("/create_account");
+  Future<void> pressCreateAccount(List<ResponseAccount> accounts) async {
+    final result = await Navigator.of(context).pushNamed(
+      "/create_account",
+      arguments: CreateAccountPageArgs(isAccountsEmpty: accounts.isEmpty),
+    );
 
     if (result == true) {
       updateAccounts();
@@ -168,7 +172,7 @@ class _AccountListWidgetState extends State<AccountListWidget> {
                       CommonButtonBarWidget(
                         icon: Icons.account_balance_outlined,
                         title: "계좌 등록하기",
-                        pressCallback: pressCreateAccount,
+                        pressCallback: () => pressCreateAccount(accounts),
                       ),
                     ];
                   } else {
@@ -177,7 +181,7 @@ class _AccountListWidgetState extends State<AccountListWidget> {
                       CommonButtonBarWidget(
                         icon: Icons.account_balance_outlined,
                         title: "계좌 등록하기",
-                        pressCallback: pressCreateAccount,
+                        pressCallback: () => pressCreateAccount(accounts),
                       )
                     ];
                   }

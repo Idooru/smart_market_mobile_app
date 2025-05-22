@@ -2,14 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:smart_market/core/common/input_widget.mixin.dart';
 
 class SetMainAccountWidget extends StatefulWidget {
-  const SetMainAccountWidget({super.key});
+  final bool isAccountsEmpty;
+
+  const SetMainAccountWidget({
+    super.key,
+    required this.isAccountsEmpty,
+  });
 
   @override
   State<SetMainAccountWidget> createState() => SetMainAccountWidgetState();
 }
 
 class SetMainAccountWidgetState extends State<SetMainAccountWidget> with InputWidget {
-  bool isChecked = false;
+  late bool isChecked;
+
+  @override
+  void initState() {
+    super.initState();
+    isChecked = widget.isAccountsEmpty;
+  }
 
   void pressCheckBox() {
     setState(() {
@@ -24,7 +35,7 @@ class SetMainAccountWidgetState extends State<SetMainAccountWidget> with InputWi
         getTitle("주 사용 계좌 설정"),
         const Spacer(),
         IconButton(
-          onPressed: pressCheckBox,
+          onPressed: isChecked ? null : pressCheckBox,
           icon: Icon(isChecked ? Icons.check_box_outlined : Icons.check_box_outline_blank_sharp),
         ),
       ],
