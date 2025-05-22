@@ -136,13 +136,15 @@ class _AccountItemWidgetState extends State<AccountItemWidget> {
                         title: Text("주 사용 계좌 설정"),
                       ),
                     ),
-              GestureDetector(
-                onTap: pressDeleteAccount,
-                child: const ListTile(
-                  leading: Icon(Icons.delete_forever),
-                  title: Text("계좌 삭제"),
-                ),
-              ),
+              widget.account.isMainAccount
+                  ? Container()
+                  : GestureDetector(
+                      onTap: pressDeleteAccount,
+                      child: const ListTile(
+                        leading: Icon(Icons.delete_forever),
+                        title: Text("계좌 삭제"),
+                      ),
+                    ),
             ],
           ),
         );
