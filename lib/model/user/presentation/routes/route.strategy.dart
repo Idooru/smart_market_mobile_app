@@ -49,8 +49,9 @@ class FindEmailRouteStrategy implements RouteStrategy {
 class ResetPasswordRouteStrategy implements RouteStrategy {
   @override
   MaterialPageRoute route(RouteSettings settings) {
+    final args = settings.arguments as ResetPasswordPageArgs;
     return MaterialPageRoute(
-      builder: (context) => const ResetPasswordPage(),
+      builder: (context) => ResetPasswordPage(email: args.email),
       settings: settings,
     );
   }

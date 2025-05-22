@@ -10,8 +10,19 @@ import 'package:smart_market/model/user/presentation/state/edit_user_column.prov
 import 'package:smart_market/model/user/presentation/widgets/edit/edit_email.widget.dart';
 import 'package:smart_market/model/user/presentation/widgets/edit/edit_password.widget.dart';
 
+class ResetPasswordPageArgs {
+  final String? email;
+
+  const ResetPasswordPageArgs({this.email});
+}
+
 class ResetPasswordPage extends StatefulWidget {
-  const ResetPasswordPage({super.key});
+  final String? email;
+
+  const ResetPasswordPage({
+    super.key,
+    this.email,
+  });
 
   @override
   State<ResetPasswordPage> createState() => _ResetPasswordPageState();
@@ -79,7 +90,11 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 children: [
                   FocusEditWidget<EditEmailWidgetState>(
                     editWidgetKey: _emailKey,
-                    editWidget: EditEmailWidget(key: _emailKey, hasDuplicateValidation: false),
+                    editWidget: EditEmailWidget(
+                      key: _emailKey,
+                      beforeEmail: widget.email,
+                      hasDuplicateValidation: false,
+                    ),
                   ),
                   EditPasswordWidget(key: _passwordKey, isLastWidget: true),
                   getResetPasswordButton(provider),

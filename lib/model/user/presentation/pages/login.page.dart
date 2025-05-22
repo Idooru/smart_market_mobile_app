@@ -4,6 +4,7 @@ import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.dart';
 import 'package:smart_market/model/user/domain/entities/login.entity.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
+import 'package:smart_market/model/user/presentation/pages/reset_password.page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -76,7 +77,10 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void pressResetPassword() {
-    Navigator.of(context).pushNamed("/reset_password");
+    Navigator.of(context).pushNamed(
+      "/reset_password",
+      arguments: const ResetPasswordPageArgs(),
+    );
   }
 
   ConditionalButtonBarWidget getLoginButton() {

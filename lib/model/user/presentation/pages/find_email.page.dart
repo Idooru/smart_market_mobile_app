@@ -7,6 +7,7 @@ import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.d
 import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
 import 'package:smart_market/model/user/domain/entities/find_email.entity.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
+import 'package:smart_market/model/user/presentation/pages/reset_password.page.dart';
 import 'package:smart_market/model/user/presentation/state/edit_user_column.provider.dart';
 import 'package:smart_market/model/user/presentation/widgets/edit/edit_phonenumber.widget.dart';
 import 'package:smart_market/model/user/presentation/widgets/edit/edit_realname.widget.dart';
@@ -59,6 +60,13 @@ class _FindEmailPageState extends State<FindEmailPage> {
     }
   }
 
+  void pressResetPassword() {
+    Navigator.of(context).pushNamed(
+      "/reset_password",
+      arguments: ResetPasswordPageArgs(email: _email),
+    );
+  }
+
   Widget getEmail() {
     if (_email.isEmpty) return Container();
     return Column(
@@ -87,7 +95,7 @@ class _FindEmailPageState extends State<FindEmailPage> {
         CommonButtonBarWidget(
           icon: Icons.lock,
           title: "비밀번호 초기화하기",
-          pressCallback: () => Navigator.of(context).pushNamed("/reset_password"),
+          pressCallback: pressResetPassword,
         ),
       ],
     );
