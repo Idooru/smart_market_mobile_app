@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_market/core/common/network_handler.mixin.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.dart';
@@ -28,7 +29,7 @@ class ResetPasswordPage extends StatefulWidget {
   State<ResetPasswordPage> createState() => _ResetPasswordPageState();
 }
 
-class _ResetPasswordPageState extends State<ResetPasswordPage> {
+class _ResetPasswordPageState extends State<ResetPasswordPage> with NetWorkHandler {
   final UserService _userService = locator<UserService>();
   final GlobalKey<EditEmailWidgetState> _emailKey = GlobalKey();
   final GlobalKey<EditPasswordWidgetState> _passwordKey = GlobalKey();
@@ -51,13 +52,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     } on DioFailError catch (err) {
       setState(() {
         _hasError = true;
-        if (err.message == "none connection") {
-          _errorMessage = "서버와 연결되지 않습니다.";
-        } else if (err.response!.data["statusCode"] == 500) {
-          _errorMessage = "서버 내부에서 에러가 발생하였습니다.";
-        } else {
-          _errorMessage = err.response!.data["reason"];
-        }
+        _errorMessage = branchErrorMessage(err);
       });
     }
   }
@@ -99,13 +94,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   EditPasswordWidget(key: _passwordKey, isLastWidget: true),
                   getResetPasswordButton(provider),
                   const SizedBox(height: 10),
-                  if (_hasError)
-                    Center(
-                      child: Text(
-                        _errorMessage,
-                        style: const TextStyle(color: Colors.red),
-                      ),
-                    )
+                  if (_hasError) getErrorMessageWidget(_errorMessage)
                 ],
               ),
             ),

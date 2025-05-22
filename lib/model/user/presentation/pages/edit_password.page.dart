@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_market/core/common/network_handler.mixin.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
@@ -14,7 +15,7 @@ class EditPasswordPage extends StatefulWidget {
   State<EditPasswordPage> createState() => _EditPasswordPageState();
 }
 
-class _EditPasswordPageState extends State<EditPasswordPage> {
+class _EditPasswordPageState extends State<EditPasswordPage> with NetWorkHandler {
   final GlobalKey<EditPasswordWidgetState> _passwordKey = GlobalKey();
   final UserService _userService = locator<UserService>();
 
@@ -30,10 +31,10 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
       await _userService.modifyPassword(password);
       navigator.pop();
       scaffoldMessenger.showSnackBar(const SnackBar(content: Text("비밀번호를 수정하였습니다.")));
-    } on DioFailError catch (_) {
+    } on DioFailError catch (err) {
       setState(() {
         _hasError = true;
-        _errorMessage = "서버 에러";
+        _errorMessage = branchErrorMessage(err);
       });
     }
   }
@@ -93,11 +94,7 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  if (_hasError)
-                    Text(
-                      _errorMessage,
-                      style: const TextStyle(color: Colors.red),
-                    )
+                  if (_hasError) getErrorMessageWidget(_errorMessage),
                 ],
               ),
             ),

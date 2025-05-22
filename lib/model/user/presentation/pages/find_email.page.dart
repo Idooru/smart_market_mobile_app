@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_market/core/common/network_handler.mixin.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/widgets/common/common_button_bar.widget.dart';
@@ -19,7 +20,7 @@ class FindEmailPage extends StatefulWidget {
   State<FindEmailPage> createState() => _FindEmailPageState();
 }
 
-class _FindEmailPageState extends State<FindEmailPage> {
+class _FindEmailPageState extends State<FindEmailPage> with NetWorkHandler {
   final UserService _userService = locator<UserService>();
   final GlobalKey<EditRealNameWidgetState> _realNameKey = GlobalKey<EditRealNameWidgetState>();
   final GlobalKey<EditPhoneNumberWidgetState> _phoneNumberKey = GlobalKey<EditPhoneNumberWidgetState>();
@@ -49,13 +50,7 @@ class _FindEmailPageState extends State<FindEmailPage> {
       setState(() {
         _hasError = true;
         _email = "";
-        if (err.message == "none connection") {
-          _errorMessage = "서버와 연결되지 않습니다.";
-        } else if (err.response!.data["statusCode"] == 500) {
-          _errorMessage = "서버 내부에서 에러가 발생하였습니다.";
-        } else {
-          _errorMessage = err.response!.data["reason"];
-        }
+        _errorMessage = branchErrorMessage(err);
       });
     }
   }
@@ -147,12 +142,7 @@ class _FindEmailPageState extends State<FindEmailPage> {
                   ),
                   getFindEmailButton(provider),
                   const SizedBox(height: 10),
-                  if (_hasError)
-                    Center(
-                        child: Text(
-                      _errorMessage,
-                      style: const TextStyle(color: Colors.red),
-                    )),
+                  if (_hasError) getErrorMessageWidget(_errorMessage),
                   getEmail(),
                 ],
               ),

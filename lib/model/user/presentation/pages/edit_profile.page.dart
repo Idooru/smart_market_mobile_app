@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_market/core/common/network_handler.mixin.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/widgets/common/common_button_bar.widget.dart';
@@ -31,7 +32,7 @@ class EditProfilePage extends StatefulWidget {
   State<EditProfilePage> createState() => _EditProfilePageState();
 }
 
-class _EditProfilePageState extends State<EditProfilePage> {
+class _EditProfilePageState extends State<EditProfilePage> with NetWorkHandler {
   final UserService _userService = locator<UserService>();
   final GlobalKey<EditNickNameWidgetState> _nickNameKey = GlobalKey<EditNickNameWidgetState>();
   final GlobalKey<EditEmailWidgetState> _emailKey = GlobalKey<EditEmailWidgetState>();
@@ -55,10 +56,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
       await _userService.updateProfile(args);
       navigator.pop(true);
       scaffoldMessenger.showSnackBar(const SnackBar(content: Text("프로필을 수정하였습니다.")));
-    } on DioFailError catch (_) {
+    } on DioFailError catch (err) {
       setState(() {
         _hasError = true;
-        _errorMessage = "서버 에러";
+        _errorMessage = branchErrorMessage(err);
       });
     }
   }
@@ -110,12 +111,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   EditPhoneNumberWidget(beforePhoneNumber: widget.profile.phoneNumber, key: _phoneNumberKey),
                   EditAddressWidget(beforeAddress: widget.profile.address, key: _addressKey, isLastWidget: true),
                   getEditProfileButton(provider),
-                  if (_hasError)
-                    Center(
-                        child: Text(
-                      _errorMessage,
-                      style: const TextStyle(color: Colors.red),
-                    )),
+                  if (_hasError) getErrorMessageWidget(_errorMessage),
                   getNavigateEditPasswordButton()
                 ],
               ),

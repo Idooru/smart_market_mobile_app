@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_market/core/common/network_handler.mixin.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 
 class HandleAccountTransactionErrorDialog {
@@ -25,20 +26,13 @@ class HandleAccountTransactionErrorWidget extends StatefulWidget {
   State<HandleAccountTransactionErrorWidget> createState() => _HandleAccountTransactionErrorWidgetState();
 }
 
-class _HandleAccountTransactionErrorWidgetState extends State<HandleAccountTransactionErrorWidget> {
+class _HandleAccountTransactionErrorWidgetState extends State<HandleAccountTransactionErrorWidget> with NetWorkHandler {
   late final String _errorMessage;
 
   @override
   void initState() {
     super.initState();
-
-    if (widget.err.message == "none connection") {
-      _errorMessage = "서버와 연결되지 않습니다.";
-    } else if (widget.err.response!.data["statusCode"] == 500) {
-      _errorMessage = "서버 내부에서 에러가 발생하였습니다.";
-    } else {
-      _errorMessage = widget.err.response!.data["reason"];
-    }
+    _errorMessage = branchErrorMessage(widget.err);
   }
 
   void pressConfirm() {
