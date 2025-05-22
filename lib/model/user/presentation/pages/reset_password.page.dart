@@ -45,7 +45,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
         } else if (err.response!.data["statusCode"] == 500) {
           _errorMessage = "서버 내부에서 에러가 발생하였습니다.";
         } else {
-          _errorMessage = "원인 모를 에러가 발생하였습니다.";
+          _errorMessage = err.response!.data["reason"];
         }
       });
     }

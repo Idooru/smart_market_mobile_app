@@ -58,12 +58,10 @@ class _LoginPageState extends State<LoginPage> {
         _hasError = true;
         if (err.message == "none connection") {
           _errorMessage = "서버와 연결되지 않습니다.";
-        } else if (err.response!.data["statusCode"] == 400) {
-          _errorMessage = err.response!.data["reason"];
         } else if (err.response!.data["statusCode"] == 500) {
           _errorMessage = "서버 내부에서 에러가 발생하였습니다.";
         } else {
-          _errorMessage = "원인 모를 에러가 발생하였습니다.";
+          _errorMessage = err.response!.data["reason"];
         }
       });
     }
