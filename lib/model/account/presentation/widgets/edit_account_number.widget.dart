@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_market/core/common/input_widget.mixin.dart';
 import 'package:smart_market/core/common/validate.entity.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
@@ -7,7 +8,6 @@ import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
 import 'package:smart_market/model/account/domain/service/account_validate.service.dart';
 import 'package:smart_market/model/account/presentation/state/create_account.provider.dart';
 import 'package:smart_market/model/user/common/interface/edit_detector.interface.dart';
-import 'package:smart_market/model/user/common/mixin/edit_widget.mixin.dart';
 
 class EditAccountNumberWidget extends StatefulWidget {
   final bool isLastWidget;
@@ -21,7 +21,7 @@ class EditAccountNumberWidget extends StatefulWidget {
   State<EditAccountNumberWidget> createState() => EditAccountNumberWidgetState();
 }
 
-class EditAccountNumberWidgetState extends EditWidgetState<EditAccountNumberWidget> with EditWidget implements EditDetector {
+class EditAccountNumberWidgetState extends EditWidgetState<EditAccountNumberWidget> with InputWidget implements EditDetector {
   final FocusNode _focusNode = FocusNode();
   final TextEditingController accountNumberController = TextEditingController();
   final AccountValidateService _accountValidateService = locator<AccountValidateService>();

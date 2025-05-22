@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_market/core/common/input_widget.mixin.dart';
 import 'package:smart_market/core/widgets/common/radio.widget.dart';
-import 'package:smart_market/model/user/common/mixin/edit_widget.mixin.dart';
 import 'package:smart_market/model/user/presentation/state/edit_user_column.provider.dart';
 
 class EditGenderWidget extends StatefulWidget {
@@ -11,7 +11,7 @@ class EditGenderWidget extends StatefulWidget {
   State<EditGenderWidget> createState() => EditGenderWidgetState();
 }
 
-class EditGenderWidgetState extends State<EditGenderWidget> with EditWidget {
+class EditGenderWidgetState extends State<EditGenderWidget> with InputWidget {
   late EditUserColumnProvider provider;
 
   String selectedGender = "male";

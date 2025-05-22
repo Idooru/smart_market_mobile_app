@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_market/model/user/common/mixin/edit_widget.mixin.dart';
+import 'package:smart_market/core/common/input_widget.mixin.dart';
 import 'package:smart_market/model/user/presentation/state/edit_user_column.provider.dart';
 
 class EditBirthWidget extends StatefulWidget {
@@ -11,7 +11,7 @@ class EditBirthWidget extends StatefulWidget {
   State<EditBirthWidget> createState() => EditBirthWidgetState();
 }
 
-class EditBirthWidgetState extends State<EditBirthWidget> with EditWidget {
+class EditBirthWidgetState extends State<EditBirthWidget> with InputWidget {
   late EditUserColumnProvider _provider;
   late bool _isValid = false;
 

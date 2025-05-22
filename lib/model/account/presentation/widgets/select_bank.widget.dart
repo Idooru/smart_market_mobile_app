@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_market/core/common/input_widget.mixin.dart';
 import 'package:smart_market/model/account/presentation/state/create_account.provider.dart';
-import 'package:smart_market/model/user/common/mixin/edit_widget.mixin.dart';
 
 class SelectBankWidget extends StatefulWidget {
   const SelectBankWidget({super.key});
@@ -10,7 +10,7 @@ class SelectBankWidget extends StatefulWidget {
   State<SelectBankWidget> createState() => SelectBankWidgetState();
 }
 
-class SelectBankWidgetState extends State<SelectBankWidget> with EditWidget {
+class SelectBankWidgetState extends State<SelectBankWidget> with InputWidget {
   late CreateAccountProvider _provider;
 
   bool _isValid = false;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:smart_market/core/common/input_widget.mixin.dart';
 import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
-import 'package:smart_market/model/user/common/mixin/edit_widget.mixin.dart';
 
 class DepositWidget extends StatefulWidget {
   const DepositWidget({super.key});
@@ -9,7 +9,7 @@ class DepositWidget extends StatefulWidget {
   State<DepositWidget> createState() => DepositBalanceWidgetState();
 }
 
-class DepositBalanceWidgetState extends EditWidgetState<DepositWidget> with EditWidget {
+class DepositBalanceWidgetState extends EditWidgetState<DepositWidget> with InputWidget {
   final FocusNode _focusNode = FocusNode();
   final TextEditingController depositController = TextEditingController();
 

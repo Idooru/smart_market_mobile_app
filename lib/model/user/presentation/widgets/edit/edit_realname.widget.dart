@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_market/core/common/input_widget.mixin.dart';
 import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
 import 'package:smart_market/model/user/common/interface/edit_detector.interface.dart';
-import 'package:smart_market/model/user/common/mixin/edit_widget.mixin.dart';
 import 'package:smart_market/model/user/presentation/state/edit_user_column.provider.dart';
 
 class EditRealNameWidget extends StatefulWidget {
@@ -17,7 +17,7 @@ class EditRealNameWidget extends StatefulWidget {
   State<EditRealNameWidget> createState() => EditRealNameWidgetState();
 }
 
-class EditRealNameWidgetState extends EditWidgetState<EditRealNameWidget> with EditWidget implements EditDetector {
+class EditRealNameWidgetState extends EditWidgetState<EditRealNameWidget> with InputWidget implements EditDetector {
   final FocusNode _focusNode = FocusNode();
   final TextEditingController realNameController = TextEditingController();
   late EditUserColumnProvider _provider;

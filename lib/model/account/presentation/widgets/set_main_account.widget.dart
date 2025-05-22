@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smart_market/model/user/common/mixin/edit_widget.mixin.dart';
+import 'package:smart_market/core/common/input_widget.mixin.dart';
 
 class SetMainAccountWidget extends StatefulWidget {
   const SetMainAccountWidget({super.key});
@@ -8,7 +8,7 @@ class SetMainAccountWidget extends StatefulWidget {
   State<SetMainAccountWidget> createState() => SetMainAccountWidgetState();
 }
 
-class SetMainAccountWidgetState extends State<SetMainAccountWidget> with EditWidget {
+class SetMainAccountWidgetState extends State<SetMainAccountWidget> with InputWidget {
   bool isChecked = false;
 
   void pressCheckBox() {
