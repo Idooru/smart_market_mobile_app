@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:smart_market/model/product/presentation/state/product_filtered.provider.dart';
+import 'package:smart_market/model/product/presentation/provider/product_filtered.provider.dart';
 
 class HighlightFilteredProductWidget extends StatefulWidget {
   final Text textWidget;

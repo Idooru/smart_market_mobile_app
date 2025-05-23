@@ -9,7 +9,7 @@ import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
 import 'package:smart_market/model/user/domain/entities/find_email.entity.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
 import 'package:smart_market/model/user/presentation/pages/reset_password.page.dart';
-import 'package:smart_market/model/user/presentation/state/edit_user_column.provider.dart';
+import 'package:smart_market/model/user/presentation/provider/edit_user_column.provider.dart';
 import 'package:smart_market/model/user/presentation/widgets/edit/edit_phonenumber.widget.dart';
 import 'package:smart_market/model/user/presentation/widgets/edit/edit_realname.widget.dart';
 

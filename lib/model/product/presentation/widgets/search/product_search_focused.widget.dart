@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:smart_market/core/utils/parse_date.dart';
 import 'package:smart_market/core/widgets/common/custom_scrollbar.widget.dart';
 import 'package:smart_market/model/product/domain/entities/search_product.entity.dart';
-import 'package:smart_market/model/product/presentation/state/product_filtered.provider.dart';
-import 'package:smart_market/model/product/presentation/state/product_search.provider.dart';
+import 'package:smart_market/model/product/presentation/provider/product_filtered.provider.dart';
+import 'package:smart_market/model/product/presentation/provider/product_search.provider.dart';
 
 class ProductSearchFocusedWidget extends StatelessWidget {
   final void Function(String keyword, ProductSearchProvider searchProvider, ProductFilteredProvider filteredProvider, void Function(RequestSearchProducts) callback) search;

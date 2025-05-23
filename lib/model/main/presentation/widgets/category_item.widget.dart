@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_market/model/main/presentation/pages/navigation.page.dart';
-import 'package:smart_market/model/product/presentation/state/product_search.provider.dart';
+import 'package:smart_market/model/product/presentation/provider/product_search.provider.dart';
 
 class CategoryItemWidget extends StatelessWidget {
   final String title;

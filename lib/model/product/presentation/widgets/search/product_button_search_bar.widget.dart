@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smart_market/model/product/presentation/state/product_search.provider.dart';
+import 'package:smart_market/model/product/presentation/provider/product_search.provider.dart';
 
 class _SearchBarDelegate extends SliverPersistentHeaderDelegate {
   final Widget child;

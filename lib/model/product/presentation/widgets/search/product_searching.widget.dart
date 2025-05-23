@@ -7,8 +7,8 @@ import 'package:smart_market/core/widgets/handler/internal_server_error_handler.
 import 'package:smart_market/core/widgets/handler/network_error_handler.widget.dart';
 import 'package:smart_market/model/product/domain/entities/search_product.entity.dart';
 import 'package:smart_market/model/product/domain/service/product.service.dart';
-import 'package:smart_market/model/product/presentation/state/product_filtered.provider.dart';
-import 'package:smart_market/model/product/presentation/state/product_search.provider.dart';
+import 'package:smart_market/model/product/presentation/provider/product_filtered.provider.dart';
+import 'package:smart_market/model/product/presentation/provider/product_search.provider.dart';
 
 class ProductSearchingWidget extends StatefulWidget {
   final void Function(String keyword, ProductSearchProvider searchProvider, ProductFilteredProvider filteredProvider, void Function(RequestSearchProducts) callback) search;

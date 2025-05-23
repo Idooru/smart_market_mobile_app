@@ -6,8 +6,8 @@ import 'package:smart_market/model/main/presentation/pages/navigation.page.dart'
 import 'package:smart_market/model/product/common/const/%08product_category.const.dart';
 import 'package:smart_market/model/product/domain/entities/search_product.entity.dart';
 import 'package:smart_market/model/product/domain/service/product.service.dart';
-import 'package:smart_market/model/product/presentation/state/product_filtered.provider.dart';
-import 'package:smart_market/model/product/presentation/state/product_search.provider.dart';
+import 'package:smart_market/model/product/presentation/provider/product_filtered.provider.dart';
+import 'package:smart_market/model/product/presentation/provider/product_search.provider.dart';
 import 'package:smart_market/model/product/presentation/widgets/product_filter.dialog.dart';
 import 'package:smart_market/model/product/presentation/widgets/search/product_button_search_bar.widget.dart';
 import 'package:smart_market/model/product/presentation/widgets/search/product_search_focused.widget.dart';

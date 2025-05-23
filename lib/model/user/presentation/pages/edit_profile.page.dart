@@ -8,7 +8,7 @@ import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.d
 import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
 import 'package:smart_market/model/user/domain/entities/profile.entity.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
-import 'package:smart_market/model/user/presentation/state/edit_user_column.provider.dart';
+import 'package:smart_market/model/user/presentation/provider/edit_user_column.provider.dart';
 import 'package:smart_market/model/user/presentation/widgets/edit/edit_address.widget.dart';
 import 'package:smart_market/model/user/presentation/widgets/edit/edit_email.widget.dart';
 import 'package:smart_market/model/user/presentation/widgets/edit/edit_nickname.widget.dart';

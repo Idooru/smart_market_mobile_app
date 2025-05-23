@@ -6,7 +6,7 @@ import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.dart';
 import 'package:smart_market/model/account/domain/entities/create_account.entity.dart';
 import 'package:smart_market/model/account/domain/service/account.service.dart';
-import 'package:smart_market/model/account/presentation/state/create_account.provider.dart';
+import 'package:smart_market/model/account/presentation/provider/create_account.provider.dart';
 import 'package:smart_market/model/account/presentation/widgets/deposit_balance.widget.dart';
 import 'package:smart_market/model/account/presentation/widgets/edit_account_number.widget.dart';
 import 'package:smart_market/model/account/presentation/widgets/select_bank.widget.dart';

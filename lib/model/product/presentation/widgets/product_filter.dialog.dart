@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:smart_market/core/widgets/common/radio.widget.dart';
 import 'package:smart_market/model/product/common/const/%08product_category.const.dart';
 import 'package:smart_market/model/product/domain/entities/search_product.entity.dart';
-import 'package:smart_market/model/product/presentation/state/product_filtered.provider.dart';
-import 'package:smart_market/model/product/presentation/state/product_search.provider.dart';
+import 'package:smart_market/model/product/presentation/provider/product_filtered.provider.dart';
+import 'package:smart_market/model/product/presentation/provider/product_search.provider.dart';
 
 final Map<String, String> filterMap = {};
 

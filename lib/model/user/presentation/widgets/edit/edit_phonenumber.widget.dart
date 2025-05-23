@@ -8,7 +8,7 @@ import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
 import 'package:smart_market/model/user/common/interface/edit_detector.interface.dart';
 import 'package:smart_market/model/user/domain/service/user_validate.service.dart';
-import 'package:smart_market/model/user/presentation/state/edit_user_column.provider.dart';
+import 'package:smart_market/model/user/presentation/provider/edit_user_column.provider.dart';
 
 class EditPhoneNumberWidget extends StatefulWidget {
   final String? beforePhoneNumber;

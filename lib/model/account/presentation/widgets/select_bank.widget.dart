@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_market/core/common/input_widget.mixin.dart';
-import 'package:smart_market/model/account/presentation/state/create_account.provider.dart';
+import 'package:smart_market/model/account/presentation/provider/create_account.provider.dart';
 
 class SelectBankWidget extends StatefulWidget {
   const SelectBankWidget({super.key});

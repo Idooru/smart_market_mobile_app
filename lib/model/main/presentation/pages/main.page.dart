@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:smart_market/model/main/presentation/pages/navigation.page.dart';
 import 'package:smart_market/model/main/presentation/widgets/category_list.widget.dart';
 import 'package:smart_market/model/main/presentation/widgets/conditional_product_list.widget.dart';
-import 'package:smart_market/model/product/presentation/state/product_search.provider.dart';
+import 'package:smart_market/model/product/presentation/provider/product_search.provider.dart';
 import 'package:smart_market/model/product/presentation/widgets/search/product_button_search_bar.widget.dart';
 
 class MainPage extends StatelessWidget {

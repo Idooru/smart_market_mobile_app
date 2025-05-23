@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:smart_market/core/utils/parse_date.dart';
 import 'package:smart_market/model/product/domain/entities/search_product.entity.dart';
 import 'package:smart_market/model/product/presentation/pages/detail_product.page.dart';
-import 'package:smart_market/model/product/presentation/state/product_filtered.provider.dart';
+import 'package:smart_market/model/product/presentation/provider/product_filtered.provider.dart';
 import 'package:smart_market/model/product/presentation/widgets/display_average_score.widget.dart';
 // import 'package:smart_market/model/product/presentation/widgets/item/highlight_filtered_product.widget.dart';
 

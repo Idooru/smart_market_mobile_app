@@ -7,7 +7,7 @@ import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
 import 'package:smart_market/model/account/domain/service/account_validate.service.dart';
-import 'package:smart_market/model/account/presentation/state/create_account.provider.dart';
+import 'package:smart_market/model/account/presentation/provider/create_account.provider.dart';
 import 'package:smart_market/model/user/common/interface/edit_detector.interface.dart';
 
 class EditAccountNumberWidget extends StatefulWidget {
