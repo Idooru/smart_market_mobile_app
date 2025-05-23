@@ -7,6 +7,7 @@ import 'package:smart_market/core/widgets/handler/loading_handler.widget.dart';
 import 'package:smart_market/core/widgets/handler/network_error_handler.widget.dart';
 import 'package:smart_market/model/account/domain/entities/account.entity.dart';
 import 'package:smart_market/model/account/domain/service/account.service.dart';
+import 'package:smart_market/model/account/presentation/dialog/account_sort.dialog.dart';
 import 'package:smart_market/model/account/presentation/pages/create_account.page.dart';
 import 'package:smart_market/model/account/presentation/widgets/account_item.widget.dart';
 
@@ -19,21 +20,17 @@ class AccountListWidget extends StatefulWidget {
 
 class _AccountListWidgetState extends State<AccountListWidget> {
   final AccountService _accountService = locator<AccountService>();
+  final RequestAccounts defaultRequestAccountsArgs = const RequestAccounts(align: "DESC", column: "createdAt");
   late Future<List<ResponseAccount>> _getAccountsFuture;
 
   @override
   void initState() {
     super.initState();
 
-    updateAccounts();
+    updateAccounts(defaultRequestAccountsArgs);
   }
 
-  void updateAccounts() {
-    RequestAccounts args = const RequestAccounts(
-      align: "DESC",
-      column: "createdAt",
-    );
-
+  void updateAccounts(RequestAccounts args) {
     setState(() {
       _getAccountsFuture = _accountService.getAccounts(args);
     });
@@ -67,7 +64,7 @@ class _AccountListWidgetState extends State<AccountListWidget> {
 
   GestureDetector getSortAccountsButton() {
     return GestureDetector(
-      onTap: () {},
+      onTap: pressSortAccount,
       child: Container(
         width: 90,
         height: 30,
@@ -86,6 +83,10 @@ class _AccountListWidgetState extends State<AccountListWidget> {
     );
   }
 
+  void pressSortAccount() {
+    AccountSortDialog.show(context, updateCallback: updateAccounts);
+  }
+
   Future<void> pressCreateAccount(List<ResponseAccount> accounts) async {
     final result = await Navigator.of(context).pushNamed(
       "/create_account",
@@ -93,7 +94,7 @@ class _AccountListWidgetState extends State<AccountListWidget> {
     );
 
     if (result == true) {
-      updateAccounts();
+      updateAccounts(defaultRequestAccountsArgs);
     }
   }
 
@@ -160,14 +161,14 @@ class _AccountListWidgetState extends State<AccountListWidget> {
                     return accounts
                         .map((account) => AccountItemWidget(
                               account: account,
-                              updateCallback: updateAccounts,
+                              updateCallback: () => updateAccounts(defaultRequestAccountsArgs),
                             ))
                         .toList();
                   } else if (accounts.isNotEmpty && accounts.length <= 4) {
                     return [
                       ...accounts.map((account) => AccountItemWidget(
                             account: account,
-                            updateCallback: updateAccounts,
+                            updateCallback: () => updateAccounts(defaultRequestAccountsArgs),
                           )),
                       CommonButtonBarWidget(
                         icon: Icons.account_balance_outlined,
