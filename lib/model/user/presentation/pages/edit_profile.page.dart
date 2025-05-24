@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:smart_market/core/common/network_handler.mixin.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
+import 'package:smart_market/core/utils/get_snackbar.dart';
 import 'package:smart_market/core/widgets/common/common_button_bar.widget.dart';
 import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.dart';
 import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
@@ -55,7 +56,7 @@ class _EditProfilePageState extends State<EditProfilePage> with NetWorkHandler {
     try {
       await _userService.updateProfile(args);
       navigator.pop(true);
-      scaffoldMessenger.showSnackBar(const SnackBar(content: Text("프로필을 수정하였습니다.")));
+      scaffoldMessenger.showSnackBar(getSnackBar("프로필을 수정하였습니다."));
     } on DioFailError catch (err) {
       setState(() {
         _hasError = true;

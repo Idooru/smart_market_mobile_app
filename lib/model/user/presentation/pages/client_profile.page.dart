@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
+import 'package:smart_market/core/utils/get_snackbar.dart';
 import 'package:smart_market/model/account/presentation/widgets/account_list.widget.dart';
 import 'package:smart_market/model/main/presentation/pages/navigation.page.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
@@ -22,7 +23,7 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
     try {
       final state = context.findAncestorStateOfType<NavigationPageState>();
       await _userService.logout();
-      scaffoldMessenger.showSnackBar(const SnackBar(content: Text('로그아웃이 완료되었습니다.')));
+      scaffoldMessenger.showSnackBar(getSnackBar('로그아웃이 완료되었습니다.'));
       state?.tapBottomNavigator(0);
     } on DioFailError catch (err) {
       debugPrint("err: $err");

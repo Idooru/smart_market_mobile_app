@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:smart_market/core/common/network_handler.mixin.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
+import 'package:smart_market/core/utils/get_snackbar.dart';
 import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.dart';
 import 'package:smart_market/model/account/domain/entities/create_account.entity.dart';
 import 'package:smart_market/model/account/domain/service/account.service.dart';
@@ -75,7 +76,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> with NetWorkHandl
     try {
       await _accountService.createAccount(args);
       navigator.pop(true);
-      scaffoldMessenger.showSnackBar(const SnackBar(content: Text('계좌 생성이 완료되었습니다.')));
+      scaffoldMessenger.showSnackBar(getSnackBar('계좌 생성이 완료되었습니다.'));
     } on DioFailError catch (err) {
       setState(() {
         _hasError = true;
