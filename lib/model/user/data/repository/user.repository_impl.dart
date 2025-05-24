@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:smart_market/core/common/data_state.dart';
 import 'package:smart_market/core/utils/dio_initializer.dart';
@@ -51,12 +49,7 @@ class UserRepositoryImpl implements UserRepository {
     Dio dio = await _authenticationHttpClient.getClient(args: clientArgs);
 
     try {
-      await dio.patch(
-        url,
-        options: Options(
-          headers: {'Authorization': 'Basic ${base64Encode(utf8.encode('${args.email}:${args.password}'))}'},
-        ),
-      );
+      await dio.patch(url);
 
       return const DataSuccess(data: null);
     } on DioException catch (err) {
@@ -71,12 +64,7 @@ class UserRepositoryImpl implements UserRepository {
     Dio dio = await _authenticationHttpClient.getClient(args: clientArgs);
 
     try {
-      Response response = await dio.post(
-        url,
-        options: Options(
-          headers: {'Authorization': 'Basic ${base64Encode(utf8.encode('${args.email}:${args.password}'))}'},
-        ),
-      );
+      Response response = await dio.post(url);
 
       String accessToken = response.headers["access-token"]![0];
       return DataSuccess(data: accessToken);

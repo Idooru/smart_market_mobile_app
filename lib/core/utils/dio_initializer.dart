@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
@@ -43,6 +45,13 @@ class AuthenticationHttpClient extends DioInitializer {
 
   Future<Dio> _manualDio(String email, String password) async {
     Dio dio = super._dio;
+
+    dio.interceptors.add(InterceptorsWrapper(
+      onRequest: (options, handler) {
+        options.headers["Authorization"] = 'Basic ${base64Encode(utf8.encode('$email:$password'))}';
+        return handler.next(options);
+      },
+    ));
 
     return dio;
   }
