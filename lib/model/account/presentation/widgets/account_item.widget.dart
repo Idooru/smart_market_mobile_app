@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
+import 'package:smart_market/core/utils/get_snackbar.dart';
 import 'package:smart_market/core/utils/parse_date.dart';
 import 'package:smart_market/model/account/domain/entities/account.entity.dart';
 import 'package:smart_market/model/account/domain/entities/account_transaction.entity.dart';
@@ -31,6 +32,7 @@ class _AccountItemWidgetState extends State<AccountItemWidget> {
   }
 
   void pressDeposit() {
+    ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
     Future<void> deposit(int balance) async {
       RequestAccountTransaction args = RequestAccountTransaction(
         id: widget.account.id,
@@ -40,6 +42,7 @@ class _AccountItemWidgetState extends State<AccountItemWidget> {
       try {
         await _accountService.deposit(args);
         widget.updateCallback();
+        scaffoldMessenger.showSnackBar(getSnackBar("입금을 완료하였습니다."));
       } on DioFailError catch (err) {
         handleAccountTransactionError(err);
       }
@@ -55,6 +58,7 @@ class _AccountItemWidgetState extends State<AccountItemWidget> {
   }
 
   void pressWithDraw() async {
+    ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
     Future<void> withDraw(int balance) async {
       RequestAccountTransaction args = RequestAccountTransaction(
         id: widget.account.id,
@@ -64,6 +68,7 @@ class _AccountItemWidgetState extends State<AccountItemWidget> {
       try {
         await _accountService.withdraw(args);
         widget.updateCallback();
+        scaffoldMessenger.showSnackBar(getSnackBar("출금을 완료하였습니다."));
       } on DioFailError catch (err) {
         handleAccountTransactionError(err);
       }
@@ -80,10 +85,12 @@ class _AccountItemWidgetState extends State<AccountItemWidget> {
 
   void pressSetMainAccount() async {
     NavigatorState navigator = Navigator.of(context);
+    ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
 
     try {
       await _accountService.setMainAccount(widget.account.id);
       widget.updateCallback();
+      scaffoldMessenger.showSnackBar(getSnackBar("해당 계좌를 주 사용 계좌로 설정하였습니다."));
       navigator.pop();
     } on DioFailError catch (err) {
       navigator.pop();
@@ -93,10 +100,12 @@ class _AccountItemWidgetState extends State<AccountItemWidget> {
 
   void pressDeleteAccount() async {
     NavigatorState navigator = Navigator.of(context);
+    ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
 
     try {
       await _accountService.deleteAccount(widget.account.id);
       widget.updateCallback();
+      scaffoldMessenger.showSnackBar(getSnackBar("해당 계좌를 삭제하였습니다."));
       navigator.pop();
     } on DioFailError catch (err) {
       navigator.pop();
