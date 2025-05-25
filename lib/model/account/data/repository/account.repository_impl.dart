@@ -18,10 +18,7 @@ class AccountRepositoryImpl implements AccountRepository {
     Dio dio = await _authorizationHttpClient.getClient(args: clientArgs);
 
     try {
-      Response response = await dio.get(
-        url,
-        options: Options(headers: {'access-token': accessToken}),
-      );
+      Response response = await dio.get(url);
 
       List<ResponseAccount> accounts = List<Map<String, dynamic>>.from(response.data["result"]).map((data) => ResponseAccount.fromJson(data)).toList();
       return DataSuccess(data: accounts);
@@ -37,11 +34,7 @@ class AccountRepositoryImpl implements AccountRepository {
     Dio dio = await _authorizationHttpClient.getClient(args: clientArgs);
 
     try {
-      await dio.patch(
-        url,
-        options: Options(headers: {'access-token': accessToken}),
-        data: {"balance": args.balance},
-      );
+      await dio.patch(url, data: {"balance": args.balance});
 
       return const DataSuccess(data: null);
     } on DioException catch (err) {
@@ -56,11 +49,7 @@ class AccountRepositoryImpl implements AccountRepository {
     Dio dio = await _authorizationHttpClient.getClient(args: clientArgs);
 
     try {
-      await dio.patch(
-        url,
-        options: Options(headers: {'access-token': accessToken}),
-        data: {"balance": args.balance},
-      );
+      await dio.patch(url, data: {"balance": args.balance});
 
       return const DataSuccess(data: null);
     } on DioException catch (err) {
@@ -75,10 +64,7 @@ class AccountRepositoryImpl implements AccountRepository {
     Dio dio = await _authorizationHttpClient.getClient(args: clientArgs);
 
     try {
-      await dio.patch(
-        url,
-        options: Options(headers: {'access-token': accessToken}),
-      );
+      await dio.patch(url);
 
       return const DataSuccess(data: null);
     } on DioException catch (err) {
@@ -93,10 +79,7 @@ class AccountRepositoryImpl implements AccountRepository {
     Dio dio = await _authorizationHttpClient.getClient(args: clientArgs);
 
     try {
-      await dio.delete(
-        url,
-        options: Options(headers: {'access-token': accessToken}),
-      );
+      await dio.delete(url);
 
       return const DataSuccess(data: null);
     } on DioException catch (err) {
@@ -111,11 +94,7 @@ class AccountRepositoryImpl implements AccountRepository {
     Dio dio = await _authorizationHttpClient.getClient(args: clientArgs);
 
     try {
-      await dio.post(
-        url,
-        data: args.toJson(),
-        options: Options(headers: {"access-token": accessToken}),
-      );
+      await dio.post(url, data: args.toJson());
 
       return const DataSuccess(data: null);
     } on DioException catch (err) {
