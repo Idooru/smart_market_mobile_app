@@ -7,56 +7,57 @@ import 'package:smart_market/model/product/presentation/provider/product_search.
 import 'package:smart_market/model/product/presentation/widgets/search/product_button_search_bar.widget.dart';
 
 class MainPage extends StatelessWidget {
-  const MainPage({super.key});
+  final Map<String, dynamic> pageArgs;
+
+  const MainPage({
+    super.key,
+    required this.pageArgs,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Consumer<ProductSearchProvider>(
       builder: (BuildContext context, ProductSearchProvider provider, Widget? child) {
         return Scaffold(
-          body: ColoredBox(
-            color: Colors.white,
-            child: CustomScrollView(
-              slivers: [
-                SliverAppBar(
-                  title: const Text("Smart Market"),
-                  pinned: false,
-                  floating: true,
-                  snap: true,
-                  flexibleSpace: Container(
-                    color: Colors.blueGrey[300], // 스크롤 될 시 색상 변경 방지
+          backgroundColor: Colors.white,
+          body: CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                title: const Text("Smart Market"),
+                pinned: false,
+                floating: true,
+                snap: true,
+                flexibleSpace: Container(
+                  color: Colors.blueGrey[300], // 스크롤 될 시 색상 변경 방지
+                ),
+              ),
+              ProductButtonSearchBarWidget(
+                provider: provider,
+                searchBarCall: SearchBarCall.main,
+                pressCallback: () {
+                  final state = context.findAncestorStateOfType<NavigationPageState>();
+                  state?.tapBottomNavigator(1); // index 1 = ProductSearchPage
+                },
+              ),
+              SliverToBoxAdapter(
+                child: Container(
+                  margin: const EdgeInsets.all(10),
+                  child: Column(
+                    children: [
+                      const CategoryListWidget(),
+                      ConditionalProductListWidget(
+                        title: "가장 별점 높은 상품",
+                        products: pageArgs["high-rated-products"],
+                      ),
+                      ConditionalProductListWidget(
+                        title: "가장 리뷰 많은 상품",
+                        products: pageArgs["most-review-products"],
+                      ),
+                    ],
                   ),
                 ),
-                ProductButtonSearchBarWidget(
-                  provider: provider,
-                  searchBarCall: SearchBarCall.main,
-                  pressCallback: () {
-                    final state = context.findAncestorStateOfType<NavigationPageState>();
-                    state?.tapBottomNavigator(1); // index 1 = ProductSearchPage
-                  },
-                ),
-                SliverToBoxAdapter(
-                  child: Container(
-                    margin: const EdgeInsets.all(10),
-                    child: const Column(
-                      children: [
-                        CategoryListWidget(),
-                        ConditionalProductListWidget(
-                          title: "가장 별점 높은 상품",
-                          count: 10,
-                          condition: "high-rated-product",
-                        ),
-                        ConditionalProductListWidget(
-                          title: "가장 리뷰 많은 상품",
-                          count: 10,
-                          condition: "most-review-product",
-                        ),
-                      ],
-                    ),
-                  ),
-                )
-              ],
-            ),
+              )
+            ],
           ),
         );
       },
