@@ -12,7 +12,12 @@ import 'package:smart_market/model/account/presentation/pages/create_account.pag
 import 'package:smart_market/model/account/presentation/widgets/account_item.widget.dart';
 
 class AccountListWidget extends StatefulWidget {
-  const AccountListWidget({super.key});
+  final List<ResponseAccount> accounts;
+
+  const AccountListWidget({
+    super.key,
+    required this.accounts,
+  });
 
   @override
   State<AccountListWidget> createState() => _AccountListWidgetState();
@@ -22,11 +27,11 @@ class _AccountListWidgetState extends State<AccountListWidget> {
   final AccountService _accountService = locator<AccountService>();
   final RequestAccounts defaultRequestAccountsArgs = const RequestAccounts(align: "DESC", column: "createdAt");
   late Future<List<ResponseAccount>> _getAccountsFuture;
+  bool _isFirstRendering = true;
 
   @override
   void initState() {
     super.initState();
-
     updateAccounts(defaultRequestAccountsArgs);
   }
 
@@ -98,102 +103,107 @@ class _AccountListWidgetState extends State<AccountListWidget> {
     }
   }
 
+  Widget getPageElement(List<ResponseAccount> accounts) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 15),
+        Row(
+          children: [
+            const Text(
+              "내 계좌 목록",
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+            ),
+            const Spacer(),
+            getSortAccountsButton(),
+          ],
+        ),
+        const SizedBox(height: 10),
+        Column(
+          children: (() {
+            if (accounts.isNotEmpty && accounts.length >= 5) {
+              return accounts
+                  .map((account) => AccountItemWidget(
+                        account: account,
+                        updateCallback: () => updateAccounts(defaultRequestAccountsArgs),
+                      ))
+                  .toList();
+            } else if (accounts.isNotEmpty && accounts.length <= 4) {
+              return [
+                ...accounts.map((account) => AccountItemWidget(
+                      account: account,
+                      updateCallback: () => updateAccounts(defaultRequestAccountsArgs),
+                    )),
+                CommonButtonBarWidget(
+                  icon: Icons.account_balance_outlined,
+                  title: "계좌 등록하기",
+                  pressCallback: () => pressCreateAccount(accounts),
+                ),
+              ];
+            } else {
+              return [
+                getEmptyAccountMessage(),
+                CommonButtonBarWidget(
+                  icon: Icons.account_balance_outlined,
+                  title: "계좌 등록하기",
+                  pressCallback: () => pressCreateAccount(accounts),
+                )
+              ];
+            }
+          })(),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _getAccountsFuture,
-      builder: (BuildContext context, AsyncSnapshot<List<ResponseAccount>> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Column(
-            children: [
-              SizedBox(height: 30),
-              LoadingHandlerWidget(title: "계좌 리스트 불러오기"),
-            ],
+    return _isFirstRendering
+        ? Builder(builder: (context) {
+            WidgetsBinding.instance.addPostFrameCallback((_) => _isFirstRendering = false);
+            return getPageElement(widget.accounts);
+          })
+        : FutureBuilder(
+            future: _getAccountsFuture,
+            builder: (BuildContext context, AsyncSnapshot<List<ResponseAccount>> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Column(
+                  children: [
+                    SizedBox(height: 30),
+                    LoadingHandlerWidget(title: "계좌 리스트 불러오기"),
+                  ],
+                );
+              } else if (snapshot.hasError) {
+                DioFailError err = snapshot.error as DioFailError;
+                if (err.message == "none connection") {
+                  return Column(
+                    children: [
+                      const SizedBox(height: 25),
+                      NetworkErrorHandlerWidget(reconnectCallback: () {
+                        setState(() {
+                          RequestAccounts args = const RequestAccounts(
+                            align: "DESC",
+                            column: "createdAt",
+                          );
+                          _getAccountsFuture = _accountService.getAccounts(args);
+                        });
+                      }),
+                      const SizedBox(height: 25),
+                    ],
+                  );
+                } else {
+                  return const Column(
+                    children: [
+                      SizedBox(height: 25),
+                      InternalServerErrorHandlerWidget(),
+                      SizedBox(height: 25),
+                    ],
+                  );
+                }
+              } else {
+                return getPageElement(snapshot.data!);
+              }
+            },
           );
-        } else if (snapshot.hasError) {
-          DioFailError err = snapshot.error as DioFailError;
-          if (err.message == "none connection") {
-            return Column(
-              children: [
-                const SizedBox(height: 25),
-                NetworkErrorHandlerWidget(reconnectCallback: () {
-                  setState(() {
-                    RequestAccounts args = const RequestAccounts(
-                      align: "DESC",
-                      column: "createdAt",
-                    );
-                    _getAccountsFuture = _accountService.getAccounts(args);
-                  });
-                }),
-                const SizedBox(height: 25),
-              ],
-            );
-          } else {
-            return const Column(
-              children: [
-                SizedBox(height: 25),
-                InternalServerErrorHandlerWidget(),
-                SizedBox(height: 25),
-              ],
-            );
-          }
-        } else if (snapshot.hasData) {
-          List<ResponseAccount> accounts = snapshot.data!;
-
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 15),
-              Row(
-                children: [
-                  const Text(
-                    "내 계좌 목록",
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-                  ),
-                  const Spacer(),
-                  getSortAccountsButton(),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Column(
-                children: (() {
-                  if (accounts.isNotEmpty && accounts.length >= 5) {
-                    return accounts
-                        .map((account) => AccountItemWidget(
-                              account: account,
-                              updateCallback: () => updateAccounts(defaultRequestAccountsArgs),
-                            ))
-                        .toList();
-                  } else if (accounts.isNotEmpty && accounts.length <= 4) {
-                    return [
-                      ...accounts.map((account) => AccountItemWidget(
-                            account: account,
-                            updateCallback: () => updateAccounts(defaultRequestAccountsArgs),
-                          )),
-                      CommonButtonBarWidget(
-                        icon: Icons.account_balance_outlined,
-                        title: "계좌 등록하기",
-                        pressCallback: () => pressCreateAccount(accounts),
-                      ),
-                    ];
-                  } else {
-                    return [
-                      getEmptyAccountMessage(),
-                      CommonButtonBarWidget(
-                        icon: Icons.account_balance_outlined,
-                        title: "계좌 등록하기",
-                        pressCallback: () => pressCreateAccount(accounts),
-                      )
-                    ];
-                  }
-                })(),
-              ),
-            ],
-          );
-        } else {
-          return const SizedBox.shrink();
-        }
-      },
-    );
   }
 }
