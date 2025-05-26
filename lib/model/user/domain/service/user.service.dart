@@ -10,6 +10,7 @@ abstract interface class UserService {
   Future<void> resetPassword(RequestResetPassword args);
   Future<void> login(RequestLogin args);
   Future<void> logout();
+  Future<bool> checkJwtTokenDuration();
   Future<ResponseProfile> getProfile();
   Future<void> updateProfile(RequestUpdateProfile args);
   Future<void> modifyPassword(String password);

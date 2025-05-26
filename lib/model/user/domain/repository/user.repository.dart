@@ -11,6 +11,8 @@ abstract interface class UserRepository {
   Future<DataState<void>> resetPassword(RequestResetPassword args);
   Future<DataState<String>> login(RequestLogin args);
   Future<DataState<void>> logout(String accessToken);
+  Future<DataState<void>> isValidAccessToken(String accessToken);
+  Future<DataState<String>> refreshToken(String accessToken);
   Future<DataState<ResponseProfile>> getProfile(String accessToken);
   Future<DataState<void>> updateProfile(String accessToken, RequestUpdateProfile args);
   Future<DataState<void>> modifyPassword(String accessToken, String password);

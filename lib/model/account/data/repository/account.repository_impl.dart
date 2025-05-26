@@ -15,7 +15,7 @@ class AccountRepositoryImpl implements AccountRepository {
   Future<DataState<List<ResponseAccount>>> fetchAccounts(String accessToken, RequestAccounts args) async {
     String url = "$_baseUrl/all?align=${args.align}&column=${args.column}";
     ClientArgs clientArgs = ClientArgs(accessToken: accessToken);
-    Dio dio = await _authorizationHttpClient.getClient(args: clientArgs);
+    Dio dio = _authorizationHttpClient.getClient(args: clientArgs);
 
     try {
       Response response = await dio.get(url);
@@ -31,7 +31,7 @@ class AccountRepositoryImpl implements AccountRepository {
   Future<DataState<void>> deposit(String accessToken, RequestAccountTransaction args) async {
     String url = "$_baseUrl/${args.id}/deposit";
     ClientArgs clientArgs = ClientArgs(accessToken: accessToken);
-    Dio dio = await _authorizationHttpClient.getClient(args: clientArgs);
+    Dio dio = _authorizationHttpClient.getClient(args: clientArgs);
 
     try {
       await dio.patch(url, data: {"balance": args.balance});
@@ -46,7 +46,7 @@ class AccountRepositoryImpl implements AccountRepository {
   Future<DataState<void>> withdraw(String accessToken, RequestAccountTransaction args) async {
     String url = "$_baseUrl/${args.id}/withdraw";
     ClientArgs clientArgs = ClientArgs(accessToken: accessToken);
-    Dio dio = await _authorizationHttpClient.getClient(args: clientArgs);
+    Dio dio = _authorizationHttpClient.getClient(args: clientArgs);
 
     try {
       await dio.patch(url, data: {"balance": args.balance});
@@ -61,7 +61,7 @@ class AccountRepositoryImpl implements AccountRepository {
   Future<DataState<void>> setMainAccount(String accessToken, String id) async {
     String url = "$_baseUrl/$id/main-account";
     ClientArgs clientArgs = ClientArgs(accessToken: accessToken);
-    Dio dio = await _authorizationHttpClient.getClient(args: clientArgs);
+    Dio dio = _authorizationHttpClient.getClient(args: clientArgs);
 
     try {
       await dio.patch(url);
@@ -76,7 +76,7 @@ class AccountRepositoryImpl implements AccountRepository {
   Future<DataState<void>> deleteAccount(String accessToken, String id) async {
     String url = "$_baseUrl/$id";
     ClientArgs clientArgs = ClientArgs(accessToken: accessToken);
-    Dio dio = await _authorizationHttpClient.getClient(args: clientArgs);
+    Dio dio = _authorizationHttpClient.getClient(args: clientArgs);
 
     try {
       await dio.delete(url);
@@ -91,7 +91,7 @@ class AccountRepositoryImpl implements AccountRepository {
   Future<DataState<void>> createAccount(String accessToken, RequestCreateAccount args) async {
     String url = _baseUrl;
     ClientArgs clientArgs = ClientArgs(accessToken: accessToken);
-    Dio dio = await _authorizationHttpClient.getClient(args: clientArgs);
+    Dio dio = _authorizationHttpClient.getClient(args: clientArgs);
 
     try {
       await dio.post(url, data: args.toJson());

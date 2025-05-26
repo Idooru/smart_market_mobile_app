@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:smart_market/core/common/data_state.dart';
 import 'package:smart_market/core/utils/dio_initializer.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
@@ -19,7 +18,7 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<DataState<void>> register(RequestRegister args) async {
     String url = "$_baseUrl/register";
-    Dio dio = await _commonHttpClient.getClient();
+    Dio dio = _commonHttpClient.getClient();
 
     try {
       await dio.post(url, data: args.toJson());
@@ -32,7 +31,7 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<DataState<String>> findEmail(RequestFindEmail args) async {
     String url = "$_baseUrl/forgotten-email?realName=${args.realName}&phoneNumber=${args.phoneNumber}";
-    Dio dio = await _commonHttpClient.getClient();
+    Dio dio = _commonHttpClient.getClient();
 
     try {
       Response response = await dio.get(url);
@@ -47,7 +46,7 @@ class UserRepositoryImpl implements UserRepository {
   Future<DataState<void>> resetPassword(RequestResetPassword args) async {
     String url = "$_baseUrl/reset-password";
     ClientArgs clientArgs = ClientArgs(email: args.email, password: args.password);
-    Dio dio = await _authenticationHttpClient.getClient(args: clientArgs);
+    Dio dio = _authenticationHttpClient.getClient(args: clientArgs);
 
     try {
       await dio.patch(url);
@@ -62,7 +61,7 @@ class UserRepositoryImpl implements UserRepository {
   Future<DataState<String>> login(RequestLogin args) async {
     String url = "$_baseUrl/login";
     ClientArgs clientArgs = ClientArgs(email: args.email, password: args.password);
-    Dio dio = await _authenticationHttpClient.getClient(args: clientArgs);
+    Dio dio = _authenticationHttpClient.getClient(args: clientArgs);
 
     try {
       Response response = await dio.post(url);
@@ -78,7 +77,7 @@ class UserRepositoryImpl implements UserRepository {
   Future<DataState<void>> logout(String accessToken) async {
     String url = "$_baseUrl/logout";
     ClientArgs clientArgs = ClientArgs(accessToken: accessToken);
-    Dio dio = await _authorizationHttpClient.getClient(args: clientArgs);
+    Dio dio = _authorizationHttpClient.getClient(args: clientArgs);
 
     try {
       await dio.delete(url);
@@ -90,10 +89,41 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
+  Future<DataState<void>> isValidAccessToken(String accessToken) async {
+    String url = "$_baseUrl/is-valid-access-token";
+    ClientArgs clientArgs = ClientArgs(accessToken: accessToken);
+    Dio dio = _authorizationHttpClient.getClient(args: clientArgs);
+
+    try {
+      await dio.get(url);
+
+      return const DataSuccess(data: null);
+    } on DioException catch (err) {
+      return DataFail(exception: err);
+    }
+  }
+
+  @override
+  Future<DataState<String>> refreshToken(String accessToken) async {
+    String url = "$_baseUrl/refresh-token";
+    ClientArgs clientArgs = ClientArgs(accessToken: accessToken);
+    Dio dio = _authorizationHttpClient.getClient(args: clientArgs);
+
+    try {
+      Response response = await dio.patch(url);
+
+      String accessToken = response.headers["access-token"]![0];
+      return DataSuccess(data: accessToken);
+    } on DioException catch (err) {
+      return DataFail(exception: err);
+    }
+  }
+
+  @override
   Future<DataState<ResponseProfile>> getProfile(String accessToken) async {
     String url = "$_baseUrl/profile";
     ClientArgs clientArgs = ClientArgs(accessToken: accessToken);
-    Dio dio = await _authorizationHttpClient.getClient(args: clientArgs);
+    Dio dio = _authorizationHttpClient.getClient(args: clientArgs);
 
     try {
       Response response = await dio.get(url);
@@ -102,10 +132,6 @@ class UserRepositoryImpl implements UserRepository {
       return DataSuccess(data: profile);
     } on DioException catch (err) {
       return DataFail(exception: err);
-    } catch (err) {
-      debugPrint("err: $err");
-      err as DioException;
-      return DataFail(exception: err);
     }
   }
 
@@ -113,7 +139,7 @@ class UserRepositoryImpl implements UserRepository {
   Future<DataState<void>> updateProfile(String accessToken, RequestUpdateProfile args) async {
     String url = "$_baseUrl/me";
     ClientArgs clientArgs = ClientArgs(accessToken: accessToken);
-    Dio dio = await _authorizationHttpClient.getClient(args: clientArgs);
+    Dio dio = _authorizationHttpClient.getClient(args: clientArgs);
 
     try {
       await dio.put(url, data: args.toJson());
@@ -128,7 +154,7 @@ class UserRepositoryImpl implements UserRepository {
   Future<DataState<void>> modifyPassword(String accessToken, String password) async {
     String url = "$_baseUrl/me/password";
     ClientArgs clientArgs = ClientArgs(accessToken: accessToken);
-    Dio dio = await _authorizationHttpClient.getClient(args: clientArgs);
+    Dio dio = _authorizationHttpClient.getClient(args: clientArgs);
 
     try {
       await dio.patch(url, data: {"password": password});

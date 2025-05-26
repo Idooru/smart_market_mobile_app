@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
+import 'package:smart_market/core/errors/refresh_token_expired.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/utils/get_snackbar.dart';
 import 'package:smart_market/core/widgets/handler/loading_handler.widget.dart';
@@ -12,6 +13,7 @@ import '../../../account/domain/entities/account.entity.dart';
 import '../../../account/domain/service/account.service.dart';
 import '../../../account/presentation/widgets/account_list.widget.dart';
 import '../../domain/entities/profile.entity.dart';
+import '../dialog/force_logout.dialog.dart';
 import '../widgets/profile/basic_profile.widget.dart';
 
 class ClientProfilePage extends StatefulWidget {
@@ -36,6 +38,9 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
 
   Future<Map<String, dynamic>> initProfilePageFuture() async {
     await Future.delayed(const Duration(milliseconds: 500));
+
+    bool result = await _userService.checkJwtTokenDuration();
+    if (!result) throw RefreshTokenExpiredError();
 
     ResponseProfile profile = await _userService.getProfile();
     List<ResponseAccount> accounts = await _accountService.getAccounts(defaultRequestAccountsArgs);
@@ -67,17 +72,26 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
               child: LoadingHandlerWidget(title: "프로필 페이지 불러오기.."),
             );
           } else if (snapshot.hasError) {
-            DioFailError err = snapshot.error as DioFailError;
-            if (err.message == "none connection") {
-              return Center(
-                child: NetworkErrorHandlerWidget(reconnectCallback: () {
-                  setState(() {
-                    _profilePageFuture = initProfilePageFuture();
-                  });
-                }),
-              );
+            final error = snapshot.error;
+            if (error is RefreshTokenExpiredError) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                ForceLogoutDialog.show(context);
+              });
+              return const SizedBox.shrink();
+            } else if (error is DioFailError) {
+              if (error.message == "none connection") {
+                return Center(
+                  child: NetworkErrorHandlerWidget(reconnectCallback: () {
+                    setState(() {
+                      _profilePageFuture = initProfilePageFuture();
+                    });
+                  }),
+                );
+              } else {
+                return const Center(child: InternalServerErrorHandlerWidget());
+              }
             } else {
-              return const Center(child: InternalServerErrorHandlerWidget());
+              return const SizedBox.shrink();
             }
           } else {
             return Scaffold(

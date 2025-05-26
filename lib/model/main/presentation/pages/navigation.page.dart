@@ -8,9 +8,8 @@ import 'package:smart_market/model/main/presentation/pages/test.page.dart';
 import 'package:smart_market/model/product/domain/entities/search_product.entity.dart';
 import 'package:smart_market/model/product/domain/service/product.service.dart';
 import 'package:smart_market/model/product/presentation/pages/product_search.page.dart';
+import 'package:smart_market/model/user/presentation/dialog/invitation_login.dialog.dart';
 import 'package:smart_market/model/user/presentation/pages/client_profile.page.dart';
-import 'package:smart_market/model/user/presentation/pages/login.page.dart';
-import 'package:smart_market/model/user/presentation/widgets/invitation_login.dialog.dart';
 import 'package:smart_market/model/user/utils/check_is_logined.dart';
 
 class NavigationPage extends StatefulWidget {
@@ -57,7 +56,7 @@ class NavigationPageState extends State<NavigationPage> {
     bool isLogined = checkIsLogined();
     if ((index == 2 || index == 3) && !isLogined) {
       if (!context.mounted) return;
-      InvitationLoginDialog.show(capturedContext, index);
+      InvitationLoginDialog.show(capturedContext);
     } else {
       updateSelectedIndex(index);
     }
@@ -109,12 +108,11 @@ class NavigationPageState extends State<NavigationPage> {
               });
             });
 
-            bool isLogined = checkIsLogined();
             List<Widget> pages = [
               MainPage(pageArgs: datas),
               const ProductSearchPage(),
-              isLogined ? const TestWidget() : const LoginPage(),
-              isLogined ? const ClientProfilePage() : const LoginPage(),
+              const TestWidget(),
+              const ClientProfilePage(),
             ];
 
             return ColoredBox(

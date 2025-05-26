@@ -3,8 +3,6 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:smart_market/core/utils/get_it_initializer.dart';
 
 class RequestUrl {
   static final String _baseUrl = dotenv.get('API_URL');
@@ -17,7 +15,7 @@ class RequestUrl {
 abstract class DioInitializer {
   final _dio = Dio();
 
-  Future<Dio> getClient({ClientArgs? args});
+  Dio getClient({ClientArgs? args});
 }
 
 class ClientArgs {
@@ -34,18 +32,18 @@ class ClientArgs {
 
 class CommonHttpClient extends DioInitializer {
   @override
-  Future<Dio> getClient({ClientArgs? args}) async {
+  Dio getClient({ClientArgs? args}) {
     return super._dio;
   }
 }
 
 class AuthenticationHttpClient extends DioInitializer {
   @override
-  Future<Dio> getClient({ClientArgs? args}) async {
+  Dio getClient({ClientArgs? args}) {
     return _manualDio(args!.email!, args.password!);
   }
 
-  Future<Dio> _manualDio(String email, String password) async {
+  Dio _manualDio(String email, String password) {
     Dio dio = super._dio;
 
     dio.interceptors.add(InterceptorsWrapper(
@@ -60,44 +58,12 @@ class AuthenticationHttpClient extends DioInitializer {
 }
 
 class AuthorizationHttpClient extends DioInitializer {
-  final SharedPreferences _db = locator<SharedPreferences>();
-  final String _baseUrl = RequestUrl.getUrl("/user");
-
   @override
-  Future<Dio> getClient({ClientArgs? args}) async {
+  Dio getClient({ClientArgs? args}) {
     return _manualDio(args!.accessToken!);
   }
 
-  Dio _generateRefreshDio() {
-    Dio refreshDio = super._dio;
-    String? newAccessToken = _db.getString("access-token");
-
-    refreshDio.interceptors.clear();
-    refreshDio.interceptors.add(
-      InterceptorsWrapper(
-        onError: (error, handler) async {
-          // refresh-token 만료 후 로그아웃 로직
-          if (error.response?.data['error'] == "TokenExpiredError") {
-            await _db.remove("access-token");
-          }
-          return handler.next(error);
-        },
-      ),
-    );
-
-    // 토큰 갱신 API 요청 시 AccessToken(만료), RefreshToken 포함
-    refreshDio.options.headers['access-token'] = newAccessToken!;
-
-    return refreshDio;
-  }
-
-  Future<String> _requestRefreshToken(Dio refreshDio) async {
-    String url = "$_baseUrl/refresh-token";
-    Response response = await refreshDio.patch(url);
-    return response.headers['access-token']![0];
-  }
-
-  Future<Dio> _manualDio(String accessToken) async {
+  Dio _manualDio(String accessToken) {
     Dio dio = super._dio;
 
     dio.interceptors.clear();
@@ -105,26 +71,6 @@ class AuthorizationHttpClient extends DioInitializer {
       onRequest: (options, handler) {
         options.headers["access-token"] = accessToken;
         return handler.next(options);
-      },
-      onError: (error, handler) async {
-        // access-token 만료 후 재발급 로직
-        if (error.response!.data['error'] == "TokenExpiredError") {
-          Dio refreshDio = _generateRefreshDio();
-          String newAccessToken = await _requestRefreshToken(refreshDio);
-
-          await _db.setString("access-token", newAccessToken);
-          error.requestOptions.headers['access-token'] = newAccessToken;
-
-          Response response = await dio.request(
-            error.requestOptions.path,
-            options: Options(method: error.requestOptions.method, headers: error.requestOptions.headers),
-            data: error.requestOptions.data,
-            queryParameters: error.requestOptions.queryParameters,
-          );
-
-          return handler.resolve(response);
-        }
-        return handler.next(error);
       },
     ));
 

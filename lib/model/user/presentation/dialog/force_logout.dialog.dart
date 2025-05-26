@@ -1,29 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class InvitationLoginDialog {
-  static void show(BuildContext context, int index) {
+import '../../../../core/utils/get_it_initializer.dart';
+import '../../../main/presentation/pages/navigation.page.dart';
+
+class ForceLogoutDialog {
+  static show(BuildContext context) {
     showDialog(
       context: context,
-      builder: (BuildContext context) => Dialog(
-        child: InvitationLoginDialogWidget(index: index),
+      barrierDismissible: false,
+      builder: (_) => Dialog(
+        child: ForceLogoutDialogWidget(parentContext: context),
       ),
     );
   }
 }
 
-class InvitationLoginDialogWidget extends StatefulWidget {
-  final int index;
+class ForceLogoutDialogWidget extends StatefulWidget {
+  final BuildContext parentContext;
 
-  const InvitationLoginDialogWidget({
+  const ForceLogoutDialogWidget({
     super.key,
-    required this.index,
+    required this.parentContext,
   });
 
   @override
-  State<InvitationLoginDialogWidget> createState() => _InvitationLoginDialogWidgetState();
+  State<ForceLogoutDialogWidget> createState() => _ForceLogoutDialogWidgetState();
 }
 
-class _InvitationLoginDialogWidgetState extends State<InvitationLoginDialogWidget> {
+class _ForceLogoutDialogWidgetState extends State<ForceLogoutDialogWidget> {
+  final SharedPreferences _db = locator<SharedPreferences>();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -40,13 +47,16 @@ class _InvitationLoginDialogWidgetState extends State<InvitationLoginDialogWidge
             const Icon(Icons.warning, size: 30),
             const SizedBox(height: 5),
             const Text(
-              "로그인이 필요한 서비스입니다.",
+              "토큰이 만료되어 로그아웃합니다.",
               style: TextStyle(fontSize: 17),
             ),
             GestureDetector(
               onTap: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pushNamed("/login");
+                Navigator.of(widget.parentContext).pop();
+                _db.remove("access-token");
+
+                final state = widget.parentContext.findAncestorStateOfType<NavigationPageState>();
+                state?.tapBottomNavigator(0); // index 1 = ProductSearchPage
               },
               child: Container(
                 margin: const EdgeInsets.all(10),
@@ -67,7 +77,7 @@ class _InvitationLoginDialogWidgetState extends State<InvitationLoginDialogWidge
                       width: 5,
                     ),
                     Text(
-                      "로그인 하기",
+                      "로그아웃 하기",
                       style: TextStyle(
                         color: Color.fromARGB(255, 70, 70, 70),
                         fontSize: 17,

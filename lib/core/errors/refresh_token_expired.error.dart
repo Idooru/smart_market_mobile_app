@@ -1,0 +1,1 @@
+class RefreshTokenExpiredError extends Error {}

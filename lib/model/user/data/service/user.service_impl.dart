@@ -14,6 +14,39 @@ class UserServiceImpl extends Service implements UserService {
   final SharedPreferences _db = locator<SharedPreferences>();
   final UserRepository _userRepository = locator<UserRepository>();
 
+  Future<bool> refreshToken(String accessToken) async {
+    DataState<String> dataState = await _userRepository.refreshToken(accessToken);
+    if (dataState.exception != null) {
+      if (dataState.exception!.response!.statusCode! == 401) {
+        return false;
+      } else {
+        throwDioFailError(dataState);
+      }
+    }
+
+    _db.setString('access-token', dataState.data!);
+    return true;
+  }
+
+  @override
+  Future<bool> checkJwtTokenDuration() async {
+    String? accessToken = _db.getString("access-token");
+    DataState<void> dataState = await _userRepository.isValidAccessToken(accessToken!);
+    bool flag = false;
+
+    if (dataState.exception != null) {
+      if (dataState.exception!.response!.statusCode! == 401) {
+        flag = await refreshToken(accessToken);
+      } else {
+        throwDioFailError(dataState);
+      }
+    } else {
+      flag = true;
+    }
+
+    return flag;
+  }
+
   @override
   Future<void> register(RequestRegister args) async {
     DataState<void> dataState = await _userRepository.register(args);

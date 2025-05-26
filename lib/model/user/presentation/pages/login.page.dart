@@ -53,6 +53,7 @@ class _LoginPageState extends State<LoginPage> with NetWorkHandler {
 
     try {
       await _userService.login(args);
+
       navigator.pop();
       scaffoldMessenger.showSnackBar(getSnackBar('로그인이 완료되었습니다.'));
     } on DioFailError catch (err) {
