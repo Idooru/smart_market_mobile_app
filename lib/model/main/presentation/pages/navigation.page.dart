@@ -3,8 +3,8 @@ import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/widgets/handler/internal_server_error_handler.widget.dart';
 import 'package:smart_market/core/widgets/handler/network_error_handler.widget.dart';
+import 'package:smart_market/model/cart/presentation/pages/cart.page.dart';
 import 'package:smart_market/model/main/presentation/pages/main.page.dart';
-import 'package:smart_market/model/main/presentation/pages/test.page.dart';
 import 'package:smart_market/model/product/domain/entities/search_product.entity.dart';
 import 'package:smart_market/model/product/domain/service/product.service.dart';
 import 'package:smart_market/model/product/presentation/pages/product_search.page.dart';
@@ -111,7 +111,7 @@ class NavigationPageState extends State<NavigationPage> {
             List<Widget> pages = [
               MainPage(pageArgs: datas),
               const ProductSearchPage(),
-              const TestWidget(),
+              const CartPage(),
               const ClientProfilePage(),
             ];
 
