@@ -1,6 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_market/core/common/data_state.dart';
 import 'package:smart_market/core/common/service.dart';
+import 'package:smart_market/core/errors/connection_error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/model/user/domain/entities/find_email.entity.dart';
 import 'package:smart_market/model/user/domain/entities/login.entity.dart';
@@ -35,7 +36,9 @@ class UserServiceImpl extends Service implements UserService {
     bool flag = false;
 
     if (dataState.exception != null) {
-      if (dataState.exception!.response!.statusCode! == 401) {
+      if (dataState.exception!.response == null) {
+        throw ConnectionError();
+      } else if (dataState.exception!.response!.statusCode! == 401) {
         flag = await refreshToken(accessToken);
       } else {
         throwDioFailError(dataState);
