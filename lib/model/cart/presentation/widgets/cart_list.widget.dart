@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_market/core/widgets/common/common_button_bar.widget.dart';
+import 'package:smart_market/model/cart/presentation/dialog/warn_delete_all_carts.dialog.dart';
 import 'package:smart_market/model/cart/presentation/widgets/cart_item.widget.dart';
 
 import '../../../../core/errors/dio_fail.error.dart';
@@ -35,9 +36,13 @@ class _CartListWidgetState extends State<CartListWidget> {
     });
   }
 
-  GestureDetector getSortCartsButton() {
+  GestureDetector getButton({
+    required void Function() pressCallback,
+    required IconData icon,
+    required String title,
+  }) {
     return GestureDetector(
-      onTap: pressSortCarts,
+      onTap: pressCallback,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         height: 30,
@@ -45,11 +50,12 @@ class _CartListWidgetState extends State<CartListWidget> {
           borderRadius: BorderRadius.circular(10),
           color: const Color.fromARGB(255, 230, 230, 230),
         ),
-        child: const Row(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Icon(Icons.sort, size: 15),
-            Text("장바구니 정렬"),
+            Icon(icon, size: 15),
+            const SizedBox(width: 5),
+            Text(title),
           ],
         ),
       ),
@@ -62,16 +68,33 @@ class _CartListWidgetState extends State<CartListWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            const Text(
-              "내 장바구니 목록",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-            ),
-            const Spacer(),
-            getSortCartsButton(),
-          ],
+        const Text(
+          "내 장바구니 목록",
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
         ),
+        const SizedBox(height: 5),
+        carts.cartRaws.isNotEmpty
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  getButton(
+                    pressCallback: pressSortCarts,
+                    icon: Icons.sort,
+                    title: '장바구니 정렬',
+                  ),
+                  getButton(
+                    pressCallback: () {
+                      WarnDeleteAllCartsDialog.show(
+                        context,
+                        updateCallback: () => updateCarts(defaultRequestCartsArgs),
+                      );
+                    },
+                    icon: Icons.delete,
+                    title: '장바구니 전부삭제',
+                  ),
+                ],
+              )
+            : const SizedBox.shrink(),
         const SizedBox(height: 10),
         Expanded(
           child: carts.cartRaws.isEmpty

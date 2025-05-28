@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:smart_market/model/cart/domain/entities/modify_cart.entity.dart';
+import 'package:smart_market/model/cart/presentation/dialog/modify_cart.dialog.dart';
 
+import '../../../../core/errors/dio_fail.error.dart';
+import '../../../../core/utils/get_it_initializer.dart';
+import '../../../../core/utils/get_snackbar.dart';
+import '../../../account/presentation/dialog/handle_transaction_error.dialog.dart';
 import '../../domain/entities/cart.entity.dart';
+import '../../domain/service/cart.service.dart';
 
 class CartItemWidget extends StatefulWidget {
   final Cart cart;
@@ -18,7 +25,83 @@ class CartItemWidget extends StatefulWidget {
 }
 
 class _CartItemWidgetState extends State<CartItemWidget> {
-  void pressTrailingIcon() {}
+  final CartService _cartService = locator<CartService>();
+
+  void handleCartError(DioFailError err) {
+    HandleAccountTransactionErrorDialog.show(context, err: err);
+  }
+
+  Future<void> pressModifyCart() async {
+    ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
+    Future<void> modifyCart({required int quantity, required int totalPrice}) async {
+      RequestModifyCart args = RequestModifyCart(
+        cartId: widget.cart.id,
+        productId: widget.cart.product.id,
+        quantity: quantity,
+        totalPrice: totalPrice,
+      );
+
+      try {
+        await _cartService.modifyCart(args);
+        widget.updateCallback();
+        scaffoldMessenger.showSnackBar(getSnackBar("해당 장바구니를 수정하였습니다."));
+      } on DioFailError catch (err) {
+        handleCartError(err);
+      }
+    }
+
+    Navigator.of(context).pop();
+    ModifyCartDialog.show(
+      context,
+      cart: widget.cart,
+      modifyCallback: modifyCart,
+    );
+  }
+
+  Future<void> pressDeleteCart() async {
+    NavigatorState navigator = Navigator.of(context);
+    ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
+
+    try {
+      await _cartService.deleteCart(widget.cart.id);
+      widget.updateCallback();
+      scaffoldMessenger.showSnackBar(getSnackBar("해당 장바구니를 삭제하였습니다."));
+      navigator.pop();
+    } on DioFailError catch (err) {
+      navigator.pop();
+      handleCartError(err);
+    }
+  }
+
+  void pressTrailingIcon() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: const Color.fromARGB(255, 245, 245, 245),
+      builder: (context) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              GestureDetector(
+                onTap: pressModifyCart,
+                child: const ListTile(
+                  leading: Icon(Icons.edit),
+                  title: Text("장바구니 수정"),
+                ),
+              ),
+              GestureDetector(
+                onTap: pressDeleteCart,
+                child: const ListTile(
+                  leading: Icon(Icons.delete),
+                  title: Text("장바구니 삭제"),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +187,7 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                     child: Text(
                       "합계: ${NumberFormat('#,###').format(widget.cart.totalPrice)}원",
                       style: const TextStyle(
-                        fontSize: 18,
+                        fontSize: 17,
                         color: Colors.black,
                         overflow: TextOverflow.ellipsis,
                         fontWeight: FontWeight.w500,
@@ -115,16 +198,6 @@ class _CartItemWidgetState extends State<CartItemWidget> {
               ),
             ),
           ),
-          // Positioned(
-          //   top: 36,
-          //   left: 100,
-          //   child: ,
-          // ),
-          // Positioned(
-          //   bottom: 10,
-          //   left: 100,
-          //   child: ,
-          // ),
           Positioned(
             top: -5,
             right: -5,

@@ -4,6 +4,7 @@ import 'package:smart_market/core/utils/dio_initializer.dart';
 import 'package:smart_market/model/cart/domain/entities/cart.entity.dart';
 
 import '../../../../core/utils/get_it_initializer.dart';
+import '../../domain/entities/modify_cart.entity.dart';
 import '../../domain/repository/cart.repository.dart';
 
 class CartRepositoryImpl implements CartRepository {
@@ -21,6 +22,51 @@ class CartRepositoryImpl implements CartRepository {
 
       ResponseCarts carts = ResponseCarts.fromJson(response.data["result"]);
       return DataSuccess(data: carts);
+    } on DioException catch (err) {
+      return DataFail(exception: err);
+    }
+  }
+
+  @override
+  Future<DataState<void>> modifyCart(String accessToken, RequestModifyCart args) async {
+    String url = "$_baseUrl/${args.cartId}/product/${args.productId}";
+    ClientArgs clientArgs = ClientArgs(accessToken: accessToken);
+    Dio dio = _authorizationHttpClient.getClient(args: clientArgs);
+
+    try {
+      await dio.put(url, data: args.toJson());
+
+      return const DataSuccess(data: null);
+    } on DioException catch (err) {
+      return DataFail(exception: err);
+    }
+  }
+
+  @override
+  Future<DataState<void>> deleteAllCarts(String accessToken) async {
+    String url = "$_baseUrl/";
+    ClientArgs clientArgs = ClientArgs(accessToken: accessToken);
+    Dio dio = _authorizationHttpClient.getClient(args: clientArgs);
+
+    try {
+      await dio.delete(url);
+
+      return const DataSuccess(data: null);
+    } on DioException catch (err) {
+      return DataFail(exception: err);
+    }
+  }
+
+  @override
+  Future<DataState<void>> deleteCart(String accessToken, String id) async {
+    String url = "$_baseUrl/$id";
+    ClientArgs clientArgs = ClientArgs(accessToken: accessToken);
+    Dio dio = _authorizationHttpClient.getClient(args: clientArgs);
+
+    try {
+      await dio.delete(url);
+
+      return const DataSuccess(data: null);
     } on DioException catch (err) {
       return DataFail(exception: err);
     }
