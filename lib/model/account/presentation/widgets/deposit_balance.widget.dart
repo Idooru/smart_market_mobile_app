@@ -28,7 +28,7 @@ class DepositBalanceWidgetState extends EditWidgetState<DepositWidget> with Inpu
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        getTitle("계좌번호"),
+        getTitle("입금"),
         getEditWidget(
           TextField(
             focusNode: _focusNode,
