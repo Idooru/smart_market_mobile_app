@@ -35,7 +35,7 @@ class SetMainAccountWidgetState extends State<SetMainAccountWidget> with InputWi
         getTitle("주 사용 계좌 설정"),
         const Spacer(),
         IconButton(
-          onPressed: isChecked ? null : pressCheckBox,
+          onPressed: widget.isAccountsEmpty ? null : pressCheckBox,
           icon: Icon(isChecked ? Icons.check_box_outlined : Icons.check_box_outline_blank_sharp),
         ),
       ],
