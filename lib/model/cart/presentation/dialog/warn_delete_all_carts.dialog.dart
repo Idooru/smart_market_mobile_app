@@ -1,8 +1,9 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/utils/get_snackbar.dart';
 import 'package:smart_market/model/cart/domain/service/cart.service.dart';
+
+import '../../../../core/widgets/dialog/handle_network_error_on_dialog.dialog.dart';
 
 class WarnDeleteAllCartsDialog {
   static void show(BuildContext context, {required void Function() updateCallback}) {
@@ -33,6 +34,10 @@ class WarnDeleteAllCartsDialogWidget extends StatefulWidget {
 class _WarnDeleteAllCartsDialogWidgetState extends State<WarnDeleteAllCartsDialogWidget> {
   final CartService _cartService = locator<CartService>();
 
+  void handleCartError(Object err) {
+    HandleNetworkErrorOnDialogDialog.show(context, err);
+  }
+
   Future<void> pressYes(BuildContext context) async {
     NavigatorState navigator = Navigator.of(context);
     ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
@@ -42,7 +47,9 @@ class _WarnDeleteAllCartsDialogWidgetState extends State<WarnDeleteAllCartsDialo
       await _cartService.deleteAllCarts();
       widget.updateCallback();
       scaffoldMessenger.showSnackBar(getSnackBar("장바구니를 전부 삭제합니다."));
-    } on DioException catch (err) {}
+    } catch (err) {
+      handleCartError(err);
+    }
   }
 
   @override

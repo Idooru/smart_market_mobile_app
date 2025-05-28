@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_market/core/common/network_handler.mixin.dart';
-import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/utils/get_snackbar.dart';
 import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.dart';
@@ -58,7 +57,7 @@ class _RegisterPageState extends State<RegisterPage> with NetWorkHandler {
       await _userService.register(args);
       navigator.pop();
       scaffoldMessenger.showSnackBar(getSnackBar('회원가입이 완료되었습니다.'));
-    } on DioFailError catch (err) {
+    } catch (err) {
       setState(() {
         _hasError = true;
         _errorMessage = branchErrorMessage(err);

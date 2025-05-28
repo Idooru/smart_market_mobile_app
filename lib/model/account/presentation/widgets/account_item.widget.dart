@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/utils/get_snackbar.dart';
 import 'package:smart_market/model/account/domain/entities/account.entity.dart';
 import 'package:smart_market/model/account/domain/entities/account_transaction.entity.dart';
 import 'package:smart_market/model/account/domain/service/account.service.dart';
 import 'package:smart_market/model/account/presentation/dialog/account_transaction.dialog.dart';
-import 'package:smart_market/model/account/presentation/dialog/handle_transaction_error.dialog.dart';
 
 import '../../../../core/utils/parse_date.dart';
+import '../../../../core/widgets/dialog/handle_network_error_on_dialog.dialog.dart';
 
 class AccountItemWidget extends StatefulWidget {
   final ResponseAccount account;
@@ -28,8 +27,8 @@ class AccountItemWidget extends StatefulWidget {
 class _AccountItemWidgetState extends State<AccountItemWidget> {
   final AccountService _accountService = locator<AccountService>();
 
-  void handleAccountTransactionError(DioFailError err) {
-    HandleAccountTransactionErrorDialog.show(context, err: err);
+  void handleAccountTransactionError(Object err) {
+    HandleNetworkErrorOnDialogDialog.show(context, err);
   }
 
   void pressDeposit() {
@@ -44,7 +43,7 @@ class _AccountItemWidgetState extends State<AccountItemWidget> {
         await _accountService.deposit(args);
         widget.updateCallback();
         scaffoldMessenger.showSnackBar(getSnackBar("입금을 완료하였습니다."));
-      } on DioFailError catch (err) {
+      } catch (err) {
         handleAccountTransactionError(err);
       }
     }
@@ -70,7 +69,7 @@ class _AccountItemWidgetState extends State<AccountItemWidget> {
         await _accountService.withdraw(args);
         widget.updateCallback();
         scaffoldMessenger.showSnackBar(getSnackBar("출금을 완료하였습니다."));
-      } on DioFailError catch (err) {
+      } catch (err) {
         handleAccountTransactionError(err);
       }
     }
@@ -93,7 +92,7 @@ class _AccountItemWidgetState extends State<AccountItemWidget> {
       widget.updateCallback();
       scaffoldMessenger.showSnackBar(getSnackBar("해당 계좌를 주 사용 계좌로 설정하였습니다."));
       navigator.pop();
-    } on DioFailError catch (err) {
+    } catch (err) {
       navigator.pop();
       handleAccountTransactionError(err);
     }
@@ -108,7 +107,7 @@ class _AccountItemWidgetState extends State<AccountItemWidget> {
       widget.updateCallback();
       scaffoldMessenger.showSnackBar(getSnackBar("해당 계좌를 삭제하였습니다."));
       navigator.pop();
-    } on DioFailError catch (err) {
+    } catch (err) {
       navigator.pop();
       handleAccountTransactionError(err);
     }

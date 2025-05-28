@@ -1,32 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:smart_market/core/common/network_handler.mixin.dart';
-import 'package:smart_market/core/errors/dio_fail.error.dart';
 
-class HandleAccountTransactionErrorDialog {
-  static void show(BuildContext context, {required DioFailError err}) {
+class HandleNetworkErrorOnDialogDialog {
+  static void show(BuildContext context, Object err) {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) => Dialog(
-        child: HandleAccountTransactionErrorWidget(err: err),
+        child: HandleNetworkErrorOnDialogWidget(err: err),
       ),
     );
   }
 }
 
-class HandleAccountTransactionErrorWidget extends StatefulWidget {
-  final DioFailError err;
+class HandleNetworkErrorOnDialogWidget extends StatefulWidget {
+  final Object err;
 
-  const HandleAccountTransactionErrorWidget({
+  const HandleNetworkErrorOnDialogWidget({
     super.key,
     required this.err,
   });
 
   @override
-  State<HandleAccountTransactionErrorWidget> createState() => _HandleAccountTransactionErrorWidgetState();
+  State<HandleNetworkErrorOnDialogWidget> createState() => _HandleNetworkErrorOnDialogState();
 }
 
-class _HandleAccountTransactionErrorWidgetState extends State<HandleAccountTransactionErrorWidget> with NetWorkHandler {
+class _HandleNetworkErrorOnDialogState extends State<HandleNetworkErrorOnDialogWidget> with NetWorkHandler {
   late final String _errorMessage;
 
   @override

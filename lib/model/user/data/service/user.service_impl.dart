@@ -1,8 +1,8 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_market/core/common/data_state.dart';
-import 'package:smart_market/core/common/service.dart';
 import 'package:smart_market/core/errors/connection_error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
+import 'package:smart_market/core/utils/throw_network_error.dart';
 import 'package:smart_market/model/user/domain/entities/find_email.entity.dart';
 import 'package:smart_market/model/user/domain/entities/login.entity.dart';
 import 'package:smart_market/model/user/domain/entities/profile.entity.dart';
@@ -11,17 +11,22 @@ import 'package:smart_market/model/user/domain/entities/reset_password.entity.da
 import 'package:smart_market/model/user/domain/repository/user.repository.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
 
-class UserServiceImpl extends Service implements UserService {
+import '../../../../core/errors/dio_fail.error.dart';
+
+class UserServiceImpl implements UserService {
   final SharedPreferences _db = locator<SharedPreferences>();
   final UserRepository _userRepository = locator<UserRepository>();
 
   Future<bool> refreshToken(String accessToken) async {
     DataState<String> dataState = await _userRepository.refreshToken(accessToken);
     if (dataState.exception != null) {
+      if (dataState.exception!.response == null) {
+        throw ConnectionError();
+      }
       if (dataState.exception!.response!.statusCode! == 401) {
         return false;
       } else {
-        throwDioFailError(dataState);
+        throw DioFailError(response: dataState.exception!.response!);
       }
     }
 
@@ -41,7 +46,7 @@ class UserServiceImpl extends Service implements UserService {
       } else if (dataState.exception!.response!.statusCode! == 401) {
         flag = await refreshToken(accessToken);
       } else {
-        throwDioFailError(dataState);
+        throw DioFailError(response: dataState.exception!.response!);
       }
     } else {
       flag = true;
@@ -53,26 +58,26 @@ class UserServiceImpl extends Service implements UserService {
   @override
   Future<void> register(RequestRegister args) async {
     DataState<void> dataState = await _userRepository.register(args);
-    if (dataState.exception != null) throwDioFailError(dataState);
+    if (dataState.exception != null) branchNetworkError(dataState);
   }
 
   @override
   Future<String> findEmail(RequestFindEmail args) async {
     DataState<String> dataState = await _userRepository.findEmail(args);
-    if (dataState.exception != null) throwDioFailError(dataState);
+    if (dataState.exception != null) branchNetworkError(dataState);
     return dataState.data!;
   }
 
   @override
   Future<void> resetPassword(RequestResetPassword args) async {
     DataState<void> dataState = await _userRepository.resetPassword(args);
-    if (dataState.exception != null) throwDioFailError(dataState);
+    if (dataState.exception != null) branchNetworkError(dataState);
   }
 
   @override
   Future<void> login(RequestLogin args) async {
     DataState<String> dataState = await _userRepository.login(args);
-    if (dataState.exception != null) throwDioFailError(dataState);
+    if (dataState.exception != null) branchNetworkError(dataState);
     _db.setString('access-token', dataState.data!);
   }
 
@@ -80,7 +85,7 @@ class UserServiceImpl extends Service implements UserService {
   Future<void> logout() async {
     String? accessToken = _db.getString("access-token");
     DataState<void> dataState = await _userRepository.logout(accessToken!);
-    if (dataState.exception != null) throwDioFailError(dataState);
+    if (dataState.exception != null) branchNetworkError(dataState);
     _db.remove("access-token");
   }
 
@@ -88,7 +93,7 @@ class UserServiceImpl extends Service implements UserService {
   Future<ResponseProfile> getProfile() async {
     String? accessToken = _db.getString("access-token");
     DataState<ResponseProfile> dataState = await _userRepository.getProfile(accessToken!);
-    if (dataState.exception != null) throwDioFailError(dataState);
+    if (dataState.exception != null) branchNetworkError(dataState);
     return dataState.data!;
   }
 
@@ -96,13 +101,13 @@ class UserServiceImpl extends Service implements UserService {
   Future<void> updateProfile(RequestUpdateProfile args) async {
     String? accessToken = _db.getString("access-token");
     DataState<void> dataState = await _userRepository.updateProfile(accessToken!, args);
-    if (dataState.exception != null) throwDioFailError(dataState);
+    if (dataState.exception != null) branchNetworkError(dataState);
   }
 
   @override
   Future<void> modifyPassword(String password) async {
     String? accessToken = _db.getString("access-token");
     DataState<void> dataState = await _userRepository.modifyPassword(accessToken!, password);
-    if (dataState.exception != null) throwDioFailError(dataState);
+    if (dataState.exception != null) branchNetworkError(dataState);
   }
 }

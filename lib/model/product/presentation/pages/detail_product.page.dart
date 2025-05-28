@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
-import 'package:smart_market/core/widgets/handler/internal_server_error_handler.widget.dart';
-import 'package:smart_market/core/widgets/handler/network_error_handler.widget.dart';
 import 'package:smart_market/core/widgets/handler/loading_handler.widget.dart';
 import 'package:smart_market/model/product/domain/entities/detail_product.entity.dart';
 import 'package:smart_market/model/product/domain/service/product.service.dart';
 import 'package:smart_market/model/product/presentation/widgets/display_average_score.widget.dart';
 import 'package:smart_market/model/product/presentation/widgets/image/product_image_grid.widget.dart';
 import 'package:smart_market/model/product/presentation/widgets/item/review_item.widget.dart';
+
+import '../../../../core/errors/connection_error.dart';
+import '../../../../core/widgets/handler/internal_server_error_handler.widget.dart';
+import '../../../../core/widgets/handler/network_error_handler.widget.dart';
 
 class DetailProductPageArgs {
   final String productId;
@@ -56,15 +58,17 @@ class _DetailProductPageState extends State<DetailProductPage> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const LoadingHandlerWidget(title: "상품 상세 데이터 불러오기..");
             } else if (snapshot.hasError) {
-              DioFailError err = snapshot.error as DioFailError;
-              if (err.message == "none connection") {
+              final error = snapshot.error;
+              if (error is ConnectionError) {
                 return NetworkErrorHandlerWidget(reconnectCallback: () {
                   setState(() {
                     _getDetailProductFuture = productService.getDetailProduct(widget.productId);
                   });
                 });
-              } else {
+              } else if (error is DioFailError) {
                 return const InternalServerErrorHandlerWidget();
+              } else {
+                return Center(child: Text("$error"));
               }
             } else if (snapshot.hasData) {
               final data = snapshot.data!;

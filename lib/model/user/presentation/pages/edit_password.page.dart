@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_market/core/common/network_handler.mixin.dart';
-import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/utils/get_snackbar.dart';
 import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
@@ -32,7 +31,7 @@ class _EditPasswordPageState extends State<EditPasswordPage> with NetWorkHandler
       await _userService.modifyPassword(password);
       navigator.pop();
       scaffoldMessenger.showSnackBar(getSnackBar("비밀번호를 수정하였습니다."));
-    } on DioFailError catch (err) {
+    } catch (err) {
       setState(() {
         _hasError = true;
         _errorMessage = branchErrorMessage(err);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_market/core/errors/connection_error.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/errors/refresh_token_expired.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
@@ -68,30 +69,24 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
         future: _profilePageFuture,
         builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: LoadingHandlerWidget(title: "프로필 페이지 불러오기.."),
-            );
+            return const LoadingHandlerWidget(title: "프로필 페이지 불러오기..");
           } else if (snapshot.hasError) {
             final error = snapshot.error;
-            if (error is RefreshTokenExpiredError) {
+            if (error is ConnectionError) {
+              return NetworkErrorHandlerWidget(reconnectCallback: () {
+                setState(() {
+                  _profilePageFuture = initProfilePageFuture();
+                });
+              });
+            } else if (error is RefreshTokenExpiredError) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 ForceLogoutDialog.show(context);
               });
               return const SizedBox.shrink();
             } else if (error is DioFailError) {
-              if (error.message == "none connection") {
-                return Center(
-                  child: NetworkErrorHandlerWidget(reconnectCallback: () {
-                    setState(() {
-                      _profilePageFuture = initProfilePageFuture();
-                    });
-                  }),
-                );
-              } else {
-                return const Center(child: InternalServerErrorHandlerWidget());
-              }
+              return const InternalServerErrorHandlerWidget();
             } else {
-              return const SizedBox.shrink();
+              return Center(child: Text("$error"));
             }
           } else {
             return Scaffold(

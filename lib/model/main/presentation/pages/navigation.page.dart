@@ -12,6 +12,8 @@ import 'package:smart_market/model/user/presentation/dialog/invitation_login.dia
 import 'package:smart_market/model/user/presentation/pages/client_profile.page.dart';
 import 'package:smart_market/model/user/utils/check_is_logined.dart';
 
+import '../../../../core/errors/connection_error.dart';
+
 class NavigationPage extends StatefulWidget {
   const NavigationPage({super.key});
 
@@ -81,23 +83,17 @@ class NavigationPageState extends State<NavigationPage> {
               ),
             );
           } else if (snapshot.hasError) {
-            DioFailError err = snapshot.error as DioFailError;
-            if (err.message == "none connection") {
-              return Center(
-                child: NetworkErrorHandlerWidget(reconnectCallback: () {
-                  setState(() {
-                    _mainPageFuture = initMainPageFuture();
-                  });
-                }),
-              );
+            final error = snapshot.error;
+            if (error is ConnectionError) {
+              return NetworkErrorHandlerWidget(reconnectCallback: () {
+                setState(() {
+                  _mainPageFuture = initMainPageFuture();
+                });
+              });
+            } else if (error is DioFailError) {
+              return const InternalServerErrorHandlerWidget();
             } else {
-              return const Column(
-                children: [
-                  SizedBox(height: 25),
-                  InternalServerErrorHandlerWidget(),
-                  SizedBox(height: 25),
-                ],
-              );
+              return Center(child: Text("$error"));
             }
           } else {
             Map<String, dynamic> datas = snapshot.data!;

@@ -3,10 +3,9 @@ import 'package:intl/intl.dart';
 import 'package:smart_market/model/cart/domain/entities/modify_cart.entity.dart';
 import 'package:smart_market/model/cart/presentation/dialog/modify_cart.dialog.dart';
 
-import '../../../../core/errors/dio_fail.error.dart';
 import '../../../../core/utils/get_it_initializer.dart';
 import '../../../../core/utils/get_snackbar.dart';
-import '../../../account/presentation/dialog/handle_transaction_error.dialog.dart';
+import '../../../../core/widgets/dialog/handle_network_error_on_dialog.dialog.dart';
 import '../../domain/entities/cart.entity.dart';
 import '../../domain/service/cart.service.dart';
 
@@ -27,8 +26,8 @@ class CartItemWidget extends StatefulWidget {
 class _CartItemWidgetState extends State<CartItemWidget> {
   final CartService _cartService = locator<CartService>();
 
-  void handleCartError(DioFailError err) {
-    HandleAccountTransactionErrorDialog.show(context, err: err);
+  void handleCartError(Object err) {
+    HandleNetworkErrorOnDialogDialog.show(context, err);
   }
 
   Future<void> pressModifyCart() async {
@@ -45,7 +44,7 @@ class _CartItemWidgetState extends State<CartItemWidget> {
         await _cartService.modifyCart(args);
         widget.updateCallback();
         scaffoldMessenger.showSnackBar(getSnackBar("해당 장바구니를 수정하였습니다."));
-      } on DioFailError catch (err) {
+      } catch (err) {
         handleCartError(err);
       }
     }
@@ -67,7 +66,7 @@ class _CartItemWidgetState extends State<CartItemWidget> {
       widget.updateCallback();
       scaffoldMessenger.showSnackBar(getSnackBar("해당 장바구니를 삭제하였습니다."));
       navigator.pop();
-    } on DioFailError catch (err) {
+    } catch (err) {
       navigator.pop();
       handleCartError(err);
     }

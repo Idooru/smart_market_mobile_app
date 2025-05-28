@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_market/core/errors/connection_error.dart';
 import 'package:smart_market/model/cart/domain/entities/cart.entity.dart';
 import 'package:smart_market/model/cart/domain/service/cart.service.dart';
 import 'package:smart_market/model/cart/presentation/widgets/cart_list.widget.dart';
@@ -48,28 +49,23 @@ class _CartPageState extends State<CartPage> {
         future: _cartPageFuture,
         builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: LoadingHandlerWidget(title: "장바구니 목록 페이지 불러오기.."),
-            );
+            return const LoadingHandlerWidget(title: "장바구니 목록 페이지 불러오기..");
           } else if (snapshot.hasError) {
             final error = snapshot.error;
+            if (error is ConnectionError) {
+              return NetworkErrorHandlerWidget(reconnectCallback: () {
+                setState(() {
+                  _cartPageFuture = initCartPageFuture();
+                });
+              });
+            }
             if (error is RefreshTokenExpiredError) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 ForceLogoutDialog.show(context);
               });
               return const SizedBox.shrink();
             } else if (error is DioFailError) {
-              if (error.message == "none connection") {
-                return Center(
-                  child: NetworkErrorHandlerWidget(reconnectCallback: () {
-                    setState(() {
-                      _cartPageFuture = initCartPageFuture();
-                    });
-                  }),
-                );
-              } else {
-                return const Center(child: InternalServerErrorHandlerWidget());
-              }
+              return const InternalServerErrorHandlerWidget();
             } else {
               return Center(child: Text("$error"));
             }
