@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/widgets/common/common_button_bar.widget.dart';
-import 'package:smart_market/core/widgets/handler/internal_server_error_handler.widget.dart';
-import 'package:smart_market/core/widgets/handler/loading_handler.widget.dart';
-import 'package:smart_market/core/widgets/handler/network_error_handler.widget.dart';
 import 'package:smart_market/model/account/domain/entities/account.entity.dart';
 import 'package:smart_market/model/account/domain/service/account.service.dart';
 import 'package:smart_market/model/account/presentation/dialog/account_sort.dialog.dart';
 import 'package:smart_market/model/account/presentation/pages/create_account.page.dart';
 import 'package:smart_market/model/account/presentation/widgets/account_item.widget.dart';
+
+import '../../../../core/errors/dio_fail.error.dart';
+import '../../../../core/widgets/handler/internal_server_error_handler.widget.dart';
+import '../../../../core/widgets/handler/loading_handler.widget.dart';
+import '../../../../core/widgets/handler/network_error_handler.widget.dart';
 
 class AccountListWidget extends StatefulWidget {
   final List<ResponseAccount> accounts;
@@ -28,12 +29,6 @@ class _AccountListWidgetState extends State<AccountListWidget> {
   final RequestAccounts defaultRequestAccountsArgs = const RequestAccounts(align: "DESC", column: "createdAt");
   late Future<List<ResponseAccount>> _getAccountsFuture;
   bool _isFirstRendering = true;
-
-  @override
-  void initState() {
-    super.initState();
-    updateAccounts(defaultRequestAccountsArgs);
-  }
 
   void updateAccounts(RequestAccounts args) {
     setState(() {
@@ -163,47 +158,46 @@ class _AccountListWidgetState extends State<AccountListWidget> {
             WidgetsBinding.instance.addPostFrameCallback((_) => _isFirstRendering = false);
             return getPageElement(widget.accounts);
           })
-        : FutureBuilder(
-            future: _getAccountsFuture,
-            builder: (BuildContext context, AsyncSnapshot<List<ResponseAccount>> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Column(
-                  children: [
-                    SizedBox(height: 30),
-                    LoadingHandlerWidget(title: "계좌 리스트 불러오기"),
-                  ],
-                );
-              } else if (snapshot.hasError) {
-                DioFailError err = snapshot.error as DioFailError;
-                if (err.message == "none connection") {
-                  return Column(
-                    children: [
-                      const SizedBox(height: 25),
-                      NetworkErrorHandlerWidget(reconnectCallback: () {
-                        setState(() {
-                          RequestAccounts args = const RequestAccounts(
-                            align: "DESC",
-                            column: "createdAt",
-                          );
-                          _getAccountsFuture = _accountService.getAccounts(args);
-                        });
-                      }),
-                      const SizedBox(height: 25),
-                    ],
-                  );
-                } else {
+        : (() {
+            updateAccounts(defaultRequestAccountsArgs);
+            return FutureBuilder(
+              future: _getAccountsFuture,
+              builder: (BuildContext context, AsyncSnapshot<List<ResponseAccount>> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Column(
                     children: [
-                      SizedBox(height: 25),
-                      InternalServerErrorHandlerWidget(),
-                      SizedBox(height: 25),
+                      SizedBox(height: 30),
+                      LoadingHandlerWidget(title: "계좌 리스트 불러오기"),
                     ],
                   );
+                } else if (snapshot.hasError) {
+                  DioFailError err = snapshot.error as DioFailError;
+                  if (err.message == "none connection") {
+                    return Column(
+                      children: [
+                        const SizedBox(height: 25),
+                        NetworkErrorHandlerWidget(reconnectCallback: () {
+                          setState(() {
+                            _getAccountsFuture = _accountService.getAccounts(defaultRequestAccountsArgs);
+                          });
+                        }),
+                        const SizedBox(height: 25),
+                      ],
+                    );
+                  } else {
+                    return const Column(
+                      children: [
+                        SizedBox(height: 25),
+                        InternalServerErrorHandlerWidget(),
+                        SizedBox(height: 25),
+                      ],
+                    );
+                  }
+                } else {
+                  return getPageElement(snapshot.data!);
                 }
-              } else {
-                return getPageElement(snapshot.data!);
-              }
-            },
-          );
+              },
+            );
+          })();
   }
 }

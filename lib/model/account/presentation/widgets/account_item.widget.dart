@@ -3,12 +3,13 @@ import 'package:intl/intl.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/utils/get_snackbar.dart';
-import 'package:smart_market/core/utils/parse_date.dart';
 import 'package:smart_market/model/account/domain/entities/account.entity.dart';
 import 'package:smart_market/model/account/domain/entities/account_transaction.entity.dart';
 import 'package:smart_market/model/account/domain/service/account.service.dart';
 import 'package:smart_market/model/account/presentation/dialog/account_transaction.dialog.dart';
 import 'package:smart_market/model/account/presentation/dialog/handle_transaction_error.dialog.dart';
+
+import '../../../../core/utils/parse_date.dart';
 
 class AccountItemWidget extends StatefulWidget {
   final ResponseAccount account;
@@ -176,12 +177,29 @@ class _AccountItemWidgetState extends State<AccountItemWidget> {
           Positioned(
             top: 10,
             left: 10,
-            child: Text(
-              "${widget.account.bank} ${widget.account.accountNumber}",
-              style: const TextStyle(
-                fontSize: 14,
-                color: Color.fromARGB(255, 80, 80, 80),
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "${widget.account.bank} ${widget.account.accountNumber}",
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Color.fromARGB(255, 80, 80, 80),
+                  ),
+                ),
+                Text(
+                  "${NumberFormat('#,###').format(widget.account.balance)} 원",
+                  style: const TextStyle(fontSize: 22),
+                ),
+                Text(
+                  "${parseDate(widget.account.createdAt)}에 계좌 등록됨",
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Color.fromARGB(255, 120, 120, 120),
+                  ),
+                )
+              ],
             ),
           ),
           Positioned(
@@ -190,25 +208,6 @@ class _AccountItemWidgetState extends State<AccountItemWidget> {
             child: Icon(
               widget.account.isMainAccount ? Icons.check_circle_outline : Icons.circle_outlined,
               color: widget.account.isMainAccount ? Colors.red : Colors.black,
-            ),
-          ),
-          Positioned(
-            top: 35,
-            left: 10,
-            child: Text(
-              "${NumberFormat('#,###').format(widget.account.balance)} 원",
-              style: const TextStyle(fontSize: 22),
-            ),
-          ),
-          Positioned(
-            top: 70,
-            left: 10,
-            child: Text(
-              "${parseDate(widget.account.createdAt)}에 계좌 등록됨",
-              style: const TextStyle(
-                fontSize: 12,
-                color: Color.fromARGB(255, 120, 120, 120),
-              ),
             ),
           ),
           Positioned(
