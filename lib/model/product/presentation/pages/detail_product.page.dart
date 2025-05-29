@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
+import 'package:smart_market/core/utils/get_snackbar.dart';
 import 'package:smart_market/core/widgets/handler/loading_handler.widget.dart';
+import 'package:smart_market/model/cart/domain/entities/create_cart.entity.dart';
+import 'package:smart_market/model/cart/presentation/dialog/create_cart.dialog.dart';
 import 'package:smart_market/model/product/domain/entities/detail_product.entity.dart';
 import 'package:smart_market/model/product/domain/service/product.service.dart';
 import 'package:smart_market/model/product/presentation/widgets/display_average_score.widget.dart';
@@ -9,8 +12,10 @@ import 'package:smart_market/model/product/presentation/widgets/image/product_im
 import 'package:smart_market/model/product/presentation/widgets/item/review_item.widget.dart';
 
 import '../../../../core/errors/connection_error.dart';
+import '../../../../core/widgets/dialog/handle_network_error_on_dialog.dialog.dart';
 import '../../../../core/widgets/handler/internal_server_error_handler.widget.dart';
 import '../../../../core/widgets/handler/network_error_handler.widget.dart';
+import '../../../cart/domain/service/cart.service.dart';
 
 class DetailProductPageArgs {
   final String productId;
@@ -32,12 +37,41 @@ class DetailProductPage extends StatefulWidget {
 
 class _DetailProductPageState extends State<DetailProductPage> {
   final ProductService productService = locator<ProductService>();
+  final CartService _cartService = locator<CartService>();
   late Future<ResponseDetailProduct> _getDetailProductFuture;
 
   @override
   void initState() {
     super.initState();
     _getDetailProductFuture = productService.getDetailProduct(widget.productId);
+  }
+
+  void handleCartError(Object err) {
+    HandleNetworkErrorOnDialogDialog.show(context, err);
+  }
+
+  Future<void> pressCreateCart(ResponseDetailProduct product) async {
+    ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
+    Future<void> createCart({required int quantity, required int totalPrice}) async {
+      RequestCreateCart args = RequestCreateCart(
+        productId: widget.productId,
+        quantity: quantity,
+        totalPrice: totalPrice,
+      );
+
+      try {
+        await _cartService.createCart(args);
+        scaffoldMessenger.showSnackBar(getSnackBar("해당 상품을 장바구니에 추가하였습니다."));
+      } catch (err) {
+        handleCartError(err);
+      }
+    }
+
+    CreateCartDialog.show(
+      context,
+      product: product,
+      createCallback: createCart,
+    );
   }
 
   @override
@@ -180,7 +214,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
                         Flexible(
                           flex: 1,
                           child: GestureDetector(
-                            onTap: () {},
+                            onTap: () => pressCreateCart(data),
                             child: Container(
                               margin: const EdgeInsets.all(10),
                               height: 60,

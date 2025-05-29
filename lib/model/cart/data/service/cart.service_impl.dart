@@ -5,6 +5,7 @@ import 'package:smart_market/model/cart/domain/service/cart.service.dart';
 
 import '../../../../core/utils/get_it_initializer.dart';
 import '../../../../core/utils/throw_network_error.dart';
+import '../../domain/entities/create_cart.entity.dart';
 import '../../domain/entities/modify_cart.entity.dart';
 import '../../domain/repository/cart.repository.dart';
 
@@ -18,6 +19,13 @@ class CartServiceImpl implements CartService {
     DataState<ResponseCarts> dataState = await _cartRepository.fetchCarts(accessToken!, args);
     if (dataState.exception != null) branchNetworkError(dataState);
     return dataState.data!;
+  }
+
+  @override
+  Future<void> createCart(RequestCreateCart args) async {
+    String? accessToken = _db.getString("access-token");
+    DataState<void> dataState = await _cartRepository.createCart(accessToken!, args);
+    if (dataState.exception != null) branchNetworkError(dataState);
   }
 
   @override

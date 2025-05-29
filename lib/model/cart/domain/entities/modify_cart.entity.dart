@@ -1,20 +1,12 @@
-class RequestModifyCart {
+import 'package:smart_market/model/cart/domain/entities/create_cart.entity.dart';
+
+class RequestModifyCart extends RequestCreateCart {
   final String cartId;
-  final String productId;
-  final int quantity;
-  final int totalPrice;
 
   const RequestModifyCart({
     required this.cartId,
-    required this.productId,
-    required this.quantity,
-    required this.totalPrice,
+    required super.productId,
+    required super.quantity,
+    required super.totalPrice,
   });
-
-  Map<String, dynamic> toJson() {
-    return {
-      "quantity": quantity,
-      "totalPrice": totalPrice,
-    };
-  }
 }

@@ -4,6 +4,7 @@ import 'package:smart_market/core/utils/dio_initializer.dart';
 import 'package:smart_market/model/cart/domain/entities/cart.entity.dart';
 
 import '../../../../core/utils/get_it_initializer.dart';
+import '../../domain/entities/create_cart.entity.dart';
 import '../../domain/entities/modify_cart.entity.dart';
 import '../../domain/repository/cart.repository.dart';
 
@@ -22,6 +23,21 @@ class CartRepositoryImpl implements CartRepository {
 
       ResponseCarts carts = ResponseCarts.fromJson(response.data["result"]);
       return DataSuccess(data: carts);
+    } on DioException catch (err) {
+      return DataFail(exception: err);
+    }
+  }
+
+  @override
+  Future<DataState<void>> createCart(String accessToken, RequestCreateCart args) async {
+    String url = "$_baseUrl/product/${args.productId}";
+    ClientArgs clientArgs = ClientArgs(accessToken: accessToken);
+    Dio dio = _authorizationHttpClient.getClient(args: clientArgs);
+
+    try {
+      await dio.post(url, data: args.toJson());
+
+      return const DataSuccess(data: null);
     } on DioException catch (err) {
       return DataFail(exception: err);
     }
