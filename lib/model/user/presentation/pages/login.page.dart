@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:smart_market/core/common/network_handler.mixin.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/utils/get_snackbar.dart';
-import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.dart';
 import 'package:smart_market/model/user/domain/entities/login.entity.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
 import 'package:smart_market/model/user/presentation/pages/reset_password.page.dart';
+
+import '../../../../core/widgets/common/conditional_button_bar.widget.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -79,15 +80,6 @@ class _LoginPageState extends State<LoginPage> with NetWorkHandler {
     );
   }
 
-  ConditionalButtonBarWidget getLoginButton() {
-    return ConditionalButtonBarWidget(
-      backgroundColor: Colors.blueAccent,
-      title: "로그인 하기",
-      isValid: _isValidForm,
-      pressCallback: pressLogin,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -156,7 +148,13 @@ class _LoginPageState extends State<LoginPage> with NetWorkHandler {
               const SizedBox(height: 10),
               if (_hasError) getErrorMessageWidget(_errorMessage),
               const SizedBox(height: 10),
-              getLoginButton(),
+              ConditionalButtonBarWidget(
+                backgroundColor: Colors.blueAccent,
+                title: "로그인 하기",
+                isValid: _isValidForm,
+                pressCallback: pressLogin,
+              ),
+              const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
