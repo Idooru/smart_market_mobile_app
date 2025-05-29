@@ -44,6 +44,8 @@ class _ModifyCartDialogWidgetState extends State<ModifyCartDialogWidget> {
   }
 
   void pressIncrement() {
+    if (productQuantity == 50) return;
+
     setState(() {
       productQuantity += 1;
       totalPrice = widget.cart.product.price * productQuantity;
@@ -51,6 +53,8 @@ class _ModifyCartDialogWidgetState extends State<ModifyCartDialogWidget> {
   }
 
   void pressDecrement() {
+    if (productQuantity == 1) return;
+
     setState(() {
       productQuantity -= 1;
       totalPrice = widget.cart.product.price * productQuantity;
