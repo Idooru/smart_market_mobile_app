@@ -7,6 +7,7 @@ import 'package:smart_market/model/account/presentation/dialog/account_sort.dial
 import 'package:smart_market/model/account/presentation/pages/create_account.page.dart';
 import 'package:smart_market/model/account/presentation/widgets/account_item.widget.dart';
 
+import '../../../../core/errors/connection_error.dart';
 import '../../../../core/errors/dio_fail.error.dart';
 import '../../../../core/widgets/handler/internal_server_error_handler.widget.dart';
 import '../../../../core/widgets/handler/loading_handler.widget.dart';
@@ -171,27 +172,17 @@ class _AccountListWidgetState extends State<AccountListWidget> {
                     ],
                   );
                 } else if (snapshot.hasError) {
-                  DioFailError err = snapshot.error as DioFailError;
-                  if (err.message == "none connection") {
-                    return Column(
-                      children: [
-                        const SizedBox(height: 25),
-                        NetworkErrorHandlerWidget(reconnectCallback: () {
-                          setState(() {
-                            _getAccountsFuture = _accountService.getAccounts(defaultRequestAccountsArgs);
-                          });
-                        }),
-                        const SizedBox(height: 25),
-                      ],
-                    );
+                  final error = snapshot.error;
+                  if (error is ConnectionError) {
+                    return NetworkErrorHandlerWidget(reconnectCallback: () {
+                      setState(() {
+                        _getAccountsFuture = _accountService.getAccounts(defaultRequestAccountsArgs);
+                      });
+                    });
+                  } else if (error is DioFailError) {
+                    return const InternalServerErrorHandlerWidget();
                   } else {
-                    return const Column(
-                      children: [
-                        SizedBox(height: 25),
-                        InternalServerErrorHandlerWidget(),
-                        SizedBox(height: 25),
-                      ],
-                    );
+                    return Center(child: Text("$error"));
                   }
                 } else {
                   return getPageElement(snapshot.data!);

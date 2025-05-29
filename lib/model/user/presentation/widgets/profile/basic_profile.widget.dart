@@ -9,6 +9,8 @@ import 'package:smart_market/model/user/domain/entities/profile.entity.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
 import 'package:smart_market/model/user/presentation/pages/edit_profile.page.dart';
 
+import '../../../../../core/errors/connection_error.dart';
+
 class BasicProfileWidget extends StatefulWidget {
   final ResponseProfile profile;
 
@@ -203,27 +205,17 @@ class _BasicProfileWidgetState extends State<BasicProfileWidget> {
                   ],
                 );
               } else if (snapshot.hasError) {
-                DioFailError err = snapshot.error as DioFailError;
-                if (err.message == "none connection") {
-                  return Column(
-                    children: [
-                      const SizedBox(height: 25),
-                      NetworkErrorHandlerWidget(reconnectCallback: () {
-                        setState(() {
-                          _getProfileFuture = _userService.getProfile();
-                        });
-                      }),
-                      const SizedBox(height: 25),
-                    ],
-                  );
+                final error = snapshot.error;
+                if (error is ConnectionError) {
+                  return NetworkErrorHandlerWidget(reconnectCallback: () {
+                    setState(() {
+                      _getProfileFuture = _userService.getProfile();
+                    });
+                  });
+                } else if (error is DioFailError) {
+                  return const InternalServerErrorHandlerWidget();
                 } else {
-                  return const Column(
-                    children: [
-                      SizedBox(height: 25),
-                      InternalServerErrorHandlerWidget(),
-                      SizedBox(height: 25),
-                    ],
-                  );
+                  return Center(child: Text("$error"));
                 }
               } else {
                 return getPageElement(snapshot.data!);

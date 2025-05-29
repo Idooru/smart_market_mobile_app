@@ -4,6 +4,7 @@ import 'package:smart_market/core/widgets/common/common_button_bar.widget.dart';
 import 'package:smart_market/model/cart/presentation/dialog/warn_delete_all_carts.dialog.dart';
 import 'package:smart_market/model/cart/presentation/widgets/cart_item.widget.dart';
 
+import '../../../../core/errors/connection_error.dart';
 import '../../../../core/errors/dio_fail.error.dart';
 import '../../../../core/utils/get_it_initializer.dart';
 import '../../../../core/widgets/handler/internal_server_error_handler.widget.dart';
@@ -155,34 +156,19 @@ class _CartListWidgetState extends State<CartListWidget> {
               future: _getCartsFuture,
               builder: (BuildContext context, AsyncSnapshot<ResponseCarts> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Column(
-                    children: [
-                      SizedBox(height: 30),
-                      LoadingHandlerWidget(title: "장바구니 리스트 불러오기"),
-                    ],
-                  );
+                  return const LoadingHandlerWidget(title: "장바구니 리스트 불러오기");
                 } else if (snapshot.hasError) {
-                  DioFailError err = snapshot.error as DioFailError;
-                  if (err.message == "none connection") {
-                    return Column(
-                      children: [
-                        const SizedBox(height: 25),
-                        NetworkErrorHandlerWidget(reconnectCallback: () {
-                          setState(() {
-                            _getCartsFuture = _cartService.fetchCarts(defaultRequestCartsArgs);
-                          });
-                        }),
-                        const SizedBox(height: 25),
-                      ],
-                    );
+                  final error = snapshot.error;
+                  if (error is ConnectionError) {
+                    return NetworkErrorHandlerWidget(reconnectCallback: () {
+                      setState(() {
+                        _getCartsFuture = _cartService.fetchCarts(defaultRequestCartsArgs);
+                      });
+                    });
+                  } else if (error is DioFailError) {
+                    return const InternalServerErrorHandlerWidget();
                   } else {
-                    return const Column(
-                      children: [
-                        SizedBox(height: 25),
-                        InternalServerErrorHandlerWidget(),
-                        SizedBox(height: 25),
-                      ],
-                    );
+                    return Center(child: Text("$error"));
                   }
                 } else {
                   return getPageElement(snapshot.data!);

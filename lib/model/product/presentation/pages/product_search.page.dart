@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/model/main/presentation/pages/navigation.page.dart';
 import 'package:smart_market/model/product/common/const/%08product_category.const.dart';
@@ -12,8 +11,10 @@ import 'package:smart_market/model/product/presentation/widgets/product_filter.d
 import 'package:smart_market/model/product/presentation/widgets/search/product_button_search_bar.widget.dart';
 import 'package:smart_market/model/product/presentation/widgets/search/product_search_focused.widget.dart';
 import 'package:smart_market/model/product/presentation/widgets/search/product_search_result.widget.dart';
-import 'package:smart_market/model/product/presentation/widgets/search/product_textfield_search_bar.widget.dart';
 import 'package:smart_market/model/product/presentation/widgets/search/product_searching.widget.dart';
+import 'package:smart_market/model/product/presentation/widgets/search/product_textfield_search_bar.widget.dart';
+
+import '../../../../core/errors/connection_error.dart';
 
 enum ViewMode {
   list,
@@ -89,12 +90,10 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
       List<ResponseSearchProduct> products = await productService.getSearchProduct(args);
       searchProvider.setProducts(products);
       searchProvider.setFail(SearchProductFail.none);
-    } on DioFailError catch (err) {
-      if (err.message == "none connection") {
-        searchProvider.setFail(SearchProductFail.noneConnectionException);
-      } else {
-        searchProvider.setFail(SearchProductFail.internalServerException);
-      }
+    } catch (err) {
+      searchProvider.setFail(
+        err is ConnectionError ? SearchProductFail.noneConnectionException : SearchProductFail.internalServerException,
+      );
     }
   }
 

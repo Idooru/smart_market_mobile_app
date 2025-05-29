@@ -10,6 +10,8 @@ import 'package:smart_market/model/product/domain/service/product.service.dart';
 import 'package:smart_market/model/product/presentation/provider/product_filtered.provider.dart';
 import 'package:smart_market/model/product/presentation/provider/product_search.provider.dart';
 
+import '../../../../../core/errors/connection_error.dart';
+
 class ProductSearchingWidget extends StatefulWidget {
   final void Function(String keyword, ProductSearchProvider searchProvider, ProductFilteredProvider filteredProvider, void Function(RequestSearchProducts) callback) search;
   final void Function(RequestSearchProducts args) updateProductList;
@@ -133,15 +135,17 @@ class _ProductSearchingWidgetState extends State<ProductSearchingWidget> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const SizedBox.shrink();
                 } else if (snapshot.hasError) {
-                  DioFailError err = snapshot.error as DioFailError;
-                  if (err.message == "none connection") {
+                  final error = snapshot.error;
+                  if (error is ConnectionError) {
                     return NetworkErrorHandlerWidget(reconnectCallback: () {
                       setState(() {
                         _getProductAutoCompleteFuture = productService.getProductAutocomplete(searchProvider.keyword);
                       });
                     });
-                  } else {
+                  } else if (error is DioFailError) {
                     return const InternalServerErrorHandlerWidget();
+                  } else {
+                    return Center(child: Text("$error"));
                   }
                 } else {
                   List<String> autoCompletes = snapshot.data!;
