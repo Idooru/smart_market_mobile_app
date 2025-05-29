@@ -65,7 +65,7 @@ class _ModifyCartDialogWidgetState extends State<ModifyCartDialogWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 400,
+      height: 380,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -140,8 +140,8 @@ class _ModifyCartDialogWidgetState extends State<ModifyCartDialogWidget> {
                       GestureDetector(
                         onTap: pressDecrement,
                         child: Container(
-                          width: 75,
-                          height: 50,
+                          width: 55,
+                          height: 45,
                           decoration: BoxDecoration(
                             color: Colors.black,
                             borderRadius: BorderRadius.circular(10),
@@ -175,8 +175,8 @@ class _ModifyCartDialogWidgetState extends State<ModifyCartDialogWidget> {
                       GestureDetector(
                         onTap: pressIncrement,
                         child: Container(
-                          width: 75,
-                          height: 50,
+                          width: 55,
+                          height: 45,
                           decoration: BoxDecoration(
                             color: Colors.black,
                             borderRadius: BorderRadius.circular(10),
