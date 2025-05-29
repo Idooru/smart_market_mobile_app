@@ -6,6 +6,7 @@ import 'package:smart_market/model/cart/presentation/dialog/modify_cart.dialog.d
 import '../../../../core/utils/get_it_initializer.dart';
 import '../../../../core/utils/get_snackbar.dart';
 import '../../../../core/widgets/dialog/handle_network_error_on_dialog.dialog.dart';
+import '../../../product/presentation/pages/detail_product.page.dart';
 import '../../domain/entities/cart.entity.dart';
 import '../../domain/service/cart.service.dart';
 
@@ -28,6 +29,14 @@ class _CartItemWidgetState extends State<CartItemWidget> {
 
   void handleCartError(Object err) {
     HandleNetworkErrorOnDialogDialog.show(context, err);
+  }
+
+  void pressShowProductDetail() {
+    Navigator.of(context).pop();
+    Navigator.of(context).pushNamed(
+      "/detail_product",
+      arguments: DetailProductPageArgs(productId: widget.cart.product.id),
+    );
   }
 
   Future<void> pressModifyCart() async {
@@ -81,6 +90,13 @@ class _CartItemWidgetState extends State<CartItemWidget> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              GestureDetector(
+                onTap: pressShowProductDetail,
+                child: const ListTile(
+                  leading: Icon(Icons.open_in_new),
+                  title: Text("상품 상세 보기"),
+                ),
+              ),
               GestureDetector(
                 onTap: pressModifyCart,
                 child: const ListTile(
