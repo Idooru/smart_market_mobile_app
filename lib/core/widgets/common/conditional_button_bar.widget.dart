@@ -26,7 +26,6 @@ class ConditionalButtonBarWidget extends StatelessWidget {
       onTap: isValid ? pressCallback : () {},
       child: Container(
         height: 50,
-        margin: const EdgeInsets.only(bottom: 10),
         decoration: BoxDecoration(
           color: isValid ? getBackgroundColorWhenValid() : const Color.fromARGB(255, 190, 190, 190),
           borderRadius: BorderRadius.circular(10),
