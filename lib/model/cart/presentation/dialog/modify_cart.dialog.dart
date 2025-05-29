@@ -51,7 +51,7 @@ class _ModifyCartDialogWidgetState extends State<ModifyCartDialogWidget> with Ed
   }
 
   void pressDecrement() {
-    if (productQuantity == 1) return;
+    if (productQuantity <= 1) return;
 
     setState(() {
       productQuantity -= 1;
