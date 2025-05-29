@@ -12,6 +12,7 @@ import 'package:smart_market/model/product/presentation/widgets/image/product_im
 import 'package:smart_market/model/product/presentation/widgets/item/review_item.widget.dart';
 
 import '../../../../core/errors/connection_error.dart';
+import '../../../../core/utils/check_jwt_duration.dart';
 import '../../../../core/widgets/dialog/handle_network_error_on_dialog.dialog.dart';
 import '../../../../core/widgets/handler/internal_server_error_handler.widget.dart';
 import '../../../../core/widgets/handler/network_error_handler.widget.dart';
@@ -57,6 +58,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
     if (!isLogined) return InvitationLoginDialog.show(context);
 
     ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
+    await checkJwtDuration();
     Future<void> createCart({required int quantity, required int totalPrice}) async {
       RequestCreateCart args = RequestCreateCart(
         productId: widget.productId,

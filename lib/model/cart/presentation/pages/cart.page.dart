@@ -6,11 +6,11 @@ import 'package:smart_market/model/cart/presentation/widgets/cart_list.widget.da
 
 import '../../../../core/errors/dio_fail.error.dart';
 import '../../../../core/errors/refresh_token_expired.error.dart';
+import '../../../../core/utils/check_jwt_duration.dart';
 import '../../../../core/utils/get_it_initializer.dart';
 import '../../../../core/widgets/handler/internal_server_error_handler.widget.dart';
 import '../../../../core/widgets/handler/loading_handler.widget.dart';
 import '../../../../core/widgets/handler/network_error_handler.widget.dart';
-import '../../../user/domain/service/user.service.dart';
 import '../../../user/presentation/dialog/force_logout.dialog.dart';
 
 class CartPage extends StatefulWidget {
@@ -21,7 +21,6 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
-  final UserService _userService = locator<UserService>();
   final CartService _cartService = locator<CartService>();
   late Future<Map<String, dynamic>> _cartPageFuture;
 
@@ -33,9 +32,7 @@ class _CartPageState extends State<CartPage> {
 
   Future<Map<String, dynamic>> initCartPageFuture() async {
     await Future.delayed(const Duration(milliseconds: 500));
-
-    bool result = await _userService.checkJwtTokenDuration();
-    if (!result) throw RefreshTokenExpiredError();
+    await checkJwtDuration();
 
     ResponseCarts carts = await _cartService.fetchCarts(const RequestCarts(align: "DESC", column: "createdAt"));
 
