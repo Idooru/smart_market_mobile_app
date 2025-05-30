@@ -19,14 +19,14 @@ import '../../domain/entities/profile.entity.dart';
 import '../dialog/force_logout.dialog.dart';
 import '../widgets/profile/basic_profile.widget.dart';
 
-class ClientProfilePage extends StatefulWidget {
-  const ClientProfilePage({super.key});
+class ProfilePage extends StatefulWidget {
+  const ProfilePage({super.key});
 
   @override
-  State<ClientProfilePage> createState() => _ClientProfilePageState();
+  State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ClientProfilePageState extends State<ClientProfilePage> {
+class _ProfilePageState extends State<ProfilePage> {
   final UserService _userService = locator<UserService>();
   final AccountService _accountService = locator<AccountService>();
   final RequestAccounts defaultRequestAccountsArgs = const RequestAccounts(align: "DESC", column: "createdAt");

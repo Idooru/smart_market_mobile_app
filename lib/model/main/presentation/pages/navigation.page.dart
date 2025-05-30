@@ -9,7 +9,7 @@ import 'package:smart_market/model/product/domain/entities/search_product.entity
 import 'package:smart_market/model/product/domain/service/product.service.dart';
 import 'package:smart_market/model/product/presentation/pages/product_search.page.dart';
 import 'package:smart_market/model/user/presentation/dialog/invitation_login.dialog.dart';
-import 'package:smart_market/model/user/presentation/pages/client_profile.page.dart';
+import 'package:smart_market/model/user/presentation/pages/profile.page.dart';
 import 'package:smart_market/model/user/utils/check_is_logined.dart';
 
 import '../../../../core/errors/connection_error.dart';
@@ -108,7 +108,7 @@ class NavigationPageState extends State<NavigationPage> {
               MainPage(pageArgs: datas),
               const ProductSearchPage(),
               const CartPage(),
-              const ClientProfilePage(),
+              const ProfilePage(),
             ];
 
             return ColoredBox(
