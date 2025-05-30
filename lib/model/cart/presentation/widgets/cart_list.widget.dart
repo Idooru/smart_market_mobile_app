@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_market/core/widgets/common/common_button_bar.widget.dart';
+import 'package:smart_market/model/cart/presentation/dialog/sort_carts.dialog.dart';
 import 'package:smart_market/model/cart/presentation/dialog/warn_delete_all_carts.dialog.dart';
 import 'package:smart_market/model/cart/presentation/widgets/cart_item.widget.dart';
 
@@ -29,6 +30,12 @@ class _CartListWidgetState extends State<CartListWidget> {
   final RequestCarts defaultRequestCartsArgs = const RequestCarts(align: "DESC", column: "createdAt");
   late Future<ResponseCarts> _getCartsFuture;
   bool _isFirstRendering = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _getCartsFuture = _cartService.fetchCarts(defaultRequestCartsArgs);
+  }
 
   void updateCarts(RequestCarts args) {
     setState(() {
@@ -62,7 +69,9 @@ class _CartListWidgetState extends State<CartListWidget> {
     );
   }
 
-  void pressSortCarts() {}
+  void pressSortCarts() {
+    SortCartsDialog.show(context, updateCallback: updateCarts);
+  }
 
   Widget getPageElement(ResponseCarts carts) {
     return Column(
@@ -150,7 +159,6 @@ class _CartListWidgetState extends State<CartListWidget> {
             },
           )
         : (() {
-            updateCarts(defaultRequestCartsArgs);
             return FutureBuilder<ResponseCarts>(
               future: _getCartsFuture,
               builder: (BuildContext context, AsyncSnapshot<ResponseCarts> snapshot) {
