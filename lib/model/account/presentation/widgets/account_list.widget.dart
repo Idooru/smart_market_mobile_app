@@ -31,6 +31,12 @@ class _AccountListWidgetState extends State<AccountListWidget> {
   late Future<List<ResponseAccount>> _getAccountsFuture;
   bool _isFirstRendering = true;
 
+  @override
+  void initState() {
+    super.initState();
+    _getAccountsFuture = _accountService.getAccounts(defaultRequestAccountsArgs);
+  }
+
   void updateAccounts(RequestAccounts args) {
     setState(() {
       _getAccountsFuture = _accountService.getAccounts(args);
@@ -160,7 +166,6 @@ class _AccountListWidgetState extends State<AccountListWidget> {
             return getPageElement(widget.accounts);
           })
         : (() {
-            updateAccounts(defaultRequestAccountsArgs);
             return FutureBuilder(
               future: _getAccountsFuture,
               builder: (BuildContext context, AsyncSnapshot<List<ResponseAccount>> snapshot) {
