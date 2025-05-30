@@ -178,7 +178,6 @@ class _AccountItemWidgetState extends State<AccountItemWidget> {
             left: 10,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   "${widget.account.bank} ${widget.account.accountNumber}",
@@ -187,9 +186,12 @@ class _AccountItemWidgetState extends State<AccountItemWidget> {
                     color: Color.fromARGB(255, 80, 80, 80),
                   ),
                 ),
-                Text(
-                  "${NumberFormat('#,###').format(widget.account.balance)} 원",
-                  style: const TextStyle(fontSize: 22),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 7),
+                  child: Text(
+                    "${NumberFormat('#,###').format(widget.account.balance)} 원",
+                    style: const TextStyle(fontSize: 24),
+                  ),
                 ),
                 Text(
                   "${parseDate(widget.account.createdAt)}에 계좌 등록됨",
