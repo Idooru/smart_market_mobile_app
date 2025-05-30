@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:smart_market/core/utils/parse_date.dart';
 import 'package:smart_market/model/cart/domain/entities/modify_cart.entity.dart';
 import 'package:smart_market/model/cart/presentation/dialog/modify_cart.dialog.dart';
 
@@ -158,10 +159,22 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                       child: Text(
                         widget.cart.product.name,
                         style: const TextStyle(
-                          fontSize: 20,
+                          fontSize: 17,
                           color: Color.fromARGB(255, 50, 50, 50),
                           overflow: TextOverflow.ellipsis,
                           fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 140,
+                      child: Text(
+                        "합계: ${NumberFormat('#,###').format(widget.cart.totalPrice)}원",
+                        style: const TextStyle(
+                          fontSize: 17,
+                          color: Colors.black,
+                          overflow: TextOverflow.ellipsis,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
@@ -173,7 +186,7 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                             child: Text(
                               "${NumberFormat('#,###').format(widget.cart.product.price)}원",
                               style: const TextStyle(
-                                fontSize: 16,
+                                // fontSize: 16,
                                 color: Color.fromARGB(255, 100, 100, 100),
                                 overflow: TextOverflow.ellipsis,
                                 fontWeight: FontWeight.w500,
@@ -191,7 +204,7 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                           Text(
                             "수량: ${widget.cart.quantity}",
                             style: const TextStyle(
-                              fontSize: 14,
+                              // fontSize: 14,
                               color: Color.fromARGB(255, 100, 100, 100),
                               fontWeight: FontWeight.w500,
                             ),
@@ -202,11 +215,10 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                     SizedBox(
                       width: 140,
                       child: Text(
-                        "합계: ${NumberFormat('#,###').format(widget.cart.totalPrice)}원",
+                        "생성일: ${parseDate(widget.cart.createdAt)}",
                         style: const TextStyle(
-                          fontSize: 17,
-                          color: Colors.black,
-                          overflow: TextOverflow.ellipsis,
+                          fontSize: 13,
+                          color: Color.fromARGB(255, 100, 100, 100),
                           fontWeight: FontWeight.w500,
                         ),
                       ),
