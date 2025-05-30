@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_market/core/widgets/common/common_button_bar.widget.dart';
 import 'package:smart_market/model/cart/presentation/dialog/sort_carts.dialog.dart';
-import 'package:smart_market/model/cart/presentation/dialog/warn_delete_all_carts.dialog.dart';
 import 'package:smart_market/model/cart/presentation/widgets/cart_item.widget.dart';
 
 import '../../../../core/errors/connection_error.dart';
@@ -13,6 +12,7 @@ import '../../../../core/widgets/handler/loading_handler.widget.dart';
 import '../../../../core/widgets/handler/network_error_handler.widget.dart';
 import '../../domain/entities/cart.entity.dart';
 import '../../domain/service/cart.service.dart';
+import '../dialog/warn_delete_all_carts.dialog.dart';
 
 class CartListWidget extends StatefulWidget {
   final ResponseCarts carts;
@@ -88,11 +88,6 @@ class _CartListWidgetState extends State<CartListWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   getButton(
-                    pressCallback: pressSortCarts,
-                    icon: Icons.sort,
-                    title: '장바구니 정렬',
-                  ),
-                  getButton(
                     pressCallback: () {
                       WarnDeleteAllCartsDialog.show(
                         context,
@@ -101,6 +96,11 @@ class _CartListWidgetState extends State<CartListWidget> {
                     },
                     icon: Icons.delete,
                     title: '장바구니 전부삭제',
+                  ),
+                  getButton(
+                    pressCallback: pressSortCarts,
+                    icon: Icons.sort,
+                    title: '장바구니 정렬',
                   ),
                 ],
               )
