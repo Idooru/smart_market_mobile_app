@@ -5,13 +5,13 @@ import 'package:smart_market/model/account/domain/entities/account.entity.dart';
 
 final Map<String, String> _filterMap = {};
 
-class AccountSortDialog {
+class SortAccountsDialog {
   static void show(BuildContext context, {required void Function(RequestAccounts args) updateCallback}) {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) => Dialog(
-        child: AccountSortDialogWidget(
+        child: SortAccountsDialogWidget(
           updateCallback: updateCallback,
         ),
       ),
@@ -19,19 +19,19 @@ class AccountSortDialog {
   }
 }
 
-class AccountSortDialogWidget extends StatefulWidget {
+class SortAccountsDialogWidget extends StatefulWidget {
   final void Function(RequestAccounts args) updateCallback;
 
-  const AccountSortDialogWidget({
+  const SortAccountsDialogWidget({
     super.key,
     required this.updateCallback,
   });
 
   @override
-  State<AccountSortDialogWidget> createState() => AccountSortDialogWidgetState();
+  State<SortAccountsDialogWidget> createState() => SortAccountsDialogWidgetState();
 }
 
-class AccountSortDialogWidgetState extends State<AccountSortDialogWidget> with NetWorkHandler {
+class SortAccountsDialogWidgetState extends State<SortAccountsDialogWidget> with NetWorkHandler {
   String _selectedAlign = _filterMap["select-align"] ?? "DESC";
   String _selectedColumn = _filterMap["select-column"] ?? "createdAt";
 

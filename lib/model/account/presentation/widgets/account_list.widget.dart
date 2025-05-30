@@ -3,7 +3,7 @@ import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/widgets/common/common_button_bar.widget.dart';
 import 'package:smart_market/model/account/domain/entities/account.entity.dart';
 import 'package:smart_market/model/account/domain/service/account.service.dart';
-import 'package:smart_market/model/account/presentation/dialog/account_sort.dialog.dart';
+import 'package:smart_market/model/account/presentation/dialog/sort_account.dialog.dart';
 import 'package:smart_market/model/account/presentation/pages/create_account.page.dart';
 import 'package:smart_market/model/account/presentation/widgets/account_item.widget.dart';
 
@@ -69,9 +69,9 @@ class _AccountListWidgetState extends State<AccountListWidget> {
     );
   }
 
-  GestureDetector getSortAccountsButton() {
+  GestureDetector getSortAccountssButton() {
     return GestureDetector(
-      onTap: pressSortAccount,
+      onTap: pressSortAccounts,
       child: Container(
         width: 90,
         height: 30,
@@ -90,8 +90,8 @@ class _AccountListWidgetState extends State<AccountListWidget> {
     );
   }
 
-  void pressSortAccount() {
-    AccountSortDialog.show(context, updateCallback: updateAccounts);
+  void pressSortAccounts() {
+    SortAccountsDialog.show(context, updateCallback: updateAccounts);
   }
 
   Future<void> pressCreateAccount(List<ResponseAccount> accounts) async {
@@ -117,7 +117,7 @@ class _AccountListWidgetState extends State<AccountListWidget> {
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
             ),
             const Spacer(),
-            getSortAccountsButton(),
+            getSortAccountssButton(),
           ],
         ),
         const SizedBox(height: 10),
