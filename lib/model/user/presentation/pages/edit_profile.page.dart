@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:smart_market/core/common/network_handler.mixin.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/utils/get_snackbar.dart';
-import 'package:smart_market/core/widgets/common/common_button_bar.widget.dart';
 import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.dart';
 import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
 import 'package:smart_market/model/user/domain/entities/profile.entity.dart';
@@ -75,15 +74,6 @@ class _EditProfilePageState extends State<EditProfilePage> with NetWorkHandler {
     );
   }
 
-  CommonButtonBarWidget getNavigateEditPasswordButton() {
-    return CommonButtonBarWidget(
-      icon: Icons.lock,
-      backgroundColor: Colors.amber,
-      title: "비밀번호 수정하기",
-      pressCallback: () => Navigator.of(context).pushNamed("/edit_password"),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<EditUserColumnProvider>(
@@ -110,9 +100,9 @@ class _EditProfilePageState extends State<EditProfilePage> with NetWorkHandler {
                   EditEmailWidget(beforeEmail: widget.profile.email, key: _emailKey),
                   EditPhoneNumberWidget(beforePhoneNumber: widget.profile.phoneNumber, key: _phoneNumberKey),
                   EditAddressWidget(beforeAddress: widget.profile.address, key: _addressKey, isLastWidget: true),
+                  const SizedBox(height: 5),
                   getEditProfileButton(provider),
                   if (_hasError) getErrorMessageWidget(_errorMessage),
-                  getNavigateEditPasswordButton()
                 ],
               ),
             ),
