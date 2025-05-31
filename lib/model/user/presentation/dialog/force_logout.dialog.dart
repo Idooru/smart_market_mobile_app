@@ -54,6 +54,7 @@ class _ForceLogoutDialogWidgetState extends State<ForceLogoutDialogWidget> {
               onTap: () {
                 Navigator.of(widget.parentContext).pop();
                 _db.remove("access-token");
+                _db.remove("user-info");
 
                 final state = widget.parentContext.findAncestorStateOfType<NavigationPageState>();
                 state?.tapBottomNavigator(0); // index 1 = ProductSearchPage

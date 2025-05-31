@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_market/core/common/data_state.dart';
 import 'package:smart_market/core/errors/connection_error.dart';
@@ -78,7 +81,13 @@ class UserServiceImpl implements UserService {
   Future<void> login(RequestLogin args) async {
     DataState<String> dataState = await _userRepository.login(args);
     if (dataState.exception != null) branchNetworkError(dataState);
-    _db.setString('access-token', dataState.data!);
+
+    String accessToken = dataState.data!;
+    Map<String, dynamic> json = JwtDecoder.decode(accessToken);
+    String encoded = jsonEncode(json);
+
+    _db.setString('access-token', accessToken);
+    _db.setString("user-info", encoded);
   }
 
   @override
@@ -86,7 +95,9 @@ class UserServiceImpl implements UserService {
     String? accessToken = _db.getString("access-token");
     DataState<void> dataState = await _userRepository.logout(accessToken!);
     if (dataState.exception != null) branchNetworkError(dataState);
+
     _db.remove("access-token");
+    _db.remove("user-info");
   }
 
   @override
