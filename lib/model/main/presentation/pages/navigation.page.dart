@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
+import 'package:smart_market/core/widgets/dialog/admin_can_not_use.dialog.dart';
 import 'package:smart_market/core/widgets/handler/internal_server_error_handler.widget.dart';
 import 'package:smart_market/core/widgets/handler/network_error_handler.widget.dart';
 import 'package:smart_market/model/cart/presentation/pages/cart.page.dart';
@@ -11,6 +12,7 @@ import 'package:smart_market/model/product/presentation/pages/product_search.pag
 import 'package:smart_market/model/user/presentation/dialog/invitation_login.dialog.dart';
 import 'package:smart_market/model/user/presentation/pages/profile.page.dart';
 import 'package:smart_market/model/user/utils/check_is_logined.dart';
+import 'package:smart_market/model/user/utils/get_user_info.dart';
 
 import '../../../../core/errors/connection_error.dart';
 
@@ -54,11 +56,11 @@ class NavigationPageState extends State<NavigationPage> {
   }
 
   void tapBottomNavigator(int index) {
-    final capturedContext = context; // await 전에 context 저장
     bool isLogined = checkIsLogined();
     if ((index == 2 || index == 3) && !isLogined) {
-      if (!context.mounted) return;
-      InvitationLoginDialog.show(capturedContext);
+      InvitationLoginDialog.show(context);
+    } else if (index == 2 && getUserInfo().userRole == "admin") {
+      AdminCanNotUseDialog.show(context);
     } else {
       updateSelectedIndex(index);
     }

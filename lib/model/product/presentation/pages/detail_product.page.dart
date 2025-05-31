@@ -10,6 +10,7 @@ import 'package:smart_market/model/product/domain/service/product.service.dart';
 import 'package:smart_market/model/product/presentation/widgets/display_average_score.widget.dart';
 import 'package:smart_market/model/product/presentation/widgets/image/product_image_grid.widget.dart';
 import 'package:smart_market/model/product/presentation/widgets/item/review_item.widget.dart';
+import 'package:smart_market/model/user/utils/get_user_info.dart';
 
 import '../../../../core/errors/connection_error.dart';
 import '../../../../core/utils/check_jwt_duration.dart';
@@ -182,78 +183,80 @@ class _DetailProductPageState extends State<DetailProductPage> {
                               ),
                             ))(),
                     ),
-                    Row(
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: GestureDetector(
-                            onTap: () {},
-                            child: Container(
-                              margin: const EdgeInsets.all(10),
-                              height: 60,
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 200, 200, 200),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: const Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.edit,
-                                    size: 19,
-                                    color: Color.fromARGB(255, 70, 70, 70),
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Text(
-                                    "리뷰 작성하기",
-                                    style: TextStyle(
-                                      color: Color.fromARGB(255, 70, 70, 70),
-                                      fontSize: 17,
+                    getUserInfo().userRole != "admin"
+                        ? Row(
+                            children: [
+                              Flexible(
+                                flex: 1,
+                                child: GestureDetector(
+                                  onTap: () {},
+                                  child: Container(
+                                    margin: const EdgeInsets.all(10),
+                                    height: 60,
+                                    decoration: BoxDecoration(
+                                      color: const Color.fromARGB(255, 200, 200, 200),
+                                      borderRadius: BorderRadius.circular(10),
                                     ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        Flexible(
-                          flex: 1,
-                          child: GestureDetector(
-                            onTap: () => pressCreateCart(data),
-                            child: Container(
-                              margin: const EdgeInsets.all(10),
-                              height: 60,
-                              decoration: BoxDecoration(
-                                color: Colors.blue,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: const Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.shopping_cart,
-                                    size: 19,
-                                    color: Colors.white,
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Text(
-                                    "장바구니 담기",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 17,
+                                    child: const Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.edit,
+                                          size: 19,
+                                          color: Color.fromARGB(255, 70, 70, 70),
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          "리뷰 작성하기",
+                                          style: TextStyle(
+                                            color: Color.fromARGB(255, 70, 70, 70),
+                                            fontSize: 17,
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                  )
-                                ],
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
+                              Flexible(
+                                flex: 1,
+                                child: GestureDetector(
+                                  onTap: () => pressCreateCart(data),
+                                  child: Container(
+                                    margin: const EdgeInsets.all(10),
+                                    height: 60,
+                                    decoration: BoxDecoration(
+                                      color: Colors.blue,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: const Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.shopping_cart,
+                                          size: 19,
+                                          color: Colors.white,
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          "장바구니 담기",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 17,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          )
+                        : const SizedBox.shrink(),
                     const SizedBox(height: 5),
                   ],
                 ),
