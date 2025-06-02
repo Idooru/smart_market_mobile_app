@@ -3,6 +3,8 @@ import 'package:smart_market/core/errors/connection_error.dart';
 import 'package:smart_market/model/cart/domain/entities/cart.entity.dart';
 import 'package:smart_market/model/cart/domain/service/cart.service.dart';
 import 'package:smart_market/model/cart/presentation/widgets/cart_list.widget.dart';
+import 'package:smart_market/model/user/domain/entities/profile.entity.dart';
+import 'package:smart_market/model/user/domain/service/user.service.dart';
 
 import '../../../../core/errors/dio_fail.error.dart';
 import '../../../../core/errors/refresh_token_expired.error.dart';
@@ -22,6 +24,7 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   final CartService _cartService = locator<CartService>();
+  final UserService _userService = locator<UserService>();
   late Future<Map<String, dynamic>> _cartPageFuture;
 
   @override
@@ -35,8 +38,9 @@ class _CartPageState extends State<CartPage> {
     await checkJwtDuration();
 
     ResponseCarts carts = await _cartService.fetchCarts(const RequestCarts(align: "DESC", column: "createdAt"));
+    ResponseProfile profile = await _userService.getProfile();
 
-    return {"carts": carts};
+    return {"carts": carts, "address": profile.address};
   }
 
   @override
@@ -77,7 +81,10 @@ class _CartPageState extends State<CartPage> {
               ),
               body: Padding(
                 padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                child: CartListWidget(carts: snapshot.data!["carts"]),
+                child: CartListWidget(
+                  carts: snapshot.data!["carts"],
+                  address: snapshot.data!["address"],
+                ),
               ),
             );
           }

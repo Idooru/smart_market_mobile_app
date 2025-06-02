@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:smart_market/core/widgets/common/common_button_bar.widget.dart';
 import 'package:smart_market/model/cart/presentation/dialog/sort_carts.dialog.dart';
 import 'package:smart_market/model/cart/presentation/widgets/cart_item.widget.dart';
+import 'package:smart_market/model/order/presentation/pages/create_order.page.dart';
 
 import '../../../../core/errors/connection_error.dart';
 import '../../../../core/errors/dio_fail.error.dart';
@@ -15,10 +16,12 @@ import '../../domain/service/cart.service.dart';
 import '../dialog/warn_delete_all_carts.dialog.dart';
 
 class CartListWidget extends StatefulWidget {
+  final String address;
   final ResponseCarts carts;
 
   const CartListWidget({
     super.key,
+    required this.address,
     required this.carts,
   });
 
@@ -70,10 +73,6 @@ class _CartListWidgetState extends State<CartListWidget> {
     );
   }
 
-  void pressSortCarts() {
-    SortCartsDialog.show(context, updateCallback: updateCarts);
-  }
-
   Widget getPageElement(ResponseCarts carts) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,7 +97,7 @@ class _CartListWidgetState extends State<CartListWidget> {
                     title: '장바구니 전부삭제',
                   ),
                   getButton(
-                    pressCallback: pressSortCarts,
+                    pressCallback: () => SortCartsDialog.show(context, updateCallback: updateCarts),
                     icon: Icons.sort,
                     title: '장바구니 정렬',
                   ),
@@ -142,9 +141,15 @@ class _CartListWidgetState extends State<CartListWidget> {
         const SizedBox(height: 10),
         CommonButtonBarWidget(
           icon: Icons.shopping_bag,
-          title: "결제하기",
+          title: "결제 주문하기",
           backgroundColor: Colors.red,
-          pressCallback: () {},
+          pressCallback: () => Navigator.of(context).pushNamed(
+            "/create_order",
+            arguments: CreateOrderPageArgs(
+              address: widget.address,
+              updateCallback: () => updateCarts(defaultRequestCartsArgs),
+            ),
+          ),
         ),
       ],
     );

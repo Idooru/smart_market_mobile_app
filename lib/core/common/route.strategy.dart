@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_market/model/account/presentation/routes/route.strategy.dart';
+import 'package:smart_market/model/order/presentation/routes/order_route.strategy.dart';
 import 'package:smart_market/model/product/presentation/routes/route.strategy.dart';
 import 'package:smart_market/model/user/presentation/routes/route.strategy.dart';
 
@@ -11,4 +12,5 @@ final Map<String, RouteStrategy> routeStrategies = {
   ...productRouteStrategies,
   ...userRouteStrategies,
   ...accountRouteStrategies,
+  ...orderRouteStrategies,
 };
