@@ -10,7 +10,7 @@ import 'package:smart_market/model/user/presentation/provider/edit_user_column.p
 import '../../../../core/utils/get_it_initializer.dart';
 import '../../../../core/utils/get_snackbar.dart';
 import '../../../user/presentation/widgets/edit/edit_address.widget.dart';
-import '../../domain/entities/order.entity.dart';
+import '../../domain/entities/create_order.entity.dart';
 
 class CreateOrderPageArgs {
   final String address;
@@ -47,7 +47,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> with NetWorkHandler {
   Future<void> pressCreateOrder() async {
     NavigatorState navigator = Navigator.of(context);
     ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
-    RequestOrder args = RequestOrder(
+    RequestCreateOrder args = RequestCreateOrder(
       deliveryOption: _optionKey.currentState!.selectedDeliveryOption,
       deliveryAddress: _addressKey.currentState!.addressController.text,
     );

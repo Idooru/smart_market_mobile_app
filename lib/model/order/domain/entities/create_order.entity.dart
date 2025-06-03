@@ -1,8 +1,8 @@
-class RequestOrder {
+class RequestCreateOrder {
   final String deliveryOption;
   final String deliveryAddress;
 
-  const RequestOrder({
+  const RequestCreateOrder({
     required this.deliveryOption,
     required this.deliveryAddress,
   });
