@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:smart_market/core/widgets/common/common_button_bar.widget.dart';
+import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.dart';
 import 'package:smart_market/model/cart/presentation/dialog/sort_carts.dialog.dart';
 import 'package:smart_market/model/cart/presentation/widgets/cart_item.widget.dart';
 import 'package:smart_market/model/order/presentation/pages/create_order.page.dart';
@@ -139,7 +139,7 @@ class _CartListWidgetState extends State<CartListWidget> {
           ],
         ),
         const SizedBox(height: 10),
-        CommonButtonBarWidget(
+        ConditionalButtonBarWidget(
           icon: Icons.shopping_bag,
           title: "결제 주문하기",
           backgroundColor: Colors.red,
@@ -150,6 +150,7 @@ class _CartListWidgetState extends State<CartListWidget> {
               updateCallback: () => updateCarts(defaultRequestCartsArgs),
             ),
           ),
+          isValid: carts.cartRaws.isNotEmpty,
         ),
       ],
     );
