@@ -9,6 +9,7 @@ import 'package:smart_market/model/account/presentation/widgets/account_item.wid
 
 import '../../../../core/errors/connection_error.dart';
 import '../../../../core/errors/dio_fail.error.dart';
+import '../../../../core/widgets/common/common_border.widget.dart';
 import '../../../../core/widgets/handler/internal_server_error_handler.widget.dart';
 import '../../../../core/widgets/handler/loading_handler.widget.dart';
 import '../../../../core/widgets/handler/network_error_handler.widget.dart';
@@ -30,6 +31,7 @@ class _AccountListWidgetState extends State<AccountListWidget> {
   final RequestAccounts defaultRequestAccountsArgs = const RequestAccounts(align: "DESC", column: "createdAt");
   late Future<List<ResponseAccount>> _getAccountsFuture;
   bool _isFirstRendering = true;
+  bool _isShow = false;
 
   @override
   void initState() {
@@ -41,57 +43,6 @@ class _AccountListWidgetState extends State<AccountListWidget> {
     setState(() {
       _getAccountsFuture = _accountService.getAccounts(args);
     });
-  }
-
-  SizedBox getEmptyAccountMessage() {
-    return const SizedBox(
-      width: double.infinity,
-      height: 70,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.warning,
-            size: 45,
-            color: Colors.black,
-          ),
-          SizedBox(width: 10),
-          Text(
-            "현재 등록된 계좌가 없습니다.",
-            style: TextStyle(
-              color: Color.fromARGB(255, 70, 70, 70),
-              fontSize: 17,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  GestureDetector getSortAccountssButton() {
-    return GestureDetector(
-      onTap: pressSortAccounts,
-      child: Container(
-        width: 90,
-        height: 30,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: const Color.fromARGB(255, 230, 230, 230),
-        ),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Icon(Icons.sort, size: 15),
-            Text("계좌 정렬"),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void pressSortAccounts() {
-    SortAccountsDialog.show(context, updateCallback: updateAccounts);
   }
 
   Future<void> pressCreateAccount(List<ResponseAccount> accounts) async {
@@ -107,53 +58,116 @@ class _AccountListWidgetState extends State<AccountListWidget> {
 
   Widget getPageElement(List<ResponseAccount> accounts) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 15),
-        Row(
-          children: [
-            const Text(
-              "내 계좌 목록",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-            ),
-            const Spacer(),
-            getSortAccountssButton(),
-          ],
+        SizedBox(
+          width: double.infinity,
+          child: Stack(
+            children: [
+              const Positioned(
+                child: Text(
+                  "내 계좌 목록",
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                ),
+              ),
+              Positioned(
+                top: -10,
+                left: 93,
+                child: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _isShow = !_isShow;
+                    });
+                  },
+                  icon: Icon(_isShow ? Icons.arrow_drop_down : Icons.arrow_drop_up),
+                ),
+              ),
+              Positioned(
+                right: 0,
+                child: _isShow
+                    ? GestureDetector(
+                        onTap: () => SortAccountsDialog.show(context, updateCallback: updateAccounts),
+                        child: Container(
+                          width: 90,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: const Color.fromARGB(255, 230, 230, 230),
+                          ),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Icon(Icons.sort, size: 15),
+                              Text("계좌 정렬"),
+                            ],
+                          ),
+                        ),
+                      )
+                    : const SizedBox.shrink(),
+              )
+            ],
+          ),
         ),
         const SizedBox(height: 10),
-        Column(
-          children: (() {
-            if (accounts.isNotEmpty && accounts.length >= 5) {
-              return accounts
-                  .map((account) => AccountItemWidget(
-                        account: account,
-                        updateCallback: () => updateAccounts(defaultRequestAccountsArgs),
-                      ))
-                  .toList();
-            } else if (accounts.isNotEmpty && accounts.length <= 4) {
-              return [
-                ...accounts.map((account) => AccountItemWidget(
-                      account: account,
-                      updateCallback: () => updateAccounts(defaultRequestAccountsArgs),
-                    )),
-                CommonButtonBarWidget(
-                  icon: Icons.account_balance_outlined,
-                  title: "계좌 등록하기",
-                  pressCallback: () => pressCreateAccount(accounts),
-                ),
-              ];
-            } else {
-              return [
-                getEmptyAccountMessage(),
-                CommonButtonBarWidget(
-                  icon: Icons.account_balance_outlined,
-                  title: "계좌 등록하기",
-                  pressCallback: () => pressCreateAccount(accounts),
-                )
-              ];
-            }
-          })(),
-        ),
+        _isShow
+            ? Column(
+                children: (() {
+                  if (accounts.isNotEmpty && accounts.length >= 5) {
+                    return accounts
+                        .map((account) => AccountItemWidget(
+                              account: account,
+                              updateCallback: () => updateAccounts(defaultRequestAccountsArgs),
+                            ))
+                        .toList();
+                  } else if (accounts.isNotEmpty && accounts.length <= 4) {
+                    return [
+                      ...accounts.map((account) => AccountItemWidget(
+                            account: account,
+                            updateCallback: () => updateAccounts(defaultRequestAccountsArgs),
+                          )),
+                      CommonButtonBarWidget(
+                        icon: Icons.account_balance_outlined,
+                        title: "계좌 등록하기",
+                        pressCallback: () => pressCreateAccount(accounts),
+                      ),
+                    ];
+                  } else {
+                    return [
+                      const SizedBox(
+                        width: double.infinity,
+                        height: 70,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.warning,
+                              size: 45,
+                              color: Colors.black,
+                            ),
+                            SizedBox(width: 10),
+                            Text(
+                              "현재 등록된 계좌가 없습니다.",
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 70, 70, 70),
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      CommonButtonBarWidget(
+                        icon: Icons.account_balance_outlined,
+                        title: "계좌 등록하기",
+                        pressCallback: () => pressCreateAccount(accounts),
+                      )
+                    ];
+                  }
+                })(),
+              )
+            : const SizedBox.shrink(),
+        SizedBox(height: _isShow ? 10 : 0),
+        const CommonBorder(color: Colors.grey),
       ],
     );
   }
