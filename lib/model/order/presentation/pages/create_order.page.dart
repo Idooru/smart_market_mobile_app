@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_market/core/common/network_handler.mixin.dart';
 import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.dart';
+import 'package:smart_market/model/account/domain/entities/account.entity.dart';
 import 'package:smart_market/model/order/domain/service/order.service.dart';
 import 'package:smart_market/model/order/presentation/provider/create_order.provider.dart';
+import 'package:smart_market/model/order/presentation/widgets/calculate_price.widget.dart';
 import 'package:smart_market/model/order/presentation/widgets/select_delivery_option.widget.dart';
 import 'package:smart_market/model/user/presentation/provider/edit_user_column.provider.dart';
 
@@ -40,9 +42,22 @@ class _CreateOrderPageState extends State<CreateOrderPage> with NetWorkHandler {
   final OrderService _orderService = locator<OrderService>();
   final GlobalKey<SelectDeliveryOptionState> _optionKey = GlobalKey<SelectDeliveryOptionState>();
   final GlobalKey<EditAddressWidgetState> _addressKey = GlobalKey<EditAddressWidgetState>();
+  late CreateOrderProvider provider;
 
   bool _hasError = false;
   String _errorMessage = "";
+
+  @override
+  void initState() {
+    super.initState();
+    provider = context.read<CreateOrderProvider>();
+  }
+
+  @override
+  void dispose() {
+    provider.clearAll();
+    super.dispose();
+  }
 
   Future<void> pressCreateOrder() async {
     NavigatorState navigator = Navigator.of(context);
@@ -66,7 +81,9 @@ class _CreateOrderPageState extends State<CreateOrderPage> with NetWorkHandler {
   }
 
   ConditionalButtonBarWidget getCreateOrderButton(CreateOrderProvider orderProvider, EditUserColumnProvider userProvider) {
-    bool isAllValid = orderProvider.isDeliveryOptionValid && userProvider.isAddressValid;
+    ResponseAccount mainAccount = orderProvider.accounts.firstWhere((account) => account.isMainAccount);
+    bool isSatisfiedBalance = mainAccount.balance >= orderProvider.cartTotalPrice;
+    bool isAllValid = (orderProvider.isDeliveryOptionValid && userProvider.isAddressValid) && isSatisfiedBalance;
 
     return ConditionalButtonBarWidget(
       title: '결제 주문하기',
@@ -95,9 +112,11 @@ class _CreateOrderPageState extends State<CreateOrderPage> with NetWorkHandler {
                   const SizedBox(height: 5),
                   SelectDeliveryOption(key: _optionKey),
                   EditAddressWidget(beforeAddress: widget.address, key: _addressKey, isLastWidget: true),
+                  const SizedBox(height: 5),
+                  const CalculatePriceWidget(),
                   const SizedBox(height: 10),
                   getCreateOrderButton(orderProvider, userProvider),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   if (_hasError) getErrorMessageWidget(_errorMessage),
                 ],
               ),

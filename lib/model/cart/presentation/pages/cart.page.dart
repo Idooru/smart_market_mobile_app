@@ -13,6 +13,8 @@ import '../../../../core/utils/get_it_initializer.dart';
 import '../../../../core/widgets/handler/internal_server_error_handler.widget.dart';
 import '../../../../core/widgets/handler/loading_handler.widget.dart';
 import '../../../../core/widgets/handler/network_error_handler.widget.dart';
+import '../../../account/domain/entities/account.entity.dart';
+import '../../../account/domain/service/account.service.dart';
 import '../../../user/presentation/dialog/force_logout.dialog.dart';
 
 class CartPage extends StatefulWidget {
@@ -25,6 +27,8 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   final CartService _cartService = locator<CartService>();
   final UserService _userService = locator<UserService>();
+  final AccountService _accountService = locator<AccountService>();
+  final RequestAccounts defaultRequestAccountsArgs = const RequestAccounts(align: "DESC", column: "createdAt");
   late Future<Map<String, dynamic>> _cartPageFuture;
 
   @override
@@ -39,8 +43,13 @@ class _CartPageState extends State<CartPage> {
 
     ResponseCarts carts = await _cartService.fetchCarts(const RequestCarts(align: "DESC", column: "createdAt"));
     ResponseProfile profile = await _userService.getProfile();
+    List<ResponseAccount> accounts = await _accountService.getAccounts(defaultRequestAccountsArgs);
 
-    return {"carts": carts, "address": profile.address};
+    return {
+      "carts": carts,
+      "address": profile.address,
+      "accounts": accounts,
+    };
   }
 
   @override
@@ -82,6 +91,7 @@ class _CartPageState extends State<CartPage> {
               body: Padding(
                 padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                 child: CartListWidget(
+                  accounts: snapshot.data!["accounts"],
                   carts: snapshot.data!["carts"],
                   address: snapshot.data!["address"],
                 ),

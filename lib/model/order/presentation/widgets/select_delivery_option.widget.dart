@@ -23,6 +23,7 @@ class SelectDeliveryOptionState extends State<SelectDeliveryOption> with InputWi
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       provider.setIsDeliveryOptionValid(true);
+      provider.setSelectedDeliveryOption(selectedDeliveryOption);
     });
   }
 
@@ -44,6 +45,7 @@ class SelectDeliveryOptionState extends State<SelectDeliveryOption> with InputWi
                   selectRadioCallback: (value) {
                     setState(() {
                       selectedDeliveryOption = value!;
+                      provider.setSelectedDeliveryOption(selectedDeliveryOption);
                     });
                   },
                 ),
@@ -54,6 +56,7 @@ class SelectDeliveryOptionState extends State<SelectDeliveryOption> with InputWi
                   selectRadioCallback: (value) {
                     setState(() {
                       selectedDeliveryOption = value!;
+                      provider.setSelectedDeliveryOption(selectedDeliveryOption);
                     });
                   },
                 ),
@@ -64,6 +67,7 @@ class SelectDeliveryOptionState extends State<SelectDeliveryOption> with InputWi
                   selectRadioCallback: (value) {
                     setState(() {
                       selectedDeliveryOption = value!;
+                      provider.setSelectedDeliveryOption(selectedDeliveryOption);
                     });
                   },
                 ),

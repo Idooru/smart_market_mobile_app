@@ -6,10 +6,19 @@ import 'package:smart_market/model/order/domain/repository/order.repository.dart
 import 'package:smart_market/model/order/domain/service/order.service.dart';
 
 import '../../../../core/common/data_state.dart';
+import '../../domain/entities/order.entity.dart';
 
 class OrderServiceImpl implements OrderService {
   final SharedPreferences _db = locator<SharedPreferences>();
   final OrderRepository _orderRepository = locator<OrderRepository>();
+
+  @override
+  Future<ResponseOrders> fetchOrders(RequestOrders args) async {
+    String? accessToken = _db.getString("access-token");
+    DataState<ResponseOrders> dataState = await _orderRepository.fetchOrders(accessToken!, args);
+    if (dataState.exception != null) branchNetworkError(dataState);
+    return dataState.data!;
+  }
 
   @override
   Future<void> createOrder(RequestCreateOrder args) async {

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.dart';
 import 'package:smart_market/model/cart/presentation/dialog/sort_carts.dialog.dart';
 import 'package:smart_market/model/cart/presentation/widgets/cart_item.widget.dart';
 import 'package:smart_market/model/order/presentation/pages/create_order.page.dart';
+import 'package:smart_market/model/order/presentation/provider/create_order.provider.dart';
 
 import '../../../../core/errors/connection_error.dart';
 import '../../../../core/errors/dio_fail.error.dart';
@@ -11,6 +13,7 @@ import '../../../../core/utils/get_it_initializer.dart';
 import '../../../../core/widgets/handler/internal_server_error_handler.widget.dart';
 import '../../../../core/widgets/handler/loading_handler.widget.dart';
 import '../../../../core/widgets/handler/network_error_handler.widget.dart';
+import '../../../account/domain/entities/account.entity.dart';
 import '../../domain/entities/cart.entity.dart';
 import '../../domain/service/cart.service.dart';
 import '../dialog/warn_delete_all_carts.dialog.dart';
@@ -18,11 +21,13 @@ import '../dialog/warn_delete_all_carts.dialog.dart';
 class CartListWidget extends StatefulWidget {
   final String address;
   final ResponseCarts carts;
+  final List<ResponseAccount> accounts;
 
   const CartListWidget({
     super.key,
     required this.address,
     required this.carts,
+    required this.accounts,
   });
 
   @override
@@ -139,18 +144,30 @@ class _CartListWidgetState extends State<CartListWidget> {
           ],
         ),
         const SizedBox(height: 10),
-        ConditionalButtonBarWidget(
-          icon: Icons.shopping_bag,
-          title: "결제 주문하기",
-          backgroundColor: Colors.red,
-          pressCallback: () => Navigator.of(context).pushNamed(
-            "/create_order",
-            arguments: CreateOrderPageArgs(
-              address: widget.address,
-              updateCallback: () => updateCarts(defaultRequestCartsArgs),
-            ),
-          ),
-          isValid: carts.cartRaws.isNotEmpty,
+        Consumer<CreateOrderProvider>(
+          builder: (BuildContext context, CreateOrderProvider provider, Widget? child) {
+            return ConditionalButtonBarWidget(
+              icon: Icons.shopping_bag,
+              title: "결제 주문하기",
+              backgroundColor: Colors.red,
+              pressCallback: () {
+                NavigatorState navigator = Navigator.of(context);
+
+                provider.setCarts(carts.cartRaws);
+                provider.setCartTotalPrice(carts.totalPrice);
+                provider.setAccounts(widget.accounts);
+
+                navigator.pushNamed(
+                  "/create_order",
+                  arguments: CreateOrderPageArgs(
+                    address: widget.address,
+                    updateCallback: () => updateCarts(defaultRequestCartsArgs),
+                  ),
+                );
+              },
+              isValid: carts.cartRaws.isNotEmpty,
+            );
+          },
         ),
       ],
     );
