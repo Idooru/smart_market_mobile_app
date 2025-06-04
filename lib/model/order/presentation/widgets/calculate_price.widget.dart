@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_market/core/widgets/common/common_border.widget.dart';
 import 'package:smart_market/model/order/presentation/provider/create_order.provider.dart';
 
 import '../../../account/domain/entities/account.entity.dart';
@@ -89,22 +90,14 @@ class _CalculatePriceWidgetState extends State<CalculatePriceWidget> {
                   : const SizedBox.shrink();
             })(),
             const SizedBox(height: 5),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.black, width: 1),
-              ),
-            ),
+            const CommonBorder(),
             const SizedBox(height: 5),
             getStatusLine("총 결제 금액", totalPrice),
             const SizedBox(height: 20),
             getCalculateLine(Icons.account_balance, "계좌 금액", mainAccount.balance),
             getCalculateLine(Icons.remove, "결제 금액", totalPrice),
             const SizedBox(height: 5),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.black, width: 1),
-              ),
-            ),
+            const CommonBorder(),
             const SizedBox(height: 5),
             getStatusLine("계좌 잔액", mainAccount.balance - totalPrice),
             const SizedBox(height: 5),
