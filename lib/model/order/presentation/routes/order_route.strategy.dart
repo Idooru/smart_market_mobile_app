@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:smart_market/core/common/route.strategy.dart';
 import 'package:smart_market/model/order/presentation/pages/create_order.page.dart';
+import 'package:smart_market/model/order/presentation/pages/display_payment.page.dart';
 
 final Map<String, RouteStrategy> orderRouteStrategies = {
   "/create_order": CreateOrderStrategy(),
+  "/display_payment": DisplayPaymentStrategy(),
 };
 
 class CreateOrderStrategy implements RouteStrategy {
@@ -14,6 +16,19 @@ class CreateOrderStrategy implements RouteStrategy {
       builder: (context) => CreateOrderPage(
         address: args.address,
         updateCallback: args.updateCallback,
+      ),
+      settings: settings,
+    );
+  }
+}
+
+class DisplayPaymentStrategy implements RouteStrategy {
+  @override
+  MaterialPageRoute route(RouteSettings settings) {
+    final args = settings.arguments as DisplayPaymentPageArgs;
+    return MaterialPageRoute(
+      builder: (context) => DisplayPaymentPage(
+        responseOrders: args.responseOrders,
       ),
       settings: settings,
     );

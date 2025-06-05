@@ -3,6 +3,9 @@ import 'package:intl/intl.dart';
 import 'package:smart_market/core/widgets/common/common_border.widget.dart';
 import 'package:smart_market/core/widgets/common/common_button_bar.widget.dart';
 import 'package:smart_market/model/order/domain/entities/order.entity.dart';
+import 'package:smart_market/model/order/presentation/pages/display_payment.page.dart';
+
+import '../../common/util/parse_delivery_option.dart';
 
 class OrderItemWidget extends StatefulWidget {
   final ResponseOrders responseOrders;
@@ -24,16 +27,6 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
       return Icons.cancel;
     }
     return Icons.import_contacts;
-  }
-
-  String parseDeliveryOption(String deliveryOption) {
-    if (deliveryOption == "default") {
-      return "기본 배송";
-    } else if (deliveryOption == "speed") {
-      return "신속 배송";
-    } else {
-      return "안전 배송";
-    }
   }
 
   Widget getCategoryItem({required String title, required List<Widget> widgets}) {
@@ -142,7 +135,21 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
                     const SizedBox(width: 3),
                     Text(
                       "${NumberFormat('#,###').format(widget.responseOrders.order.surtaxPrice)}원",
-                      style: const TextStyle(fontSize: 13, color: Color.fromARGB(255, 100, 100, 100)),
+                      style: const TextStyle(fontSize: 17),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 1.5),
+                child: Row(
+                  children: [
+                    const Text("상품 비용: "),
+                    const SizedBox(width: 3),
+                    Text(
+                      "${NumberFormat('#,###').format(widget.responseOrders.order.totalPrice - widget.responseOrders.order.surtaxPrice)}원",
+                      style: const TextStyle(fontSize: 17),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ],
@@ -156,7 +163,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
                     const SizedBox(width: 3),
                     Text(
                       "${NumberFormat('#,###').format(widget.responseOrders.order.totalPrice)}원",
-                      style: const TextStyle(fontSize: 13, color: Color.fromARGB(255, 100, 100, 100)),
+                      style: const TextStyle(fontSize: 17),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ],
@@ -170,7 +177,14 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
               icon: Icons.shopping_bag,
               title: "결제 내역 보기",
               backgroundColor: const Color.fromARGB(255, 100, 100, 100),
-              pressCallback: () {},
+              pressCallback: () {
+                Navigator.of(context).pushNamed(
+                  "/display_payment",
+                  arguments: DisplayPaymentPageArgs(
+                    responseOrders: widget.responseOrders,
+                  ),
+                );
+              },
             ),
           ),
         ],

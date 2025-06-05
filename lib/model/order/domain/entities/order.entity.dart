@@ -16,17 +16,17 @@ class RequestOrders {
 
 class ResponseOrders {
   final Order order;
-  final List<Payment> payment;
+  final List<Payment> payments;
 
   const ResponseOrders({
     required this.order,
-    required this.payment,
+    required this.payments,
   });
 
   factory ResponseOrders.fromJson(Map<String, dynamic> json) {
     return ResponseOrders(
       order: Order.fromJson(json["order"]),
-      payment: (json["payment"] as List).map((e) => Payment.fromJson(e)).toList(),
+      payments: (json["payment"] as List).map((e) => Payment.fromJson(e)).toList(),
     );
   }
 }
