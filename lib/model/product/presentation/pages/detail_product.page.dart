@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
+import 'package:smart_market/core/utils/format_number.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/utils/get_snackbar.dart';
 import 'package:smart_market/core/widgets/handler/loading_handler.widget.dart';
@@ -137,7 +138,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text("이름: ${data.product.name}", style: const TextStyle(fontSize: 14, color: Color.fromARGB(255, 50, 50, 50))),
-                          Text("가격: ${data.product.price}", style: const TextStyle(fontSize: 14, color: Color.fromARGB(255, 50, 50, 50))),
+                          Text("가격: ${formatNumber(data.product.price)}원", style: const TextStyle(fontSize: 14, color: Color.fromARGB(255, 50, 50, 50))),
                           Text("원산지: ${data.product.origin}", style: const TextStyle(fontSize: 14, color: Color.fromARGB(255, 50, 50, 50))),
                           Text("분류: ${data.product.category}", style: const TextStyle(fontSize: 14, color: Color.fromARGB(255, 50, 50, 50))),
                           Text("설명: ${data.product.description}", style: const TextStyle(fontSize: 14, color: Color.fromARGB(255, 50, 50, 50))),
