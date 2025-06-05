@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:smart_market/core/utils/format_number.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/utils/get_snackbar.dart';
 import 'package:smart_market/model/account/domain/entities/account.entity.dart';
@@ -191,7 +191,7 @@ class _AccountItemWidgetState extends State<AccountItemWidget> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 7),
                     child: Text(
-                      "${NumberFormat('#,###').format(widget.account.balance)} 원",
+                      "${formatNumber(widget.account.balance)}원",
                       style: const TextStyle(fontSize: 24),
                     ),
                   ),

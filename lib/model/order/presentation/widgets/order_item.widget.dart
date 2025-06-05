@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:smart_market/core/utils/format_number.dart';
 import 'package:smart_market/core/widgets/common/common_border.widget.dart';
 import 'package:smart_market/core/widgets/common/common_button_bar.widget.dart';
 import 'package:smart_market/model/order/domain/entities/order.entity.dart';
@@ -134,7 +134,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
                     const Text("추가 비용: "),
                     const SizedBox(width: 3),
                     Text(
-                      "${NumberFormat('#,###').format(widget.responseOrders.order.surtaxPrice)}원",
+                      "${formatNumber(widget.responseOrders.order.surtaxPrice)}원",
                       style: const TextStyle(fontSize: 17),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -148,7 +148,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
                     const Text("상품 비용: "),
                     const SizedBox(width: 3),
                     Text(
-                      "${NumberFormat('#,###').format(widget.responseOrders.order.totalPrice - widget.responseOrders.order.surtaxPrice)}원",
+                      "${formatNumber(widget.responseOrders.order.totalPrice - widget.responseOrders.order.surtaxPrice)}원",
                       style: const TextStyle(fontSize: 17),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -162,7 +162,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
                     const Text("총 금액: "),
                     const SizedBox(width: 3),
                     Text(
-                      "${NumberFormat('#,###').format(widget.responseOrders.order.totalPrice)}원",
+                      "${formatNumber(widget.responseOrders.order.totalPrice)}원",
                       style: const TextStyle(fontSize: 17),
                       overflow: TextOverflow.ellipsis,
                     ),

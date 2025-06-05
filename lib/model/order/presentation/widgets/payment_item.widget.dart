@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:smart_market/core/utils/format_number.dart';
 
 import '../../../product/presentation/pages/detail_product.page.dart';
 import '../../domain/entities/order.entity.dart';
@@ -102,7 +102,7 @@ class _PaymentItemWidgetState extends State<PaymentItemWidget> {
                         SizedBox(
                           width: 140,
                           child: Text(
-                            "합계: ${NumberFormat('#,###').format(widget.payment.totalPrice)}원",
+                            "합계: ${formatNumber(widget.payment.totalPrice)}원",
                             style: const TextStyle(
                               fontSize: 17,
                               color: Colors.black,
@@ -117,7 +117,7 @@ class _PaymentItemWidgetState extends State<PaymentItemWidget> {
                             children: [
                               SizedBox(
                                 child: Text(
-                                  "${NumberFormat('#,###').format(widget.payment.product.price)}원",
+                                  "${formatNumber(widget.payment.product.price)}원",
                                   style: const TextStyle(
                                     // fontSize: 16,
                                     color: Color.fromARGB(255, 100, 100, 100),

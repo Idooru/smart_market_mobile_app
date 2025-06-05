@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_market/core/utils/format_number.dart';
 import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.dart';
 import 'package:smart_market/model/cart/presentation/dialog/sort_carts.dialog.dart';
 import 'package:smart_market/model/cart/presentation/widgets/cart_item.widget.dart';
@@ -138,7 +138,7 @@ class _CartListWidgetState extends State<CartListWidget> {
             ),
             const Spacer(),
             Text(
-              "${NumberFormat('#,###').format(carts.totalPrice)}원",
+              "${formatNumber(carts.totalPrice)}원",
               style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w800),
             ),
           ],

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:smart_market/core/utils/format_number.dart';
 
 import '../../domain/entities/cart_product.entity.dart';
 
@@ -55,7 +55,7 @@ mixin EditCart {
                             ),
                           ),
                           Text(
-                            "가격: ${NumberFormat('#,###').format(product.price)}원",
+                            "가격: ${formatNumber(product.price)}원",
                             style: const TextStyle(
                               fontSize: 16,
                               overflow: TextOverflow.ellipsis,
@@ -165,7 +165,7 @@ mixin EditCart {
                   height: 50,
                   child: Center(
                     child: Text(
-                      "합계: ${NumberFormat('#,###').format(totalPrice)}원",
+                      "합계: ${formatNumber(totalPrice)}원",
                       style: const TextStyle(color: Colors.black, fontSize: 18),
                     ),
                   ),

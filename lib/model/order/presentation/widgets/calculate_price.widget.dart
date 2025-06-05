@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_market/core/utils/format_number.dart';
 import 'package:smart_market/core/widgets/common/common_border.widget.dart';
 import 'package:smart_market/model/order/presentation/provider/create_order.provider.dart';
 
@@ -30,7 +30,7 @@ class _CalculatePriceWidgetState extends State<CalculatePriceWidget> {
         const SizedBox(width: 5),
         const Spacer(),
         Text(
-          "${NumberFormat('#,###').format(price)}원",
+          "${formatNumber(price)}원",
           style: const TextStyle(fontSize: 20),
         ),
       ],
@@ -47,7 +47,7 @@ class _CalculatePriceWidgetState extends State<CalculatePriceWidget> {
         const SizedBox(width: 5),
         const Spacer(),
         Text(
-          "${NumberFormat('#,###').format(totalPrice)}원",
+          "${formatNumber(totalPrice)}원",
           style: const TextStyle(fontSize: 20),
         ),
       ],

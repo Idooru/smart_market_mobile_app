@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:smart_market/core/utils/format_number.dart';
 import 'package:smart_market/core/utils/parse_date.dart';
 import 'package:smart_market/model/cart/domain/entities/modify_cart.entity.dart';
 import 'package:smart_market/model/cart/presentation/dialog/modify_cart.dialog.dart';
@@ -169,7 +169,7 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                     SizedBox(
                       width: 140,
                       child: Text(
-                        "합계: ${NumberFormat('#,###').format(widget.cart.totalPrice)}원",
+                        "합계: ${formatNumber(widget.cart.totalPrice)}원",
                         style: const TextStyle(
                           fontSize: 17,
                           color: Colors.black,
@@ -184,7 +184,7 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                         children: [
                           SizedBox(
                             child: Text(
-                              "${NumberFormat('#,###').format(widget.cart.product.price)}원",
+                              "${formatNumber(widget.cart.product.price)}원",
                               style: const TextStyle(
                                 // fontSize: 16,
                                 color: Color.fromARGB(255, 100, 100, 100),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:smart_market/core/utils/format_number.dart';
 import 'package:smart_market/model/order/presentation/widgets/payment_item.widget.dart';
 
 import '../../common/util/parse_delivery_option.dart';
@@ -26,7 +26,7 @@ class DisplayPaymentPage extends StatefulWidget {
 }
 
 class _DisplayPaymentPageState extends State<DisplayPaymentPage> {
-  Widget getSurtaxItem(String deliveryOption, int cost) {
+  Widget getSurtaxItem(String deliveryOption, int price) {
     return Container(
       width: double.infinity,
       height: 40,
@@ -36,7 +36,7 @@ class _DisplayPaymentPageState extends State<DisplayPaymentPage> {
       ),
       child: Center(
         child: Text(
-          "${parseDeliveryOption(deliveryOption)} 비용: ${NumberFormat('#,###').format(cost)}원",
+          "${parseDeliveryOption(deliveryOption)} 비용: ${formatNumber(price)}원",
           style: const TextStyle(fontSize: 16),
         ),
       ),
@@ -96,7 +96,7 @@ class _DisplayPaymentPageState extends State<DisplayPaymentPage> {
                   ),
                   const Spacer(),
                   Text(
-                    "${NumberFormat('#,###').format(widget.responseOrders.order.totalPrice)}원",
+                    "${formatNumber(widget.responseOrders.order.totalPrice)}원",
                     style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w800),
                   ),
                 ],
