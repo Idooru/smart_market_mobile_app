@@ -31,7 +31,7 @@ class Cart {
   final String id;
   final int quantity;
   final int totalPrice;
-  final DateTime createdAt;
+  final String createdAt;
   final Product product;
 
   const Cart({
@@ -47,7 +47,7 @@ class Cart {
       id: json["id"],
       quantity: json["quantity"],
       totalPrice: json["totalPrice"],
-      createdAt: DateTime.parse(json["createdAt"]),
+      createdAt: json["createdAt"],
       product: Product.fromJson(json["product"]),
     );
   }

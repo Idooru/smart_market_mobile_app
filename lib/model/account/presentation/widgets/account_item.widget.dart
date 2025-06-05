@@ -196,7 +196,7 @@ class _AccountItemWidgetState extends State<AccountItemWidget> {
                     ),
                   ),
                   Text(
-                    "${parseDate(widget.account.createdAt)}에 계좌 등록됨",
+                    "${parseStringDate(widget.account.createdAt)}에 계좌 등록됨",
                     style: const TextStyle(
                       fontSize: 12,
                       color: Color.fromARGB(255, 120, 120, 120),

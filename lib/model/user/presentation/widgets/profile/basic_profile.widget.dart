@@ -157,7 +157,7 @@ class _BasicProfileWidgetState extends State<BasicProfileWidget> {
                           child: Row(
                             children: [
                               Text(
-                                parseDate(profile.birth),
+                                parseStringDate(profile.birth),
                                 style: const TextStyle(
                                   color: Color.fromARGB(255, 80, 80, 80),
                                   fontSize: 13,

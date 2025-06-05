@@ -59,7 +59,7 @@ class Review {
   final double starRateScore;
   final List<String> imageUrls;
   final List<String> videoUrls;
-  final DateTime createdAt;
+  final String createdAt;
   final String nickName;
 
   const Review({
@@ -81,7 +81,7 @@ class Review {
       starRateScore: double.parse(json["starRateScore"]),
       imageUrls: List<String>.from(json["imageUrls"]).map(splitHostUrl).toList(),
       videoUrls: List<String>.from(json["videoUrls"]).map(splitHostUrl).toList(),
-      createdAt: DateTime.parse(json["createdAt"]),
+      createdAt: json["createdAt"],
       nickName: json["nickName"],
     );
   }

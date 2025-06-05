@@ -25,7 +25,7 @@ class ResponseProfile {
   final String id;
   final String role;
   final String realName;
-  final DateTime birth;
+  final String birth;
   final String gender;
   final String phoneNumber;
   final String address;
@@ -49,7 +49,7 @@ class ResponseProfile {
       id: json['id'],
       role: json['role'],
       realName: json['realName'],
-      birth: DateTime.parse(json["birth"]),
+      birth: json["birth"],
       gender: json['gender'],
       phoneNumber: json['phoneNumber'],
       address: json['address'],

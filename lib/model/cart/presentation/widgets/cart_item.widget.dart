@@ -215,7 +215,7 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                     SizedBox(
                       width: 140,
                       child: Text(
-                        "생성일: ${parseDate(widget.cart.createdAt)}",
+                        "생성일: ${parseStringDate(widget.cart.createdAt)}",
                         style: const TextStyle(
                           fontSize: 13,
                           color: Color.fromARGB(255, 100, 100, 100),

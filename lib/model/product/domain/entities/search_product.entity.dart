@@ -37,7 +37,7 @@ class ResponseSearchProduct {
   final String name;
   final int price;
   final String category;
-  final DateTime createdAt;
+  final String createdAt;
   final List<String> imageUrls;
   final double averageScore;
   final int reviewCount;
@@ -59,7 +59,7 @@ class ResponseSearchProduct {
       name: json["name"],
       price: json["price"],
       category: json["category"],
-      createdAt: DateTime.parse(json["createdAt"]),
+      createdAt: json["createdAt"],
       imageUrls: List<String>.from(json["imageUrls"]).map(splitHostUrl).toList(),
       averageScore: double.parse(json["averageScore"]),
       reviewCount: json["reviewCount"],

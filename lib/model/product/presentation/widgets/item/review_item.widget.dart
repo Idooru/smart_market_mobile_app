@@ -54,7 +54,7 @@ class _ReviewItemWidgetState extends State<ReviewItemWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "작성일: ${parseDate(widget.review.createdAt)}",
+                "작성일: ${parseStringDate(widget.review.createdAt)}",
                 style: detailTextStyle,
               ),
               Text(

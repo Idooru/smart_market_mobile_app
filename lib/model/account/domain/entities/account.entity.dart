@@ -14,7 +14,7 @@ class ResponseAccount {
   final String accountNumber;
   final int balance;
   final bool isMainAccount;
-  final DateTime createdAt;
+  final String createdAt;
 
   const ResponseAccount({
     required this.id,
@@ -32,7 +32,7 @@ class ResponseAccount {
       accountNumber: json["accountNumber"],
       balance: json["balance"],
       isMainAccount: json["isMainAccount"],
-      createdAt: DateTime.parse(json["createdAt"]),
+      createdAt: json["createdAt"],
     );
   }
 }

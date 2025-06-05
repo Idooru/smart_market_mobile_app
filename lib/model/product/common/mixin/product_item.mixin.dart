@@ -48,7 +48,7 @@ mixin ProductItem {
 
   Text getCreatedAtText(ResponseSearchProduct product) {
     return Text(
-      "게시일: ${parseDate(product.createdAt)}",
+      "게시일: ${parseStringDate(product.createdAt)}",
       style: const TextStyle(fontSize: 13),
     );
   }
