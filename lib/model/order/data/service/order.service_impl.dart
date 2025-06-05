@@ -13,9 +13,9 @@ class OrderServiceImpl implements OrderService {
   final OrderRepository _orderRepository = locator<OrderRepository>();
 
   @override
-  Future<ResponseOrders> fetchOrders(RequestOrders args) async {
+  Future<List<ResponseOrders>> fetchOrders(RequestOrders args) async {
     String? accessToken = _db.getString("access-token");
-    DataState<ResponseOrders> dataState = await _orderRepository.fetchOrders(accessToken!, args);
+    DataState<List<ResponseOrders>> dataState = await _orderRepository.fetchOrders(accessToken!, args);
     if (dataState.exception != null) branchNetworkError(dataState);
     return dataState.data!;
   }

@@ -12,15 +12,16 @@ class OrderRepositoryImpl implements OrderRepository {
   final String _baseUrl = RequestUrl.getUrl("/client/order");
 
   @override
-  Future<DataState<ResponseOrders>> fetchOrders(String accessToken, RequestOrders args) async {
-    String url = "$_baseUrl/?align=${args.align}&column=${args.column}&option=${args.deliveryOption}&transactionStatus=${args.transactionStatus}";
+  Future<DataState<List<ResponseOrders>>> fetchOrders(String accessToken, RequestOrders args) async {
+    String url = "$_baseUrl/?align=${args.align}&column=${args.column}${args.deliveryOption != null ? "&option=${args.deliveryOption}" : ""}"
+        "${args.transactionStatus != null ? "&transactionStatus=${args.transactionStatus}" : ""}";
     ClientArgs clientArgs = ClientArgs(accessToken: accessToken);
     Dio dio = _authorizationHttpClient.getClient(args: clientArgs);
 
     try {
       Response response = await dio.get(url);
 
-      ResponseOrders responseOrders = ResponseOrders.fromJson(response.data["result"]);
+      List<ResponseOrders> responseOrders = List<Map<String, dynamic>>.from(response.data["result"]).map((e) => ResponseOrders.fromJson(e)).toList();
       return DataSuccess(data: responseOrders);
     } on DioException catch (err) {
       return DataFail(exception: err);

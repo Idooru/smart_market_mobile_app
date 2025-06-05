@@ -4,6 +4,6 @@ import '../../../../core/common/data_state.dart';
 import '../entities/create_order.entity.dart';
 
 abstract interface class OrderRepository {
-  Future<DataState<ResponseOrders>> fetchOrders(String accessToken, RequestOrders args);
+  Future<DataState<List<ResponseOrders>>> fetchOrders(String accessToken, RequestOrders args);
   Future<DataState<void>> createOrder(String accessToken, RequestCreateOrder args);
 }

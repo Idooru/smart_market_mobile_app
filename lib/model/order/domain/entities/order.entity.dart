@@ -3,14 +3,14 @@ import '../../../cart/domain/entities/cart.entity.dart';
 class RequestOrders {
   final String align;
   final String column;
-  final String deliveryOption;
-  final String transactionStatus;
+  final String? deliveryOption;
+  final String? transactionStatus;
 
   const RequestOrders({
     required this.align,
     required this.column,
-    required this.deliveryOption,
-    required this.transactionStatus,
+    this.deliveryOption,
+    this.transactionStatus,
   });
 }
 
@@ -38,6 +38,7 @@ class Order {
   final String transactionStatus;
   final int surtaxPrice;
   final int totalPrice;
+  final String createdAt;
 
   const Order({
     required this.id,
@@ -46,6 +47,7 @@ class Order {
     required this.transactionStatus,
     required this.surtaxPrice,
     required this.totalPrice,
+    required this.createdAt,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) {
@@ -56,6 +58,7 @@ class Order {
       transactionStatus: json["transactionStatus"],
       surtaxPrice: json["surtaxPrice"],
       totalPrice: json["totalPrice"],
+      createdAt: json["createdAt"],
     );
   }
 }
