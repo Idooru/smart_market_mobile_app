@@ -13,8 +13,8 @@ class OrderRepositoryImpl implements OrderRepository {
 
   @override
   Future<DataState<List<ResponseOrders>>> fetchOrders(String accessToken, RequestOrders args) async {
-    String url = "$_baseUrl/?align=${args.align}&column=${args.column}${args.deliveryOption != null ? "&option=${args.deliveryOption}" : ""}"
-        "${args.transactionStatus != null ? "&transactionStatus=${args.transactionStatus}" : ""}";
+    String url = "$_baseUrl/?align=${args.align}&column=${args.column}${args.deliveryOption != "none" ? "&option=${args.deliveryOption}" : ""}"
+        "${args.transactionStatus != "none" ? "&transactionStatus=${args.transactionStatus}" : ""}";
     ClientArgs clientArgs = ClientArgs(accessToken: accessToken);
     Dio dio = _authorizationHttpClient.getClient(args: clientArgs);
 

@@ -34,7 +34,12 @@ class _ProfilePageState extends State<ProfilePage> {
   final AccountService _accountService = locator<AccountService>();
   final OrderService _orderService = locator<OrderService>();
   final RequestAccounts defaultRequestAccountsArgs = const RequestAccounts(align: "DESC", column: "createdAt");
-  final RequestOrders defaultRequestOrdersArgs = const RequestOrders(align: "DESC", column: "createdAt");
+  final RequestOrders defaultRequestOrdersArgs = const RequestOrders(
+    align: "DESC",
+    column: "createdAt",
+    deliveryOption: "none",
+    transactionStatus: "none",
+  );
   late Future<Map<String, dynamic>> _profilePageFuture;
 
   @override

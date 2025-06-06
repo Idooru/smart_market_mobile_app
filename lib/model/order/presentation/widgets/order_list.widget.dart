@@ -26,7 +26,13 @@ class OrderListWidget extends StatefulWidget {
 
 class _OrderListWidgetState extends State<OrderListWidget> {
   final OrderService _orderService = locator<OrderService>();
-  final RequestOrders defaultRequestOrdersArgs = const RequestOrders(align: "DESC", column: "createdAt");
+  final RequestOrders defaultRequestOrdersArgs = const RequestOrders(
+    align: "DESC",
+    column: "createdAt",
+    deliveryOption: "none",
+    transactionStatus: "none",
+  );
+
   late Future<List<ResponseOrders>> _getOrdersFuture;
   bool _isFirstRendering = true;
   bool _isShow = false;

@@ -3,14 +3,14 @@ import '../../../cart/domain/entities/cart.entity.dart';
 class RequestOrders {
   final String align;
   final String column;
-  final String? deliveryOption;
-  final String? transactionStatus;
+  final String deliveryOption;
+  final String transactionStatus;
 
   const RequestOrders({
     required this.align,
     required this.column,
-    this.deliveryOption,
-    this.transactionStatus,
+    required this.deliveryOption,
+    required this.transactionStatus,
   });
 }
 
