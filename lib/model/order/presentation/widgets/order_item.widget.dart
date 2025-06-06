@@ -61,7 +61,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
               padding: const EdgeInsets.only(bottom: 1.5),
               child: Row(
                 children: [
-                  const Text("일시: "),
+                  const Text("주문 일시: "),
                   Text(
                     widget.responseOrders.order.createdAt,
                     style: const TextStyle(
@@ -76,7 +76,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
               padding: const EdgeInsets.only(bottom: 1.5),
               child: Row(
                 children: [
-                  const Text("상태: "),
+                  const Text("주문 상태: "),
                   const SizedBox(width: 3),
                   Icon(
                     parseTransactionStatusIcon(widget.responseOrders.order.transactionStatus),
@@ -95,7 +95,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
                 padding: const EdgeInsets.only(bottom: 1.5),
                 child: Row(
                   children: [
-                    const Text("옵션: "),
+                    const Text("배송 옵션: "),
                     const SizedBox(width: 3),
                     Text(
                       parseDeliveryOption(widget.responseOrders.order.deliveryOption),
@@ -109,7 +109,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("주소: "),
+                    const Text("배송 주소: "),
                     const SizedBox(width: 3),
                     Padding(
                       padding: const EdgeInsets.only(left: 5),
@@ -131,20 +131,6 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
                 padding: const EdgeInsets.only(bottom: 1.5),
                 child: Row(
                   children: [
-                    const Text("추가 비용: "),
-                    const SizedBox(width: 3),
-                    Text(
-                      "${formatNumber(widget.responseOrders.order.surtaxPrice)}원",
-                      style: const TextStyle(fontSize: 17),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 1.5),
-                child: Row(
-                  children: [
                     const Text("상품 비용: "),
                     const SizedBox(width: 3),
                     Text(
@@ -159,7 +145,21 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
                 padding: const EdgeInsets.only(bottom: 1.5),
                 child: Row(
                   children: [
-                    const Text("총 금액: "),
+                    const Text("추가 비용: "),
+                    const SizedBox(width: 3),
+                    Text(
+                      "${formatNumber(widget.responseOrders.order.surtaxPrice)}원",
+                      style: const TextStyle(fontSize: 17),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 1.5),
+                child: Row(
+                  children: [
+                    const Text("총합 금액: "),
                     const SizedBox(width: 3),
                     Text(
                       "${formatNumber(widget.responseOrders.order.totalPrice)}원",
