@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/model/product/presentation/provider/product_search.provider.dart';
 
 class _SearchBarDelegate extends SliverPersistentHeaderDelegate {
@@ -45,42 +46,37 @@ class ProductButtonSearchBarWidget extends StatelessWidget {
       pinned: true, // 스크롤해도 고정
       floating: false,
       delegate: _SearchBarDelegate(
-        child: Container(
-          color: Colors.blueGrey[100],
-          child: Row(
-            children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: pressCallback,
-                  child: Container(
-                    color: Colors.blueGrey[100],
-                    height: 45,
-                    padding: const EdgeInsets.all(5),
-                    child: Row(
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.only(left: 7, right: 12),
-                          child: Icon(Icons.search, color: Colors.black),
-                        ),
-                        Text(
-                          searchBarCall == SearchBarCall.main ? "상품 검색 하기" : provider.keyword,
-                          style: const TextStyle(
-                            fontSize: 16, // TextField 내 텍스트 기본 폰트 크기와 일치시킴
-                            color: Colors.black87, // 일반 텍스트 색상
-                          ),
-                        )
-                      ],
+        child: GestureDetector(
+          onTap: pressCallback,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: Container(
+              decoration: commonContainerDecoration,
+              height: 45,
+              padding: const EdgeInsets.all(5),
+              child: Row(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(left: 7, right: 12),
+                    child: Icon(Icons.search, color: Color.fromARGB(255, 80, 80, 80)),
+                  ),
+                  Text(
+                    searchBarCall == SearchBarCall.main ? "상품 검색 하기" : provider.keyword,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Color.fromARGB(255, 80, 80, 80),
                     ),
                   ),
-                ),
+                  const Spacer(),
+                  searchBarCall == SearchBarCall.search
+                      ? IconButton(
+                          onPressed: () => pressCancelButton!(provider),
+                          icon: const Icon(Icons.clear, size: 20),
+                        )
+                      : const SizedBox.shrink()
+                ],
               ),
-              searchBarCall == SearchBarCall.search
-                  ? IconButton(
-                      onPressed: () => pressCancelButton!(provider),
-                      icon: const Icon(Icons.clear, size: 20),
-                    )
-                  : const SizedBox.shrink(),
-            ],
+            ),
           ),
         ),
       ),

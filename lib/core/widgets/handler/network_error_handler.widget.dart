@@ -19,12 +19,23 @@ class _NetworkErrorHandlerWidgetState extends State<NetworkErrorHandlerWidget> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
-            Icons.warning,
-            size: 45,
-            color: Colors.yellow,
+          Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.circular(50),
+            ),
+            child: const Padding(
+              padding: EdgeInsets.only(bottom: 3),
+              child: Icon(
+                Icons.warning_amber,
+                size: 37,
+                color: Colors.yellow,
+              ),
+            ),
           ),
-          const SizedBox(height: 5),
+          const SizedBox(height: 10),
           const Text(
             "서버와의 연결이 원할하지 않습니다.",
             style: TextStyle(

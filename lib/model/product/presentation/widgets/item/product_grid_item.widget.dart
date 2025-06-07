@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/model/product/common/mixin/product_item.mixin.dart';
 import 'package:smart_market/model/product/domain/entities/search_product.entity.dart';
 
@@ -17,10 +18,7 @@ class ProductGridItemWidget extends StatelessWidget with ProductItem {
       child: Container(
         width: 150,
         margin: const EdgeInsets.all(5),
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(180, 240, 240, 240),
-          borderRadius: BorderRadius.circular(12),
-        ),
+        decoration: commonContainerDecoration,
         child: Column(
           children: [
             getProductImageContainer(product),

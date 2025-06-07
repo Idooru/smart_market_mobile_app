@@ -69,7 +69,6 @@ class NavigationPageState extends State<NavigationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueGrey[300],
       body: FutureBuilder<Map<String, dynamic>>(
         future: _mainPageFuture,
         builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
@@ -78,9 +77,9 @@ class NavigationPageState extends State<NavigationPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Smart Market", style: TextStyle(color: Colors.white, fontSize: 40)),
+                  Text("Smart Market", style: TextStyle(color: Color.fromARGB(255, 190, 190, 190), fontSize: 40)),
                   SizedBox(height: 15),
-                  CircularProgressIndicator(color: Colors.white),
+                  CircularProgressIndicator(color: Color.fromARGB(255, 190, 190, 190)),
                 ],
               ),
             );
@@ -113,11 +112,8 @@ class NavigationPageState extends State<NavigationPage> {
               const ProfilePage(),
             ];
 
-            return ColoredBox(
-              color: Colors.blueGrey[300]!,
-              child: SafeArea(
-                child: pages.elementAt(_selectedIndex),
-              ),
+            return SafeArea(
+              child: pages.elementAt(_selectedIndex),
             );
           }
         },
@@ -125,7 +121,7 @@ class NavigationPageState extends State<NavigationPage> {
       bottomNavigationBar: _isLoaded
           ? BottomNavigationBar(
               type: BottomNavigationBarType.fixed,
-              backgroundColor: const Color.fromARGB(255, 230, 230, 230),
+              backgroundColor: const Color.fromARGB(255, 220, 220, 220),
               items: const [
                 BottomNavigationBarItem(
                   icon: Icon(Icons.home),

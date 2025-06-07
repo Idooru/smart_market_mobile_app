@@ -19,7 +19,7 @@ class MainPage extends StatelessWidget {
     return Consumer<ProductSearchProvider>(
       builder: (BuildContext context, ProductSearchProvider provider, Widget? child) {
         return Scaffold(
-          backgroundColor: Colors.white,
+          // backgroundColor: Colors.white,
           body: CustomScrollView(
             slivers: [
               SliverAppBar(
@@ -28,7 +28,7 @@ class MainPage extends StatelessWidget {
                 floating: true,
                 snap: true,
                 flexibleSpace: Container(
-                  color: Colors.blueGrey[300], // 스크롤 될 시 색상 변경 방지
+                  color: const Color.fromARGB(255, 240, 240, 240), // 스크롤 될 시 색상 변경 방지
                 ),
               ),
               ProductButtonSearchBarWidget(

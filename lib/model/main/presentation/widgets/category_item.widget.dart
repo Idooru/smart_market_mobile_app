@@ -33,7 +33,8 @@ class CategoryItemWidget extends StatelessWidget {
         height: 70,
         margin: margin,
         decoration: BoxDecoration(
-          color: const Color.fromARGB(180, 240, 240, 240),
+          color: Colors.white,
+          border: Border.all(width: 0.6, color: const Color.fromARGB(255, 210, 210, 210)),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
