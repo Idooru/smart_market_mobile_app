@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
+import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/utils/get_snackbar.dart';
 import 'package:smart_market/core/widgets/common/common_button_bar.widget.dart';
@@ -84,28 +85,29 @@ class _DetailProductPageState extends State<DetailProductPage> {
   }
 
   Widget getItemArea(String title, Widget child) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(10),
-      margin: const EdgeInsets.only(bottom: 15),
-      decoration: BoxDecoration(
-        border: Border.all(width: 0.6, color: const Color.fromARGB(255, 210, 210, 210)),
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.white,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 3),
-            child: Text(
-              title,
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 5),
+          child: Text(
+            title,
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
           ),
-          child
-        ],
-      ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 5,
+          ),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(10),
+            margin: const EdgeInsets.only(bottom: 15),
+            decoration: commonContainerDecoration,
+            child: child,
+          ),
+        ),
+      ],
     );
   }
 
@@ -151,24 +153,21 @@ class _DetailProductPageState extends State<DetailProductPage> {
                             getItemArea("상품 이미지", ProductImageGridWidget(imageUrls: data.product.imageUrls)),
                             getItemArea(
                               "상품 정보",
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10, top: 10),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text("이름: ${data.product.name}", style: const TextStyle(fontSize: 14, color: Color.fromARGB(255, 50, 50, 50))),
-                                    Text("가격: ${formatNumber(data.product.price)}원", style: const TextStyle(fontSize: 14, color: Color.fromARGB(255, 50, 50, 50))),
-                                    Text("원산지: ${data.product.origin}", style: const TextStyle(fontSize: 14, color: Color.fromARGB(255, 50, 50, 50))),
-                                    Text("분류: ${data.product.category}", style: const TextStyle(fontSize: 14, color: Color.fromARGB(255, 50, 50, 50))),
-                                    Text("설명: ${data.product.description}", style: const TextStyle(fontSize: 14, color: Color.fromARGB(255, 50, 50, 50))),
-                                    Row(
-                                      children: [
-                                        const Text("평점: ", style: TextStyle(fontSize: 14, color: Color.fromARGB(255, 50, 50, 50))),
-                                        DisplayAverageScoreWidget(averageScore: data.product.averageScore),
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("이름: ${data.product.name}", style: const TextStyle(fontSize: 14, color: Color.fromARGB(255, 50, 50, 50))),
+                                  Text("가격: ${formatNumber(data.product.price)}원", style: const TextStyle(fontSize: 14, color: Color.fromARGB(255, 50, 50, 50))),
+                                  Text("원산지: ${data.product.origin}", style: const TextStyle(fontSize: 14, color: Color.fromARGB(255, 50, 50, 50))),
+                                  Text("분류: ${data.product.category}", style: const TextStyle(fontSize: 14, color: Color.fromARGB(255, 50, 50, 50))),
+                                  Text("설명: ${data.product.description}", style: const TextStyle(fontSize: 14, color: Color.fromARGB(255, 50, 50, 50))),
+                                  Row(
+                                    children: [
+                                      const Text("평점: ", style: TextStyle(fontSize: 14, color: Color.fromARGB(255, 50, 50, 50))),
+                                      DisplayAverageScoreWidget(averageScore: data.product.averageScore),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
                             getItemArea(
