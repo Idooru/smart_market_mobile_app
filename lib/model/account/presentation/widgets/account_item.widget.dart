@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:smart_market/core/utils/format_number.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/utils/get_snackbar.dart';
 import 'package:smart_market/model/account/domain/entities/account.entity.dart';
@@ -7,6 +6,7 @@ import 'package:smart_market/model/account/domain/entities/account_transaction.e
 import 'package:smart_market/model/account/domain/service/account.service.dart';
 import 'package:smart_market/model/account/presentation/dialog/account_transaction.dialog.dart';
 
+import '../../../../core/utils/format_number.dart';
 import '../../../../core/utils/parse_date.dart';
 import '../../../../core/widgets/dialog/handle_network_error_on_dialog.dialog.dart';
 
@@ -168,6 +168,7 @@ class _AccountItemWidgetState extends State<AccountItemWidget> {
       child: Container(
         width: double.infinity,
         height: 95,
+        padding: const EdgeInsets.all(10),
         margin: const EdgeInsets.only(bottom: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -176,8 +177,8 @@ class _AccountItemWidgetState extends State<AccountItemWidget> {
         child: Stack(
           children: [
             Positioned(
-              top: 10,
-              left: 10,
+              top: 0,
+              left: 0,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -188,12 +189,9 @@ class _AccountItemWidgetState extends State<AccountItemWidget> {
                       color: Color.fromARGB(255, 80, 80, 80),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 7),
-                    child: Text(
-                      "${formatNumber(widget.account.balance)}원",
-                      style: const TextStyle(fontSize: 24),
-                    ),
+                  Text(
+                    "${formatNumber(widget.account.balance)}원",
+                    style: const TextStyle(fontSize: 24),
                   ),
                   Text(
                     "${parseStringDate(widget.account.createdAt)}에 계좌 등록됨",
@@ -206,20 +204,22 @@ class _AccountItemWidgetState extends State<AccountItemWidget> {
               ),
             ),
             Positioned(
-              top: 10,
-              right: 10,
+              top: 0,
+              right: 0,
               child: Icon(
                 widget.account.isMainAccount ? Icons.check_circle_outline : Icons.circle_outlined,
                 color: widget.account.isMainAccount ? Colors.red : Colors.black,
               ),
             ),
             Positioned(
-              right: -2,
-              bottom: -2,
+              bottom: -10,
+              right: -10,
               child: IconButton(
-                constraints: const BoxConstraints(), // 크기 최소화
-                icon: const Icon(Icons.more_vert, size: 15),
                 onPressed: pressTrailingIcon,
+                icon: const Icon(
+                  Icons.more_vert,
+                  size: 17,
+                ),
               ),
             ),
           ],

@@ -92,24 +92,22 @@ class _BasicProfileWidgetState extends State<BasicProfileWidget> {
       children: [
         SizedBox(
           width: double.infinity,
-          child: Stack(
+          height: 30,
+          child: Row(
             children: [
-              const Positioned(
-                child: Text(
-                  "내 프로필",
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-                ),
+              const Text(
+                "내 프로필",
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
               ),
-              Positioned(
-                top: -10,
-                left: 70,
-                child: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      _isShow = !_isShow;
-                    });
-                  },
-                  icon: Icon(_isShow ? Icons.arrow_drop_down : Icons.arrow_drop_up),
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    _isShow = !_isShow;
+                  });
+                },
+                icon: Icon(
+                  _isShow ? Icons.arrow_drop_down : Icons.arrow_drop_up,
+                  size: 22,
                 ),
               )
             ],
@@ -121,8 +119,8 @@ class _BasicProfileWidgetState extends State<BasicProfileWidget> {
                 onLongPress: () => pressTrailingIcon(profile),
                 child: Container(
                   width: double.infinity,
-                  height: 115,
-                  padding: const EdgeInsets.all(5),
+                  height: 130,
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: const Color.fromARGB(255, 245, 245, 245),
@@ -130,28 +128,31 @@ class _BasicProfileWidgetState extends State<BasicProfileWidget> {
                   child: Stack(
                     children: [
                       Positioned(
-                        top: 5,
-                        left: 5,
+                        top: 0,
+                        left: 0,
                         child: SizedBox(
-                          height: 20,
+                          height: 30,
                           child: Row(
                             children: [
                               Text(
                                 profile.realName,
                                 style: const TextStyle(fontSize: 20),
                               ),
-                              const SizedBox(width: 5),
-                              Icon(
-                                profile.role == "client" ? Icons.person : Icons.security,
-                                size: 15,
+                              const SizedBox(width: 3),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 5),
+                                child: Icon(
+                                  profile.role == "client" ? Icons.person : Icons.security,
+                                  size: 20,
+                                ),
                               ),
                             ],
                           ),
                         ),
                       ),
                       Positioned(
-                        top: 5,
-                        right: 5,
+                        top: 0,
+                        right: 0,
                         child: SizedBox(
                           height: 20,
                           child: Row(
@@ -174,8 +175,8 @@ class _BasicProfileWidgetState extends State<BasicProfileWidget> {
                         ),
                       ),
                       Positioned(
-                        top: 28,
-                        left: 5,
+                        top: 30,
+                        left: 0,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -243,8 +244,8 @@ class _BasicProfileWidgetState extends State<BasicProfileWidget> {
                         ),
                       ),
                       Positioned(
-                        bottom: -5,
-                        right: -5,
+                        bottom: -10,
+                        right: -10,
                         child: IconButton(
                           constraints: const BoxConstraints(), // 크기 최소화
                           icon: const Icon(Icons.more_vert, size: 18),

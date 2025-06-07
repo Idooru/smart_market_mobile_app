@@ -61,50 +61,44 @@ class _AccountListWidgetState extends State<AccountListWidget> {
       children: [
         const SizedBox(height: 15),
         SizedBox(
-          width: double.infinity,
-          child: Stack(
+          height: 30,
+          child: Row(
             children: [
-              const Positioned(
-                child: Text(
-                  "내 계좌 목록",
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+              const Text(
+                "내 계좌 목록",
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+              ),
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    _isShow = !_isShow;
+                  });
+                },
+                icon: Icon(
+                  _isShow ? Icons.arrow_drop_down : Icons.arrow_drop_up,
+                  size: 22,
                 ),
               ),
-              Positioned(
-                top: -10,
-                left: 93,
-                child: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      _isShow = !_isShow;
-                    });
-                  },
-                  icon: Icon(_isShow ? Icons.arrow_drop_down : Icons.arrow_drop_up),
-                ),
-              ),
-              Positioned(
-                right: 0,
-                child: _isShow
-                    ? GestureDetector(
-                        onTap: () => SortAccountsDialog.show(context, updateCallback: updateAccounts),
-                        child: Container(
-                          width: 90,
-                          height: 30,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: const Color.fromARGB(255, 230, 230, 230),
-                          ),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Icon(Icons.sort, size: 15),
-                              Text("계좌 정렬"),
-                            ],
-                          ),
+              const Spacer(),
+              _isShow
+                  ? GestureDetector(
+                      onTap: () => SortAccountsDialog.show(context, updateCallback: updateAccounts),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: const Color.fromARGB(255, 230, 230, 230),
                         ),
-                      )
-                    : const SizedBox.shrink(),
-              )
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Icon(Icons.sort, size: 15),
+                            Text("계좌 정렬"),
+                          ],
+                        ),
+                      ),
+                    )
+                  : const SizedBox.shrink()
             ],
           ),
         ),
