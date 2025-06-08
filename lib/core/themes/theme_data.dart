@@ -34,3 +34,8 @@ const BoxDecoration searchResultDecoration = BoxDecoration(
     ),
   ),
 );
+
+final BoxDecoration quickButtonDecoration = BoxDecoration(
+  borderRadius: BorderRadius.circular(10),
+  color: const Color.fromARGB(255, 200, 200, 200),
+);

@@ -84,8 +84,9 @@ class _CartPageState extends State<CartPage> {
               appBar: AppBar(
                 title: const Text("Cart List"),
                 centerTitle: false,
+                toolbarHeight: 30,
                 flexibleSpace: Container(
-                  color: Colors.blueGrey[300],
+                  color: const Color.fromARGB(255, 240, 240, 240),
                 ),
               ),
               body: Padding(

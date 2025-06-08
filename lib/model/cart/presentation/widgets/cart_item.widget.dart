@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/utils/format_number.dart';
 import 'package:smart_market/core/utils/parse_date.dart';
 import 'package:smart_market/model/cart/domain/entities/modify_cart.entity.dart';
@@ -127,10 +128,7 @@ class _CartItemWidgetState extends State<CartItemWidget> {
         width: double.infinity,
         height: 100,
         margin: const EdgeInsets.only(bottom: 10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: const Color.fromARGB(255, 245, 245, 245),
-        ),
+        decoration: commonContainerDecoration,
         child: Stack(
           children: [
             Container(

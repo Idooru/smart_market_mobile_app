@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_market/core/utils/format_number.dart';
 import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.dart';
-import 'package:smart_market/model/cart/presentation/dialog/sort_carts.dialog.dart';
 import 'package:smart_market/model/cart/presentation/widgets/cart_item.widget.dart';
 import 'package:smart_market/model/order/presentation/pages/create_order.page.dart';
 import 'package:smart_market/model/order/presentation/provider/create_order.provider.dart';
 
 import '../../../../core/errors/connection_error.dart';
 import '../../../../core/errors/dio_fail.error.dart';
+import '../../../../core/themes/theme_data.dart';
 import '../../../../core/utils/get_it_initializer.dart';
 import '../../../../core/widgets/handler/internal_server_error_handler.widget.dart';
 import '../../../../core/widgets/handler/loading_handler.widget.dart';
@@ -16,6 +16,7 @@ import '../../../../core/widgets/handler/network_error_handler.widget.dart';
 import '../../../account/domain/entities/account.entity.dart';
 import '../../domain/entities/cart.entity.dart';
 import '../../domain/service/cart.service.dart';
+import '../dialog/sort_carts.dialog.dart';
 import '../dialog/warn_delete_all_carts.dialog.dart';
 
 class CartListWidget extends StatefulWidget {
@@ -31,10 +32,10 @@ class CartListWidget extends StatefulWidget {
   });
 
   @override
-  State<CartListWidget> createState() => _CartListWidgetState();
+  State<CartListWidget> createState() => CartListWidgetState();
 }
 
-class _CartListWidgetState extends State<CartListWidget> {
+class CartListWidgetState extends State<CartListWidget> {
   final CartService _cartService = locator<CartService>();
   final RequestCarts defaultRequestCartsArgs = const RequestCarts(align: "DESC", column: "createdAt");
   late Future<ResponseCarts> _getCartsFuture;
@@ -62,10 +63,7 @@ class _CartListWidgetState extends State<CartListWidget> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         height: 30,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: const Color.fromARGB(255, 230, 230, 230),
-        ),
+        decoration: quickButtonDecoration,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -82,34 +80,31 @@ class _CartListWidgetState extends State<CartListWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "내 장바구니 목록",
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: carts.cartRaws.isNotEmpty
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    getButton(
+                      pressCallback: () {
+                        WarnDeleteAllCartsDialog.show(
+                          context,
+                          updateCallback: () => updateCarts(defaultRequestCartsArgs),
+                        );
+                      },
+                      icon: Icons.delete,
+                      title: '장바구니 전부삭제',
+                    ),
+                    getButton(
+                      pressCallback: () => SortCartsDialog.show(context, updateCallback: updateCarts),
+                      icon: Icons.sort,
+                      title: '장바구니 정렬',
+                    ),
+                  ],
+                )
+              : const SizedBox.shrink(),
         ),
-        const SizedBox(height: 5),
-        carts.cartRaws.isNotEmpty
-            ? Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  getButton(
-                    pressCallback: () {
-                      WarnDeleteAllCartsDialog.show(
-                        context,
-                        updateCallback: () => updateCarts(defaultRequestCartsArgs),
-                      );
-                    },
-                    icon: Icons.delete,
-                    title: '장바구니 전부삭제',
-                  ),
-                  getButton(
-                    pressCallback: () => SortCartsDialog.show(context, updateCallback: updateCarts),
-                    icon: Icons.sort,
-                    title: '장바구니 정렬',
-                  ),
-                ],
-              )
-            : const SizedBox.shrink(),
-        const SizedBox(height: 10),
         Expanded(
           child: carts.cartRaws.isEmpty
               ? const Center(
@@ -129,7 +124,6 @@ class _CartListWidgetState extends State<CartListWidget> {
                   ),
                 ),
         ),
-        const SizedBox(height: 10),
         Row(
           children: [
             const Text(
