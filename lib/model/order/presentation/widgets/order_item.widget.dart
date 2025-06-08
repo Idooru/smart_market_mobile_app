@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/utils/format_number.dart';
 import 'package:smart_market/core/widgets/common/common_border.widget.dart';
 import 'package:smart_market/core/widgets/common/common_button_bar.widget.dart';
@@ -35,7 +36,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
       children: [
         Text(title, style: const TextStyle(color: Colors.black, fontSize: 19)),
         const CommonBorder(
-          width: 1,
+          width: 0.5,
           color: Color.fromARGB(255, 160, 160, 160),
         ),
         const SizedBox(height: 5),
@@ -50,10 +51,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
       width: double.infinity,
       padding: const EdgeInsets.all(10),
       margin: const EdgeInsets.only(bottom: 10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: const Color.fromARGB(255, 245, 245, 245),
-      ),
+      decoration: commonContainerDecoration,
       child: Column(
         children: <Widget>[
           getCategoryItem(title: "주문 정보", widgets: [

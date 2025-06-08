@@ -15,6 +15,7 @@ class CommonBorder extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: color, width: width),
+        borderRadius: BorderRadius.circular(10),
       ),
     );
   }

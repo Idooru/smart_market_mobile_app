@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
+import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/widgets/common/common_border.widget.dart';
 import 'package:smart_market/core/widgets/handler/internal_server_error_handler.widget.dart';
@@ -90,27 +91,28 @@ class _BasicProfileWidgetState extends State<BasicProfileWidget> {
   Widget getPageElement(ResponseProfile profile) {
     return Column(
       children: [
-        SizedBox(
-          width: double.infinity,
-          height: 30,
-          child: Row(
-            children: [
-              const Text(
-                "내 프로필",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-              ),
-              IconButton(
-                onPressed: () {
-                  setState(() {
-                    _isShow = !_isShow;
-                  });
-                },
-                icon: Icon(
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              _isShow = !_isShow;
+            });
+          },
+          child: Container(
+            color: Colors.transparent,
+            height: 30,
+            child: Row(
+              children: [
+                const Text(
+                  "내 프로필",
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(width: 5),
+                Icon(
                   _isShow ? Icons.arrow_drop_down : Icons.arrow_drop_up,
                   size: 22,
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
         const SizedBox(height: 10),
@@ -121,10 +123,7 @@ class _BasicProfileWidgetState extends State<BasicProfileWidget> {
                   width: double.infinity,
                   height: 130,
                   padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: const Color.fromARGB(255, 245, 245, 245),
-                  ),
+                  decoration: commonContainerDecoration,
                   child: Stack(
                     children: [
                       Positioned(

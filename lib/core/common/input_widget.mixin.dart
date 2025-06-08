@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_market/core/themes/theme_data.dart';
 
 mixin InputWidget {
   Padding getTitle(String title) {
@@ -13,10 +14,7 @@ mixin InputWidget {
       height: 50,
       padding: const EdgeInsets.all(10.0),
       margin: const EdgeInsets.only(bottom: 10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: const Color.fromARGB(255, 230, 230, 230),
-      ),
+      decoration: commonContainerDecoration,
       child: widget,
     );
   }

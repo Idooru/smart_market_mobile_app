@@ -113,7 +113,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 title: const Text("Profile"),
                 centerTitle: false,
                 flexibleSpace: Container(
-                  color: Colors.blueGrey[300],
+                  color: const Color.fromARGB(255, 240, 240, 240),
                 ),
                 actions: [
                   IconButton(

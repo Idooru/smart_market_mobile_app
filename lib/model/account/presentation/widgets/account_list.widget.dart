@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/widgets/common/common_button_bar.widget.dart';
 import 'package:smart_market/model/account/domain/entities/account.entity.dart';
@@ -60,46 +61,45 @@ class _AccountListWidgetState extends State<AccountListWidget> {
     return Column(
       children: [
         const SizedBox(height: 15),
-        SizedBox(
-          height: 30,
-          child: Row(
-            children: [
-              const Text(
-                "내 계좌 목록",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-              ),
-              IconButton(
-                onPressed: () {
-                  setState(() {
-                    _isShow = !_isShow;
-                  });
-                },
-                icon: Icon(
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              _isShow = !_isShow;
+            });
+          },
+          child: Container(
+            color: Colors.transparent,
+            height: 30,
+            child: Row(
+              children: [
+                const Text(
+                  "내 계좌 목록",
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(width: 5),
+                Icon(
                   _isShow ? Icons.arrow_drop_down : Icons.arrow_drop_up,
                   size: 22,
                 ),
-              ),
-              const Spacer(),
-              _isShow
-                  ? GestureDetector(
-                      onTap: () => SortAccountsDialog.show(context, updateCallback: updateAccounts),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: const Color.fromARGB(255, 230, 230, 230),
+                const Spacer(),
+                _isShow
+                    ? GestureDetector(
+                        onTap: () => SortAccountsDialog.show(context, updateCallback: updateAccounts),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 10),
+                          decoration: quickButtonDecoration,
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Icon(Icons.sort, size: 15),
+                              Text("계좌 정렬"),
+                            ],
+                          ),
                         ),
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Icon(Icons.sort, size: 15),
-                            Text("계좌 정렬"),
-                          ],
-                        ),
-                      ),
-                    )
-                  : const SizedBox.shrink()
-            ],
+                      )
+                    : const SizedBox.shrink()
+              ],
+            ),
           ),
         ),
         const SizedBox(height: 10),

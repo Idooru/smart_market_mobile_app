@@ -83,7 +83,7 @@ class _EditProfilePageState extends State<EditProfilePage> with NetWorkHandler {
             title: const Text("Edit Profile"),
             centerTitle: false,
             flexibleSpace: Container(
-              color: Colors.blueGrey[300], // 스크롤 될 시 색상 변경 방지
+              color: const Color.fromARGB(255, 240, 240, 240),
             ),
           ),
           body: Padding(

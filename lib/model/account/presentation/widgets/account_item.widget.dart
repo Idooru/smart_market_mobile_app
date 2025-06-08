@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/utils/get_snackbar.dart';
 import 'package:smart_market/model/account/domain/entities/account.entity.dart';
@@ -170,37 +171,38 @@ class _AccountItemWidgetState extends State<AccountItemWidget> {
         height: 95,
         padding: const EdgeInsets.all(10),
         margin: const EdgeInsets.only(bottom: 10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: const Color.fromARGB(255, 245, 245, 245),
-        ),
+        decoration: commonContainerDecoration,
         child: Stack(
           children: [
             Positioned(
               top: 0,
               left: 0,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "${widget.account.bank} ${widget.account.accountNumber}",
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Color.fromARGB(255, 80, 80, 80),
+              child: SizedBox(
+                height: 75,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "${widget.account.bank} ${widget.account.accountNumber}",
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Color.fromARGB(255, 80, 80, 80),
+                      ),
                     ),
-                  ),
-                  Text(
-                    "${formatNumber(widget.account.balance)}원",
-                    style: const TextStyle(fontSize: 24),
-                  ),
-                  Text(
-                    "${parseStringDate(widget.account.createdAt)}에 계좌 등록됨",
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Color.fromARGB(255, 120, 120, 120),
+                    Text(
+                      "${formatNumber(widget.account.balance)}원",
+                      style: const TextStyle(fontSize: 24),
                     ),
-                  )
-                ],
+                    Text(
+                      "${parseStringDate(widget.account.createdAt)}에 계좌 등록됨",
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Color.fromARGB(255, 120, 120, 120),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
             Positioned(
