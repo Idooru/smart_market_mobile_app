@@ -9,3 +9,28 @@ final BoxDecoration commonContainerDecoration = BoxDecoration(
   border: Border.all(width: 0.6, color: const Color.fromARGB(255, 210, 210, 210)),
   borderRadius: BorderRadius.circular(12),
 );
+
+final BoxDecoration searchBarDecoration = BoxDecoration(
+  color: Colors.white,
+  border: Border.all(width: 2, color: const Color.fromARGB(255, 210, 210, 210)),
+  borderRadius: BorderRadius.circular(50),
+);
+
+const BoxDecoration searchHistoryDecoration = BoxDecoration(
+  color: Colors.white,
+  border: Border(
+    bottom: BorderSide(
+      color: Colors.grey, // 밑줄 색
+      width: 0.2, // 밑줄 두께
+    ),
+  ),
+);
+
+const BoxDecoration searchResultDecoration = BoxDecoration(
+  border: Border(
+    bottom: BorderSide(
+      color: Colors.grey, // 밑줄 색
+      width: 0.2, // 밑줄 두께
+    ),
+  ),
+);

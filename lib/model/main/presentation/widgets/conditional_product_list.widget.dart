@@ -29,6 +29,7 @@ class ConditionalProductListWidget extends StatelessWidget {
               children: products.map((product) => ProductGridItemWidget(product: product)).toList(),
             ),
           ),
+          const SizedBox(height: 10),
         ],
       ),
     );

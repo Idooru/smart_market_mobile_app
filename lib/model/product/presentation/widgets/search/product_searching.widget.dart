@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
+import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/widgets/common/custom_scrollbar.widget.dart';
 import 'package:smart_market/core/widgets/handler/internal_server_error_handler.widget.dart';
@@ -127,76 +128,65 @@ class _ProductSearchingWidgetState extends State<ProductSearchingWidget> {
         _getProductAutoCompleteFuture = productService.getProductAutocomplete(searchProvider.keyword);
 
         return Expanded(
-          child: ColoredBox(
-            color: const Color.fromARGB(255, 235, 235, 235),
-            child: FutureBuilder(
-              future: _getProductAutoCompleteFuture,
-              builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const SizedBox.shrink();
-                } else if (snapshot.hasError) {
-                  final error = snapshot.error;
-                  if (error is ConnectionError) {
-                    return NetworkErrorHandlerWidget(reconnectCallback: () {
-                      setState(() {
-                        _getProductAutoCompleteFuture = productService.getProductAutocomplete(searchProvider.keyword);
-                      });
+          child: FutureBuilder(
+            future: _getProductAutoCompleteFuture,
+            builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const SizedBox.shrink();
+              } else if (snapshot.hasError) {
+                final error = snapshot.error;
+                if (error is ConnectionError) {
+                  return NetworkErrorHandlerWidget(reconnectCallback: () {
+                    setState(() {
+                      _getProductAutoCompleteFuture = productService.getProductAutocomplete(searchProvider.keyword);
                     });
-                  } else if (error is DioFailError) {
-                    return const InternalServerErrorHandlerWidget();
-                  } else {
-                    return Center(child: Text("$error"));
-                  }
+                  });
+                } else if (error is DioFailError) {
+                  return const InternalServerErrorHandlerWidget();
                 } else {
-                  List<String> autoCompletes = snapshot.data!;
-                  ScrollController scrollController = ScrollController();
+                  return Center(child: Text("$error"));
+                }
+              } else {
+                List<String> autoCompletes = snapshot.data!;
+                ScrollController scrollController = ScrollController();
 
-                  return SizedBox(
-                    width: double.infinity,
-                    child: autoCompletes.isNotEmpty
-                        ? CustomScrollbarWidget(
-                            scrollController: scrollController,
-                            childWidget: SingleChildScrollView(
-                              controller: scrollController,
-                              child: Column(
-                                children: autoCompletes
-                                    .map(
-                                      (autoComplete) => GestureDetector(
-                                        onTap: () => widget.search(autoComplete, searchProvider, filteredProvider, widget.updateProductList),
-                                        child: Container(
-                                          width: double.infinity,
-                                          padding: const EdgeInsets.all(10),
-                                          decoration: const BoxDecoration(
-                                            color: Color.fromARGB(255, 245, 245, 245),
-                                            border: Border(
-                                              bottom: BorderSide(
-                                                color: Colors.grey, // 밑줄 색
-                                                width: 0.2, // 밑줄 두께
-                                              ),
-                                            ),
-                                          ),
-                                          child: Text.rich(
-                                            TextSpan(
-                                              children: RegExp(r'^[ㄱ-ㅎ\s]+$').hasMatch(searchProvider.keyword)
-                                                  ? highlightInitialMatch(autoComplete, searchProvider.keyword)
-                                                  : highlightKeyword(autoComplete, searchProvider.keyword),
-                                              style: const TextStyle(color: Color.fromARGB(255, 100, 100, 100)),
-                                            ),
+                return SizedBox(
+                  width: double.infinity,
+                  child: autoCompletes.isNotEmpty
+                      ? CustomScrollbarWidget(
+                          scrollController: scrollController,
+                          childWidget: SingleChildScrollView(
+                            controller: scrollController,
+                            child: Column(
+                              children: autoCompletes
+                                  .map(
+                                    (autoComplete) => GestureDetector(
+                                      onTap: () => widget.search(autoComplete, searchProvider, filteredProvider, widget.updateProductList),
+                                      child: Container(
+                                        width: double.infinity,
+                                        padding: const EdgeInsets.all(10),
+                                        decoration: searchResultDecoration,
+                                        child: Text.rich(
+                                          TextSpan(
+                                            children: RegExp(r'^[ㄱ-ㅎ\s]+$').hasMatch(searchProvider.keyword)
+                                                ? highlightInitialMatch(autoComplete, searchProvider.keyword)
+                                                : highlightKeyword(autoComplete, searchProvider.keyword),
+                                            style: const TextStyle(color: Color.fromARGB(255, 100, 100, 100)),
                                           ),
                                         ),
                                       ),
-                                    )
-                                    .toList(),
-                              ),
+                                    ),
+                                  )
+                                  .toList(),
                             ),
-                          )
-                        : const Center(
-                            child: Text("해당 이름의 상품이 존재하지 않습니다."),
                           ),
-                  );
-                }
-              },
-            ),
+                        )
+                      : const Center(
+                          child: Text("해당 이름의 상품이 존재하지 않습니다."),
+                        ),
+                );
+              }
+            },
           ),
         );
       },

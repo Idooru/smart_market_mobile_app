@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/widgets/handler/internal_server_error_handler.widget.dart';
 import 'package:smart_market/core/widgets/handler/loading_handler.widget.dart';
 import 'package:smart_market/core/widgets/handler/network_error_handler.widget.dart';
@@ -21,15 +22,11 @@ class ProductSearchResultWidget extends StatelessWidget {
   });
 
   Widget getProductCountContainer(List<ResponseSearchProduct> products) {
-    return Container(
-      color: Colors.white,
-      height: 50,
-      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Container(
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(180, 240, 240, 240),
-          borderRadius: BorderRadius.circular(12),
-        ),
+        height: 40,
+        decoration: commonContainerDecoration,
         padding: const EdgeInsets.only(left: 10),
         child: Row(
           children: [

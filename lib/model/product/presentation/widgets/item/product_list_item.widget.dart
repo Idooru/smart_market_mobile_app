@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/model/product/common/mixin/product_item.mixin.dart';
 import 'package:smart_market/model/product/domain/entities/search_product.entity.dart';
 
@@ -20,10 +21,7 @@ class ProductListItemWidget extends StatelessWidget with ProductItem {
         width: double.infinity,
         height: 150,
         margin: margin,
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(180, 240, 240, 240),
-          borderRadius: BorderRadius.circular(12),
-        ),
+        decoration: commonContainerDecoration,
         child: Row(
           children: [
             getProductImageContainer(product),

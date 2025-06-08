@@ -16,7 +16,6 @@ class ProductGridItemWidget extends StatelessWidget with ProductItem {
     return GestureDetector(
       onTap: () => navigateDetailProductPage(context, product),
       child: Container(
-        width: 150,
         margin: const EdgeInsets.all(5),
         decoration: commonContainerDecoration,
         child: Column(

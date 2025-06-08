@@ -148,7 +148,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                   title: const Text("Search"),
                   centerTitle: false,
                   flexibleSpace: Container(
-                    color: Colors.blueGrey[300], // 스크롤 될 시 색상 변경 방지
+                    color: const Color.fromARGB(255, 240, 240, 240),
                   ),
                   leading: IconButton(
                     icon: const Icon(Icons.arrow_back_ios),
@@ -159,96 +159,92 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                   ),
                 )
               : null,
-          body: ColoredBox(
-            color: Colors.white,
-            // 검색중이 아닐 때는 Sliver 위젯 사용, 검색중일 때는 일반 Scafold 위젯 사용
-            child: provider.searchMode == SearchMode.none
-                ? CustomScrollView(
-                    slivers: [
-                      // header
-                      SliverAppBar(
-                        flexibleSpace: Container(
-                          color: Colors.blueGrey[300], // 스크롤 될 시 색상 변경 방지
-                        ),
-                        pinned: false,
-                        floating: true,
-                        leading: IconButton(
-                          icon: const Icon(Icons.arrow_back_ios),
-                          onPressed: () {
-                            final state = context.findAncestorStateOfType<NavigationPageState>();
-                            state?.tapBottomNavigator(0);
-                          },
-                        ),
-                        title: const Text("Search"),
-                        centerTitle: false,
-                        actions: [
-                          IconButton(
-                            onPressed: () => ProductFilterDialog.show(context),
-                            icon: const Icon(
-                              Icons.tune,
-                              color: Colors.black,
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: updateViewMode,
-                            icon: Icon(
-                              viewMode == ViewMode.list ? Icons.list : Icons.grid_3x3,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ],
+          body: provider.searchMode == SearchMode.none
+              ? CustomScrollView(
+                  slivers: [
+                    // header
+                    SliverAppBar(
+                      flexibleSpace: Container(
+                        color: const Color.fromARGB(255, 240, 240, 240),
                       ),
-                      ProductButtonSearchBarWidget(
-                        provider: provider,
-                        searchBarCall: SearchBarCall.search,
-                        pressCallback: () {
-                          provider.setSearchMode(SearchMode.searching);
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            focusNode.requestFocus();
-                          });
+                      pinned: false,
+                      floating: true,
+                      leading: IconButton(
+                        icon: const Icon(Icons.arrow_back_ios),
+                        onPressed: () {
+                          final state = context.findAncestorStateOfType<NavigationPageState>();
+                          state?.tapBottomNavigator(0);
                         },
-                        pressCancelButton: pressCancelButton,
                       ),
-                      ProductSearchResultWidget(
-                        viewMode: viewMode,
-                        reconnectCallback: () {
-                          RequestSearchProducts searchProduct = RequestSearchProducts(
-                            mode: productCategory.contains(_keyword) ? RequestProductSearchMode.category : RequestProductSearchMode.manual,
-                            keyword: _keyword!,
-                          );
+                      title: const Text("Search"),
+                      centerTitle: false,
+                      actions: [
+                        IconButton(
+                          onPressed: () => ProductFilterDialog.show(context),
+                          icon: const Icon(
+                            Icons.tune,
+                            color: Colors.black,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: updateViewMode,
+                          icon: Icon(
+                            viewMode == ViewMode.list ? Icons.list : Icons.grid_3x3,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                    ProductButtonSearchBarWidget(
+                      provider: provider,
+                      searchBarCall: SearchBarCall.search,
+                      pressCallback: () {
+                        provider.setSearchMode(SearchMode.searching);
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          focusNode.requestFocus();
+                        });
+                      },
+                      pressCancelButton: pressCancelButton,
+                    ),
+                    ProductSearchResultWidget(
+                      viewMode: viewMode,
+                      reconnectCallback: () {
+                        RequestSearchProducts searchProduct = RequestSearchProducts(
+                          mode: productCategory.contains(_keyword) ? RequestProductSearchMode.category : RequestProductSearchMode.manual,
+                          keyword: _keyword!,
+                        );
 
-                          updateProductList(searchProduct);
-                        },
-                      ),
-                    ],
-                  )
-                : Column(
-                    children: [
-                      ProductTextFieldSearchBarWidget(
-                        focusNode: focusNode,
-                        pressCancelButton: pressCancelButton,
-                        search: search,
-                        updateProductList: updateProductList,
-                      ),
-                      (() {
-                        if (provider.searchMode == SearchMode.focused) {
-                          return ProductSearchFocusedWidget(
-                            search: search,
-                            updateProductList: updateProductList,
-                          );
-                        } // 자동 완성 표시
-                        else if (provider.searchMode == SearchMode.searching) {
-                          return ProductSearchingWidget(
-                            search: search,
-                            updateProductList: updateProductList,
-                          );
-                        } else {
-                          return const SizedBox.shrink();
-                        }
-                      })()
-                    ],
-                  ),
-          ),
+                        updateProductList(searchProduct);
+                      },
+                    ),
+                  ],
+                )
+              : Column(
+                  children: [
+                    ProductTextFieldSearchBarWidget(
+                      focusNode: focusNode,
+                      pressCancelButton: pressCancelButton,
+                      search: search,
+                      updateProductList: updateProductList,
+                    ),
+                    (() {
+                      if (provider.searchMode == SearchMode.focused) {
+                        return ProductSearchFocusedWidget(
+                          search: search,
+                          updateProductList: updateProductList,
+                        );
+                      } // 자동 완성 표시
+                      else if (provider.searchMode == SearchMode.searching) {
+                        return ProductSearchingWidget(
+                          search: search,
+                          updateProductList: updateProductList,
+                        );
+                      } else {
+                        return const SizedBox.shrink();
+                      }
+                    })()
+                  ],
+                ),
         );
       },
     );

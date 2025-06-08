@@ -8,10 +8,10 @@ class _SearchBarDelegate extends SliverPersistentHeaderDelegate {
   _SearchBarDelegate({required this.child});
 
   @override
-  double get minExtent => 45;
+  double get minExtent => 60;
 
   @override
-  double get maxExtent => 45;
+  double get maxExtent => 60;
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
@@ -48,11 +48,13 @@ class ProductButtonSearchBarWidget extends StatelessWidget {
       delegate: _SearchBarDelegate(
         child: GestureDetector(
           onTap: pressCallback,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
+          child: Container(
+            color: const Color.fromARGB(255, 240, 240, 240),
+            padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Container(
-              decoration: commonContainerDecoration,
-              height: 45,
+              decoration: searchBarDecoration,
+              height: 50,
+              margin: const EdgeInsets.only(bottom: 10),
               padding: const EdgeInsets.all(5),
               child: Row(
                 children: [
