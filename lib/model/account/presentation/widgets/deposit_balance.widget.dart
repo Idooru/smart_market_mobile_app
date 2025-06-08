@@ -38,7 +38,7 @@ class DepositBalanceWidgetState extends EditWidgetState<DepositWidget> with Inpu
             decoration: const InputDecoration(
               isDense: true,
               border: InputBorder.none,
-              prefixIcon: Icon(Icons.credit_card, color: Color.fromARGB(255, 60, 60, 60)),
+              prefixIcon: Icon(Icons.attach_money, color: Color.fromARGB(255, 60, 60, 60)),
               hintText: "입금할 잔액을 입력하세요.",
             ),
           ),

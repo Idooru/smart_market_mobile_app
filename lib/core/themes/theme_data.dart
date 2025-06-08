@@ -4,6 +4,10 @@ ThemeData themeData = ThemeData(
   scaffoldBackgroundColor: const Color.fromARGB(255, 240, 240, 240),
 );
 
+final Container appBarColor = Container(
+  color: const Color.fromARGB(255, 240, 240, 240), // 스크롤 될 시 색상 변경 방지
+);
+
 final BoxDecoration commonContainerDecoration = BoxDecoration(
   color: Colors.white,
   border: Border.all(width: 0.6, color: const Color.fromARGB(255, 210, 210, 210)),
