@@ -31,10 +31,7 @@ class _DisplayPaymentPageState extends State<DisplayPaymentPage> {
     return Container(
       width: double.infinity,
       height: 40,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: const Color.fromARGB(255, 245, 245, 245),
-      ),
+      decoration: commonContainerDecoration,
       child: Center(
         child: Text(
           "${parseDeliveryOption(deliveryOption)} 비용: ${formatNumber(price)}원",
