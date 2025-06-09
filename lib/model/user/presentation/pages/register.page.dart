@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_market/core/common/network_handler.mixin.dart';
+import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/utils/get_snackbar.dart';
 import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.dart';
@@ -92,9 +93,7 @@ class _RegisterPageState extends State<RegisterPage> with NetWorkHandler {
           appBar: AppBar(
             title: const Text("Register"),
             centerTitle: false,
-            flexibleSpace: Container(
-              color: Colors.blueGrey[300], // 스크롤 될 시 색상 변경 방지
-            ),
+            flexibleSpace: appBarColor,
           ),
           body: Padding(
             padding: const EdgeInsets.all(10),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_market/core/common/network_handler.mixin.dart';
+import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/utils/get_snackbar.dart';
 import 'package:smart_market/model/user/domain/entities/login.entity.dart';
@@ -84,29 +85,18 @@ class _LoginPageState extends State<LoginPage> with NetWorkHandler {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Login",
-          style: TextStyle(fontSize: 30),
-        ),
-        toolbarHeight: 110,
-        centerTitle: true,
-        flexibleSpace: Container(
-          color: Colors.blueGrey[300], // 스크롤 될 시 색상 변경 방지
-        ),
+        title: const Text("Login"),
+        centerTitle: false,
+        flexibleSpace: appBarColor,
       ),
       body: Container(
-        color: Colors.white,
         padding: const EdgeInsets.all(10),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const SizedBox(height: 5),
               Container(
                 height: 50,
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(180, 240, 240, 240),
-                  borderRadius: BorderRadius.circular(10),
-                ),
+                decoration: commonContainerDecoration,
                 child: TextField(
                   focusNode: _emailFocusNode,
                   controller: _emailController,
@@ -128,10 +118,7 @@ class _LoginPageState extends State<LoginPage> with NetWorkHandler {
               const SizedBox(height: 10),
               Container(
                 height: 50,
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(180, 240, 240, 240),
-                  borderRadius: BorderRadius.circular(10),
-                ),
+                decoration: commonContainerDecoration,
                 child: TextField(
                   focusNode: _passwordFocusNode,
                   obscureText: true,

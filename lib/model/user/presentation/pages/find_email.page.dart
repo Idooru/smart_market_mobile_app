@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_market/core/common/network_handler.mixin.dart';
+import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/widgets/common/common_button_bar.widget.dart';
 import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.dart';
@@ -121,9 +122,7 @@ class _FindEmailPageState extends State<FindEmailPage> with NetWorkHandler {
           appBar: AppBar(
             title: const Text("Find Email"),
             centerTitle: false,
-            flexibleSpace: Container(
-              color: Colors.blueGrey[300], // 스크롤 될 시 색상 변경 방지
-            ),
+            flexibleSpace: appBarColor,
           ),
           body: Padding(
             padding: const EdgeInsets.all(10),
@@ -139,6 +138,7 @@ class _FindEmailPageState extends State<FindEmailPage> with NetWorkHandler {
                     isLastWidget: true,
                     hasDuplicateValidation: false,
                   ),
+                  const SizedBox(height: 10),
                   getFindEmailButton(provider),
                   const SizedBox(height: 10),
                   if (_hasError) getErrorMessageWidget(_errorMessage),
