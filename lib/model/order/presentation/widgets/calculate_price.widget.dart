@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/utils/format_number.dart';
 import 'package:smart_market/core/widgets/common/common_border.widget.dart';
 import 'package:smart_market/model/order/presentation/provider/create_order.provider.dart';
@@ -68,38 +69,54 @@ class _CalculatePriceWidgetState extends State<CalculatePriceWidget> {
               alignment: Alignment.topLeft,
               child: Text("금액 계산", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
             ),
-            Column(
-              children: provider.carts
-                  .map(
-                    (cart) => Padding(
-                      padding: const EdgeInsets.only(bottom: 3),
-                      child: getCalculateLine(Icons.add, cart.product.name, cart.totalPrice),
-                    ),
-                  )
-                  .toList(),
-            ),
-            (() {
-              String title = deliveryOption == "speed" ? "신속 배송비" : "안전 배송비";
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: commonContainerDecoration,
+              child: Column(
+                children: [
+                  Column(
+                    children: provider.carts
+                        .map(
+                          (cart) => Padding(
+                            padding: const EdgeInsets.only(bottom: 3),
+                            child: getCalculateLine(Icons.add, cart.product.name, cart.totalPrice),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                  (() {
+                    String title = deliveryOption == "speed" ? "신속 배송비" : "안전 배송비";
 
-              return deliveryOption == "speed" || deliveryOption == "safe"
-                  ? getCalculateLine(
-                      Icons.add,
-                      title,
-                      5000,
-                    )
-                  : const SizedBox.shrink();
-            })(),
-            const SizedBox(height: 5),
-            const CommonBorder(),
-            const SizedBox(height: 5),
-            getStatusLine("총 결제 금액", totalPrice),
-            const SizedBox(height: 20),
-            getCalculateLine(Icons.account_balance, "계좌 금액", mainAccount.balance),
-            getCalculateLine(Icons.remove, "결제 금액", totalPrice),
-            const SizedBox(height: 5),
-            const CommonBorder(),
-            const SizedBox(height: 5),
-            getStatusLine("계좌 잔액", mainAccount.balance - totalPrice),
+                    return deliveryOption == "speed" || deliveryOption == "safe"
+                        ? getCalculateLine(
+                            Icons.add,
+                            title,
+                            5000,
+                          )
+                        : const SizedBox.shrink();
+                  })(),
+                  const SizedBox(height: 5),
+                  const CommonBorder(),
+                  const SizedBox(height: 5),
+                  getStatusLine("총 결제 금액", totalPrice),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: commonContainerDecoration,
+              child: Column(
+                children: [
+                  getCalculateLine(Icons.account_balance, "계좌 금액", mainAccount.balance),
+                  getCalculateLine(Icons.remove, "결제 금액", totalPrice),
+                  const SizedBox(height: 5),
+                  const CommonBorder(),
+                  const SizedBox(height: 5),
+                  getStatusLine("계좌 잔액", mainAccount.balance - totalPrice),
+                ],
+              ),
+            ),
             const SizedBox(height: 5),
           ],
         );

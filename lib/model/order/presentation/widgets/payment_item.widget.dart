@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/utils/format_number.dart';
 
 import '../../../product/presentation/pages/detail_product.page.dart';
@@ -58,10 +59,7 @@ class _PaymentItemWidgetState extends State<PaymentItemWidget> {
         children: [
           Container(
             width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: const Color.fromARGB(255, 245, 245, 245),
-            ),
+            decoration: commonContainerDecoration,
             child: Stack(
               children: [
                 Container(

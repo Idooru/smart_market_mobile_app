@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/utils/format_number.dart';
 import 'package:smart_market/model/order/presentation/widgets/payment_item.widget.dart';
 
@@ -49,9 +50,7 @@ class _DisplayPaymentPageState extends State<DisplayPaymentPage> {
       appBar: AppBar(
         title: const Text("Display Payment"),
         centerTitle: false,
-        flexibleSpace: Container(
-          color: Colors.blueGrey[300], // 스크롤 될 시 색상 변경 방지
-        ),
+        flexibleSpace: appBarColor,
       ),
       body: Column(
         children: [
