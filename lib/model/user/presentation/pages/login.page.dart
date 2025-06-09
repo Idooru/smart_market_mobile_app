@@ -61,7 +61,12 @@ class _LoginPageState extends State<LoginPage> with NetWorkHandler {
       _passwordFocusNode.unfocus();
       setState(() {
         _hasError = true;
-        _errorMessage = branchErrorMessage(err);
+        String errorMessage = branchErrorMessage(err);
+        if (errorMessage == "관리자 계정은 모바일 접근이 불가능합니다.") {
+          _errorMessage = "접근이 불가능한 사용자 입니다.";
+        } else {
+          _errorMessage = errorMessage;
+        }
       });
     }
   }

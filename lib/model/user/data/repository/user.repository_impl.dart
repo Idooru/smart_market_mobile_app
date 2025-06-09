@@ -59,7 +59,7 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Future<DataState<String>> login(RequestLogin args) async {
-    String url = "$_baseUrl/login";
+    String url = "$_baseUrl/login?login-client=mobile";
     ClientArgs clientArgs = ClientArgs(email: args.email, password: args.password);
     Dio dio = _authenticationHttpClient.getClient(args: clientArgs);
 
