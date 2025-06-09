@@ -6,6 +6,7 @@ import 'package:smart_market/core/widgets/common/common_border.widget.dart';
 import 'package:smart_market/model/order/presentation/provider/create_order.provider.dart';
 
 import '../../../account/domain/entities/account.entity.dart';
+import '../../../cart/domain/entities/cart.entity.dart';
 
 class CalculatePriceWidget extends StatefulWidget {
   const CalculatePriceWidget({super.key});
@@ -15,21 +16,94 @@ class CalculatePriceWidget extends StatefulWidget {
 }
 
 class _CalculatePriceWidgetState extends State<CalculatePriceWidget> {
-  Widget getCalculateLine(IconData icon, String title, int price) {
+  Widget getProductLine(Cart cart) {
+    return Container(
+      padding: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+        color: const Color.fromARGB(255, 230, 230, 230),
+      ),
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: [
+              Text(
+                "(${cart.product.name})",
+                style: const TextStyle(color: Color.fromARGB(255, 70, 70, 70)),
+              ),
+              const Spacer(),
+              Text(
+                "${formatNumber(cart.product.price)} x ${cart.quantity}",
+                style: const TextStyle(color: Color.fromARGB(255, 70, 70, 70)),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              const Spacer(),
+              const Icon(
+                Icons.add,
+                size: 20,
+                color: Colors.red,
+              ),
+              const SizedBox(width: 3),
+              Text(
+                "${formatNumber(cart.totalPrice)}원",
+                style: const TextStyle(fontSize: 20),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget getSurtaxLine(String title) {
+    return Container(
+      padding: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+        border: Border.all(width: 2, color: const Color.fromARGB(255, 222, 102, 102)),
+      ),
+      child: Row(
+        children: [
+          Text(
+            "($title)",
+            style: const TextStyle(color: Color.fromARGB(255, 70, 70, 70)),
+          ),
+          const Spacer(),
+          const Icon(
+            Icons.add,
+            size: 20,
+            color: Colors.red,
+          ),
+          const SizedBox(width: 3),
+          Text(
+            "${formatNumber(5000)}원",
+            style: const TextStyle(
+              fontSize: 20,
+              color: Colors.black,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget getCalculateLine(IconData? icon, String title, int price) {
     return Row(
       children: [
+        Text(
+          "($title)",
+          style: const TextStyle(color: Color.fromARGB(255, 70, 70, 70)),
+        ),
+        const Spacer(),
         Icon(
           icon,
           size: 20,
           color: Colors.red,
         ),
-        const SizedBox(width: 5),
-        Text(
-          "($title)",
-          style: const TextStyle(color: Color.fromARGB(255, 120, 120, 120)),
-        ),
-        const SizedBox(width: 5),
-        const Spacer(),
+        const SizedBox(width: 3),
         Text(
           "${formatNumber(price)}원",
           style: const TextStyle(fontSize: 20),
@@ -38,7 +112,7 @@ class _CalculatePriceWidgetState extends State<CalculatePriceWidget> {
     );
   }
 
-  Widget getStatusLine(String title, int totalPrice) {
+  Widget getTotalPriceLine(String title, int totalPrice) {
     return Row(
       children: [
         Text(
@@ -75,30 +149,27 @@ class _CalculatePriceWidgetState extends State<CalculatePriceWidget> {
               child: Column(
                 children: [
                   Column(
-                    children: provider.carts
-                        .map(
-                          (cart) => Padding(
-                            padding: const EdgeInsets.only(bottom: 3),
-                            child: getCalculateLine(Icons.add, cart.product.name, cart.totalPrice),
-                          ),
-                        )
-                        .toList(),
+                    children: provider.carts.asMap().entries.map(
+                      (entry) {
+                        final index = entry.key;
+                        final cart = entry.value;
+                        final isLast = index == provider.carts.length - 1;
+                        return Padding(
+                          padding: EdgeInsets.only(bottom: isLast ? 0 : 10),
+                          child: getProductLine(cart),
+                        );
+                      },
+                    ).toList(),
                   ),
                   (() {
                     String title = deliveryOption == "speed" ? "신속 배송비" : "안전 배송비";
-
-                    return deliveryOption == "speed" || deliveryOption == "safe"
-                        ? getCalculateLine(
-                            Icons.add,
-                            title,
-                            5000,
-                          )
-                        : const SizedBox.shrink();
+                    return deliveryOption == "speed" || deliveryOption == "safe" ? getSurtaxLine(title) : const SizedBox.shrink();
                   })(),
-                  const SizedBox(height: 5),
-                  const CommonBorder(),
-                  const SizedBox(height: 5),
-                  getStatusLine("총 결제 금액", totalPrice),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 7),
+                    child: CommonBorder(),
+                  ),
+                  getTotalPriceLine("총 결제 금액", totalPrice),
                 ],
               ),
             ),
@@ -108,12 +179,24 @@ class _CalculatePriceWidgetState extends State<CalculatePriceWidget> {
               decoration: commonContainerDecoration,
               child: Column(
                 children: [
-                  getCalculateLine(Icons.account_balance, "계좌 금액", mainAccount.balance),
-                  getCalculateLine(Icons.remove, "결제 금액", totalPrice),
-                  const SizedBox(height: 5),
-                  const CommonBorder(),
-                  const SizedBox(height: 5),
-                  getStatusLine("계좌 잔액", mainAccount.balance - totalPrice),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 230, 230, 230),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    padding: const EdgeInsets.all(5),
+                    child: Column(
+                      children: [
+                        getCalculateLine(null, "계좌 금액", mainAccount.balance),
+                        getCalculateLine(Icons.remove, "결제 금액", totalPrice),
+                      ],
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 7),
+                    child: CommonBorder(),
+                  ),
+                  getTotalPriceLine("계좌 잔액", mainAccount.balance - totalPrice),
                 ],
               ),
             ),
