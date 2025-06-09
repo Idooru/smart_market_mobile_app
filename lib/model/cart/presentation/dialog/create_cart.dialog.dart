@@ -37,8 +37,8 @@ class _CreateCartDialogWidgetState extends State<CreateCartDialogWidget> with Ed
   @override
   void initState() {
     super.initState();
-    productQuantity = 0;
-    totalPrice = 0;
+    productQuantity = 1;
+    totalPrice = widget.responseDetailProduct.product.price;
   }
 
   void pressIncrement() {
