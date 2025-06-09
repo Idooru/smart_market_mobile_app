@@ -156,6 +156,7 @@ class CartListWidgetState extends State<CartListWidget> {
                   arguments: CreateOrderPageArgs(
                     address: widget.address,
                     updateCallback: () => updateCarts(defaultRequestCartsArgs),
+                    isCreateCart: true,
                   ),
                 );
               },

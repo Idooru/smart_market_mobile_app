@@ -16,6 +16,7 @@ class CreateOrderStrategy implements RouteStrategy {
       builder: (context) => CreateOrderPage(
         address: args.address,
         updateCallback: args.updateCallback,
+        isCreateCart: args.isCreateCart,
       ),
       settings: settings,
     );

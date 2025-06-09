@@ -3,9 +3,27 @@ import 'package:smart_market/core/utils/format_number.dart';
 
 import '../../domain/entities/cart_product.entity.dart';
 
-mixin EditCart {
+abstract class EditCartState<T extends StatefulWidget> extends State<T> {
   late int productQuantity;
   late int totalPrice;
+
+  void pressIncrement(CartProduct product) {
+    if (productQuantity == 50) return;
+
+    setState(() {
+      productQuantity += 1;
+      totalPrice = product.price * productQuantity;
+    });
+  }
+
+  void pressDecrement(CartProduct product) {
+    if (productQuantity <= 1) return;
+
+    setState(() {
+      productQuantity -= 1;
+      totalPrice = product.price * productQuantity;
+    });
+  }
 
   Widget getCommonWidget({
     required String title,

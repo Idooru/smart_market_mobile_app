@@ -4,6 +4,7 @@ import 'package:smart_market/core/common/network_handler.mixin.dart';
 import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.dart';
 import 'package:smart_market/model/account/domain/entities/account.entity.dart';
+import 'package:smart_market/model/cart/domain/service/cart.service.dart';
 import 'package:smart_market/model/order/domain/service/order.service.dart';
 import 'package:smart_market/model/order/presentation/provider/create_order.provider.dart';
 import 'package:smart_market/model/order/presentation/widgets/calculate_price.widget.dart';
@@ -12,27 +13,32 @@ import 'package:smart_market/model/user/presentation/provider/edit_user_column.p
 
 import '../../../../core/utils/get_it_initializer.dart';
 import '../../../../core/utils/get_snackbar.dart';
+import '../../../cart/domain/entities/cart.entity.dart';
 import '../../../user/presentation/widgets/edit/edit_address.widget.dart';
 import '../../domain/entities/create_order.entity.dart';
 
 class CreateOrderPageArgs {
   final String address;
-  final void Function() updateCallback;
+  final void Function()? updateCallback;
+  final bool isCreateCart;
 
   const CreateOrderPageArgs({
     required this.address,
-    required this.updateCallback,
+    required this.isCreateCart,
+    this.updateCallback,
   });
 }
 
 class CreateOrderPage extends StatefulWidget {
   final String address;
-  final void Function() updateCallback;
+  final void Function()? updateCallback;
+  final bool isCreateCart;
 
   const CreateOrderPage({
     super.key,
     required this.address,
-    required this.updateCallback,
+    required this.isCreateCart,
+    this.updateCallback,
   });
 
   @override
@@ -70,7 +76,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> with NetWorkHandler {
 
     try {
       await _orderService.createOrder(args);
-      widget.updateCallback();
+      if (widget.updateCallback != null) widget.updateCallback!();
       navigator.pop();
       scaffoldMessenger.showSnackBar(getSnackBar('결제 주문이 완료되었습니다.'));
     } catch (err) {
@@ -102,6 +108,18 @@ class _CreateOrderPageState extends State<CreateOrderPage> with NetWorkHandler {
             title: const Text("Create Order"),
             centerTitle: false,
             flexibleSpace: appBarColor,
+            leading: IconButton(
+              onPressed: () {
+                if (!widget.isCreateCart) {
+                  final CartService cartService = locator<CartService>();
+                  for (Cart cart in orderProvider.carts) {
+                    cartService.deleteCart(cart.id);
+                  }
+                }
+                Navigator.of(context).pop();
+              },
+              icon: const Icon(Icons.arrow_back_ios),
+            ),
           ),
           body: Padding(
             padding: const EdgeInsets.all(10),

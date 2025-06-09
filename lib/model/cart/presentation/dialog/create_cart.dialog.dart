@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:smart_market/model/cart/domain/entities/cart_product.entity.dart';
-import 'package:smart_market/model/product/domain/entities/detail_product.entity.dart';
 
 import '../../../../core/widgets/common/conditional_button_bar.widget.dart';
-import '../../common/mixin/edit_cart.mixin.dart';
+import '../../common/state/edit_cart.state.dart';
 
 class CreateCartDialog {
-  static void show(BuildContext context, {required ResponseDetailProduct product, required void Function({required int quantity, required int totalPrice}) createCallback}) {
+  static void show(
+    BuildContext context, {
+    required CartProduct product,
+    required void Function({required int quantity, required int totalPrice}) createCallback,
+  }) {
     showDialog(
       context: context,
       builder: (BuildContext context) => Dialog(
         child: CreateCartDialogWidget(
-          responseDetailProduct: product,
+          product: product,
           createCallback: createCallback,
         ),
       ),
@@ -20,12 +23,12 @@ class CreateCartDialog {
 }
 
 class CreateCartDialogWidget extends StatefulWidget {
-  final ResponseDetailProduct responseDetailProduct;
+  final CartProduct product;
   final void Function({required int quantity, required int totalPrice}) createCallback;
 
   const CreateCartDialogWidget({
     super.key,
-    required this.responseDetailProduct,
+    required this.product,
     required this.createCallback,
   });
 
@@ -33,53 +36,35 @@ class CreateCartDialogWidget extends StatefulWidget {
   State<CreateCartDialogWidget> createState() => _CreateCartDialogWidgetState();
 }
 
-class _CreateCartDialogWidgetState extends State<CreateCartDialogWidget> with EditCart {
+class _CreateCartDialogWidgetState extends EditCartState<CreateCartDialogWidget> {
   @override
   void initState() {
     super.initState();
     productQuantity = 1;
-    totalPrice = widget.responseDetailProduct.product.price;
-  }
-
-  void pressIncrement() {
-    if (productQuantity == 50) return;
-
-    setState(() {
-      productQuantity += 1;
-      totalPrice = widget.responseDetailProduct.product.price * productQuantity;
-    });
-  }
-
-  void pressDecrement() {
-    if (productQuantity <= 1) return;
-
-    setState(() {
-      productQuantity -= 1;
-      totalPrice = widget.responseDetailProduct.product.price * productQuantity;
-    });
-  }
-
-  void pressCreate() {
-    widget.createCallback(quantity: productQuantity, totalPrice: totalPrice);
-    Navigator.of(context).pop();
+    totalPrice = widget.product.price;
   }
 
   @override
   Widget build(BuildContext context) {
     return getCommonWidget(
-      title: "장바구니 추가",
+      title: "장바구니",
       product: CartProduct(
-        name: widget.responseDetailProduct.product.name,
-        price: widget.responseDetailProduct.product.price,
+        name: widget.product.name,
+        price: widget.product.price,
       ),
-      pressIncrement: pressIncrement,
-      pressDecrement: pressDecrement,
+      pressIncrement: () => pressIncrement(widget.product),
+      pressDecrement: () => pressDecrement(widget.product),
       doneButton: ConditionalButtonBarWidget(
         isValid: productQuantity != 0,
         icon: Icons.shopping_cart,
-        backgroundColor: Colors.green,
-        title: "추가하기",
-        pressCallback: pressCreate,
+        backgroundColor: Colors.blue,
+        title: "장바구니 담기",
+        pressCallback: () {
+          widget.createCallback(
+            quantity: productQuantity,
+            totalPrice: totalPrice,
+          );
+        },
       ),
     );
   }
