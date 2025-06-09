@@ -169,6 +169,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
               ),
             ],
           ),
+          const SizedBox(height: 10),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 5),
             child: CommonButtonBarWidget(
