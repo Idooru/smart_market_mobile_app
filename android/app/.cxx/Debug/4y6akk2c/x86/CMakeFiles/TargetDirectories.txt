@@ -1,0 +1,2 @@
+/Users/user/Project/smart_market/smart_market_mobile_app/android/app/.cxx/Debug/4y6akk2c/x86/CMakeFiles/edit_cache.dir
+/Users/user/Project/smart_market/smart_market_mobile_app/android/app/.cxx/Debug/4y6akk2c/x86/CMakeFiles/rebuild_cache.dir
