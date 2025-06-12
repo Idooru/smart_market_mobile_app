@@ -6,6 +6,7 @@ import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/model/account/presentation/provider/create_account.provider.dart';
 import 'package:smart_market/model/main/presentation/pages/navigation.page.dart';
+import 'package:smart_market/model/order/presentation/provider/after_create_order.provider.dart';
 import 'package:smart_market/model/order/presentation/provider/create_order.provider.dart';
 import 'package:smart_market/model/product/presentation/provider/product_filtered.provider.dart';
 import 'package:smart_market/model/product/presentation/provider/product_search.provider.dart';
@@ -24,6 +25,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => EditUserColumnProvider()),
         ChangeNotifierProvider(create: (context) => CreateAccountProvider()),
         ChangeNotifierProvider(create: (context) => CreateOrderProvider()),
+        ChangeNotifierProvider(create: (context) => CompleteCreateOrderProvider()),
       ],
       child: const MyApp(),
     ),

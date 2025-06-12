@@ -61,6 +61,7 @@ class _CalculatePriceWidgetState extends State<CalculatePriceWidget> {
   Widget getSurtaxLine(String title) {
     return Container(
       padding: const EdgeInsets.all(5),
+      margin: const EdgeInsets.only(top: 7),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
         border: Border.all(width: 2, color: const Color.fromARGB(255, 222, 102, 102)),

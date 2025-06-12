@@ -89,6 +89,7 @@ class _PayNowDialogWidgetState extends EditCartState<PayNowDialogWidget> {
                 arguments: CreateOrderPageArgs(
                   address: widget.address,
                   isCreateCart: false,
+                  updateCallback: () {},
                 ),
               );
             },

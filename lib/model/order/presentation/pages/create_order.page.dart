@@ -1,58 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_market/core/common/network_handler.mixin.dart';
 import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.dart';
 import 'package:smart_market/model/account/domain/entities/account.entity.dart';
 import 'package:smart_market/model/cart/domain/service/cart.service.dart';
-import 'package:smart_market/model/order/domain/service/order.service.dart';
+import 'package:smart_market/model/order/presentation/pages/complete_create_order.page.dart';
 import 'package:smart_market/model/order/presentation/provider/create_order.provider.dart';
 import 'package:smart_market/model/order/presentation/widgets/calculate_price.widget.dart';
 import 'package:smart_market/model/order/presentation/widgets/select_delivery_option.widget.dart';
 import 'package:smart_market/model/user/presentation/provider/edit_user_column.provider.dart';
 
 import '../../../../core/utils/get_it_initializer.dart';
-import '../../../../core/utils/get_snackbar.dart';
 import '../../../cart/domain/entities/cart.entity.dart';
 import '../../../user/presentation/widgets/edit/edit_address.widget.dart';
 import '../../domain/entities/create_order.entity.dart';
 
 class CreateOrderPageArgs {
   final String address;
-  final void Function()? updateCallback;
   final bool isCreateCart;
+  final void Function() updateCallback;
 
   const CreateOrderPageArgs({
     required this.address,
     required this.isCreateCart,
-    this.updateCallback,
+    required this.updateCallback,
   });
 }
 
 class CreateOrderPage extends StatefulWidget {
   final String address;
-  final void Function()? updateCallback;
   final bool isCreateCart;
+  final void Function() updateCallback;
 
   const CreateOrderPage({
     super.key,
     required this.address,
     required this.isCreateCart,
-    this.updateCallback,
+    required this.updateCallback,
   });
 
   @override
   State<CreateOrderPage> createState() => _CreateOrderPageState();
 }
 
-class _CreateOrderPageState extends State<CreateOrderPage> with NetWorkHandler {
-  final OrderService _orderService = locator<OrderService>();
+class _CreateOrderPageState extends State<CreateOrderPage> {
   final GlobalKey<SelectDeliveryOptionState> _optionKey = GlobalKey<SelectDeliveryOptionState>();
   final GlobalKey<EditAddressWidgetState> _addressKey = GlobalKey<EditAddressWidgetState>();
   late CreateOrderProvider provider;
-
-  bool _hasError = false;
-  String _errorMessage = "";
 
   @override
   void initState() {
@@ -66,25 +60,20 @@ class _CreateOrderPageState extends State<CreateOrderPage> with NetWorkHandler {
     super.dispose();
   }
 
-  Future<void> pressCreateOrder() async {
-    NavigatorState navigator = Navigator.of(context);
-    ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
-    RequestCreateOrder args = RequestCreateOrder(
+  Future<void> pressCreateOrder(List<Cart> carts) async {
+    RequestCreateOrder requestCreateOrderArgs = RequestCreateOrder(
       deliveryOption: _optionKey.currentState!.selectedDeliveryOption,
       deliveryAddress: _addressKey.currentState!.addressController.text,
     );
 
-    try {
-      await _orderService.createOrder(args);
-      if (widget.updateCallback != null) widget.updateCallback!();
-      navigator.pop();
-      scaffoldMessenger.showSnackBar(getSnackBar('결제 주문이 완료되었습니다.'));
-    } catch (err) {
-      setState(() {
-        _hasError = true;
-        _errorMessage = branchErrorMessage(err);
-      });
-    }
+    CompleteCreateOrderPageArgs successCreateOrderPageArgs = CompleteCreateOrderPageArgs(
+      args: requestCreateOrderArgs,
+      carts: carts,
+      isCreateCart: widget.isCreateCart,
+      updateCallback: widget.updateCallback,
+    );
+
+    Navigator.of(context).pushNamed("/success_create_order", arguments: successCreateOrderPageArgs);
   }
 
   ConditionalButtonBarWidget getCreateOrderButton(CreateOrderProvider orderProvider, EditUserColumnProvider userProvider) {
@@ -95,7 +84,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> with NetWorkHandler {
     return ConditionalButtonBarWidget(
       title: '결제 주문하기',
       isValid: isAllValid,
-      pressCallback: pressCreateOrder,
+      pressCallback: () => pressCreateOrder(orderProvider.carts),
     );
   }
 
@@ -134,7 +123,6 @@ class _CreateOrderPageState extends State<CreateOrderPage> with NetWorkHandler {
                   const SizedBox(height: 10),
                   getCreateOrderButton(orderProvider, userProvider),
                   const SizedBox(height: 10),
-                  if (_hasError) getErrorMessageWidget(_errorMessage),
                 ],
               ),
             ),
