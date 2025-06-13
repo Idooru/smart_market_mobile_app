@@ -5,13 +5,14 @@ import 'package:smart_market/core/common/route.strategy.dart';
 import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/model/account/presentation/provider/create_account.provider.dart';
-import 'package:smart_market/model/main/presentation/pages/navigation.page.dart';
 import 'package:smart_market/model/order/presentation/provider/after_create_order.provider.dart';
 import 'package:smart_market/model/order/presentation/provider/create_order.provider.dart';
 import 'package:smart_market/model/product/presentation/provider/product_filtered.provider.dart';
 import 'package:smart_market/model/product/presentation/provider/product_search.provider.dart';
 import 'package:smart_market/model/review/presentation/provider/edit_review.provider.dart';
 import 'package:smart_market/model/user/presentation/provider/edit_user_column.provider.dart';
+
+import 'model/main/presentation/pages/splash.page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,19 +43,21 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: themeData,
-      routes: {
-        '/home': (context) {
-          return const NavigationPage();
-        },
-      },
+      initialRoute: "/loading",
       onGenerateRoute: (RouteSettings settings) {
-        final strategy = routeStrategies[settings.name];
-        if (strategy != null) {
-          return strategy.route(settings);
+        if (settings.name == "/loading") {
+          return MaterialPageRoute(
+            builder: (_) => const SplashPage(),
+            settings: settings,
+          );
+        } else {
+          final strategy = routeStrategies[settings.name];
+          if (strategy != null) {
+            return strategy.route(settings);
+          }
+          return null;
         }
-        return null;
       },
-      home: const NavigationPage(),
     );
   }
 }
