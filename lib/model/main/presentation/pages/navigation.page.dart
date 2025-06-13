@@ -1,150 +1,90 @@
 import 'package:flutter/material.dart';
-import 'package:smart_market/core/errors/dio_fail.error.dart';
-import 'package:smart_market/core/utils/get_it_initializer.dart';
-import 'package:smart_market/core/widgets/dialog/admin_can_not_use.dialog.dart';
-import 'package:smart_market/core/widgets/handler/internal_server_error_handler.widget.dart';
-import 'package:smart_market/core/widgets/handler/network_error_handler.widget.dart';
-import 'package:smart_market/model/cart/presentation/pages/cart.page.dart';
-import 'package:smart_market/model/main/presentation/pages/main.page.dart';
-import 'package:smart_market/model/product/domain/entities/search_product.entity.dart';
-import 'package:smart_market/model/product/domain/service/product.service.dart';
-import 'package:smart_market/model/product/presentation/pages/product_search.page.dart';
-import 'package:smart_market/model/user/presentation/dialog/invitation_login.dialog.dart';
-import 'package:smart_market/model/user/presentation/pages/profile.page.dart';
-import 'package:smart_market/model/user/utils/check_is_logined.dart';
-import 'package:smart_market/model/user/utils/get_user_info.dart';
 
-import '../../../../core/errors/connection_error.dart';
+import '../../../cart/presentation/pages/cart.page.dart';
+import '../../../product/presentation/pages/product_search.page.dart';
+import '../../../user/presentation/dialog/invitation_login.dialog.dart';
+import '../../../user/presentation/pages/profile.page.dart';
+import '../../../user/utils/check_is_logined.dart';
+import 'main.page.dart';
+
+class NavigationPageArgs {
+  final int selectedIndex;
+
+  const NavigationPageArgs({
+    required this.selectedIndex,
+  });
+}
 
 class NavigationPage extends StatefulWidget {
-  const NavigationPage({super.key});
+  final int initialIndex;
+
+  const NavigationPage({
+    super.key,
+    this.initialIndex = 0,
+  });
 
   @override
   State<NavigationPage> createState() => NavigationPageState();
 }
 
 class NavigationPageState extends State<NavigationPage> {
-  final ProductService _service = locator<ProductService>();
-  late Future<Map<String, dynamic>> _mainPageFuture;
+  late int _selectedIndex;
 
-  bool _isLoaded = false;
-  int _selectedIndex = 0;
+  List<Widget> pages = [
+    const MainPage(),
+    const ProductSearchPage(),
+    const CartPage(),
+    const ProfilePage(),
+  ];
 
   @override
   void initState() {
     super.initState();
 
-    _mainPageFuture = initMainPageFuture();
-  }
-
-  Future<Map<String, dynamic>> initMainPageFuture() async {
-    await Future.delayed(const Duration(seconds: 3));
-
-    RequestConditionalProducts highRatedProductArgs = const RequestConditionalProducts(count: 10, condition: "high-rated-product");
-    RequestConditionalProducts mostReviewProductArgs = const RequestConditionalProducts(count: 10, condition: "most-review-product");
-
-    List<ResponseSearchProduct> highRatedProducts = await _service.getConditionalProducts(highRatedProductArgs);
-    List<ResponseSearchProduct> mostReviewProducts = await _service.getConditionalProducts(mostReviewProductArgs);
-
-    return {"high-rated-products": highRatedProducts, "most-review-products": mostReviewProducts};
-  }
-
-  void updateSelectedIndex(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    _selectedIndex = widget.initialIndex;
   }
 
   void tapBottomNavigator(int index) {
-    bool isLogined = checkIsLogined();
-    if ((index == 2 || index == 3) && !isLogined) {
-      InvitationLoginDialog.show(context);
-    } else if (index == 2 && getUserInfo().userRole == "admin") {
-      AdminCanNotUseDialog.show(context);
-    } else {
-      updateSelectedIndex(index);
+    if ((index == 2 || index == 3) && !checkIsLogined()) {
+      return InvitationLoginDialog.show(context);
     }
+
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      "/home",
+      (route) => false,
+      arguments: NavigationPageArgs(selectedIndex: index),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<Map<String, dynamic>>(
-        future: _mainPageFuture,
-        builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Smart Market", style: TextStyle(color: Color.fromARGB(255, 190, 190, 190), fontSize: 40)),
-                  SizedBox(height: 15),
-                  CircularProgressIndicator(color: Color.fromARGB(255, 190, 190, 190)),
-                ],
-              ),
-            );
-          } else if (snapshot.hasError) {
-            final error = snapshot.error;
-            if (error is ConnectionError) {
-              return NetworkErrorHandlerWidget(reconnectCallback: () {
-                setState(() {
-                  _mainPageFuture = initMainPageFuture();
-                });
-              });
-            } else if (error is DioFailError) {
-              return const InternalServerErrorHandlerWidget();
-            } else {
-              return Center(child: Text("$error"));
-            }
-          } else {
-            Map<String, dynamic> datas = snapshot.data!;
-
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              setState(() {
-                _isLoaded = true;
-              });
-            });
-
-            List<Widget> pages = [
-              MainPage(pageArgs: datas),
-              const ProductSearchPage(),
-              const CartPage(),
-              const ProfilePage(),
-            ];
-
-            return SafeArea(
-              child: pages.elementAt(_selectedIndex),
-            );
-          }
-        },
+      body: SafeArea(child: pages.elementAt(_selectedIndex)),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: const Color.fromARGB(255, 220, 220, 220),
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: "main",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: "search",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart),
+            label: "cart",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.contact_page),
+            label: "profile",
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.black,
+        onTap: tapBottomNavigator,
       ),
-      bottomNavigationBar: _isLoaded
-          ? BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              backgroundColor: const Color.fromARGB(255, 220, 220, 220),
-              items: const [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: "main",
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.search),
-                  label: "search",
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.shopping_cart),
-                  label: "cart",
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.contact_page),
-                  label: "profile",
-                ),
-              ],
-              currentIndex: _selectedIndex,
-              selectedItemColor: Colors.black,
-              onTap: tapBottomNavigator,
-            )
-          : null,
     );
   }
 }

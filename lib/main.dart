@@ -12,6 +12,7 @@ import 'package:smart_market/model/product/presentation/provider/product_search.
 import 'package:smart_market/model/review/presentation/provider/edit_review.provider.dart';
 import 'package:smart_market/model/user/presentation/provider/edit_user_column.provider.dart';
 
+import 'model/main/presentation/pages/navigation.page.dart';
 import 'model/main/presentation/pages/splash.page.dart';
 
 void main() async {
@@ -48,6 +49,12 @@ class MyApp extends StatelessWidget {
         if (settings.name == "/loading") {
           return MaterialPageRoute(
             builder: (_) => const SplashPage(),
+            settings: settings,
+          );
+        } else if (settings.name == '/home') {
+          final args = settings.arguments as NavigationPageArgs?;
+          return MaterialPageRoute(
+            builder: (_) => NavigationPage(initialIndex: args?.selectedIndex ?? 0),
             settings: settings,
           );
         } else {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/themes/theme_data.dart';
+import '../../../main/presentation/pages/navigation.page.dart';
 import '../widgets/item/create_review_item.widget.dart';
 
 class ProductIdentify {
@@ -64,11 +65,11 @@ class _CreateReviewPageState extends State<CreateReviewPage> {
           onPressed: () {
             if (widget.isCreateCart) {
               widget.updateCallback();
-              Navigator.of(context).pop();
-              Navigator.of(context).pop();
-              Navigator.of(context).pop();
-              // final state = context.findAncestorStateOfType<NavigationPageState>();
-              // state?.tapBottomNavigator(0);
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                "/home",
+                (route) => false,
+                arguments: const NavigationPageArgs(selectedIndex: 0),
+              );
             } else {
               Navigator.of(context).popUntil(ModalRoute.withName(widget.backRoute));
             }

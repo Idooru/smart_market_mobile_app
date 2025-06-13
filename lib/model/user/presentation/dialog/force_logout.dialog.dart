@@ -56,8 +56,11 @@ class _ForceLogoutDialogWidgetState extends State<ForceLogoutDialogWidget> {
                 _db.remove("access-token");
                 _db.remove("user-info");
 
-                final state = widget.parentContext.findAncestorStateOfType<NavigationPageState>();
-                state?.tapBottomNavigator(0); // index 1 = ProductSearchPage
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  "/home",
+                  (route) => false,
+                  arguments: const NavigationPageArgs(selectedIndex: 0),
+                );
               },
               child: Container(
                 margin: const EdgeInsets.all(10),

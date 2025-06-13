@@ -153,8 +153,11 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                   leading: IconButton(
                     icon: const Icon(Icons.arrow_back_ios),
                     onPressed: () {
-                      final state = context.findAncestorStateOfType<NavigationPageState>();
-                      state?.tapBottomNavigator(0); // AllProductPage
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                        "/home",
+                        (route) => false,
+                        arguments: const NavigationPageArgs(selectedIndex: 0),
+                      );
                     },
                   ),
                 )
@@ -172,8 +175,11 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                       leading: IconButton(
                         icon: const Icon(Icons.arrow_back_ios),
                         onPressed: () {
-                          final state = context.findAncestorStateOfType<NavigationPageState>();
-                          state?.tapBottomNavigator(0);
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                            "/home",
+                            (route) => false,
+                            arguments: const NavigationPageArgs(selectedIndex: 0),
+                          );
                         },
                       ),
                       title: const Text("Search"),

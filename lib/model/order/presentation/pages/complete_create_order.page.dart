@@ -16,6 +16,7 @@ import '../../../../core/widgets/handler/internal_server_error_handler.widget.da
 import '../../../../core/widgets/handler/loading_handler.widget.dart';
 import '../../../../core/widgets/handler/network_error_handler.widget.dart';
 import '../../../cart/domain/entities/cart.entity.dart';
+import '../../../main/presentation/pages/navigation.page.dart';
 import '../../../user/presentation/dialog/force_logout.dialog.dart';
 import '../../domain/entities/create_order.entity.dart';
 import '../../domain/service/order.service.dart';
@@ -209,10 +210,11 @@ class _CompleteCreateOrderPageState extends State<CompleteCreateOrderPage> with 
                             pressCallback: () {
                               if (widget.isCreateCart) {
                                 widget.updateCallback();
-                                Navigator.of(context).pop();
-                                Navigator.of(context).pop();
-                                // final state = context.findAncestorStateOfType<NavigationPageState>();
-                                // state?.tapBottomNavigator(0);
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                  "/home",
+                                  (route) => false,
+                                  arguments: const NavigationPageArgs(selectedIndex: 0),
+                                );
                               } else {
                                 Navigator.of(context).popUntil(ModalRoute.withName(widget.backRoute));
                               }

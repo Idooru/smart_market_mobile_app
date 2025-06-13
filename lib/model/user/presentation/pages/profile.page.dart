@@ -70,12 +70,16 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> pressLogout() async {
     ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
+    NavigatorState navigator = Navigator.of(context);
 
     try {
-      final state = context.findAncestorStateOfType<NavigationPageState>();
       await _userService.logout();
       scaffoldMessenger.showSnackBar(getSnackBar('로그아웃이 완료되었습니다.'));
-      state?.tapBottomNavigator(0);
+      navigator.pushNamedAndRemoveUntil(
+        "/home",
+        (route) => false,
+        arguments: const NavigationPageArgs(selectedIndex: 0),
+      );
     } catch (err) {
       handleLogoutError(err);
     }

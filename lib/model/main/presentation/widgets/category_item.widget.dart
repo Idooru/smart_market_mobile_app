@@ -20,8 +20,11 @@ class CategoryItemWidget extends StatelessWidget {
     provider.setKeyword(title);
     provider.setSearchMode(SearchMode.none);
 
-    final state = context.findAncestorStateOfType<NavigationPageState>();
-    state?.tapBottomNavigator(1);
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      "/home",
+      (route) => false,
+      arguments: const NavigationPageArgs(selectedIndex: 1),
+    );
   }
 
   @override
