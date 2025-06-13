@@ -19,11 +19,13 @@ class CreateOrderPageArgs {
   final String address;
   final bool isCreateCart;
   final void Function() updateCallback;
+  final String backRoute;
 
   const CreateOrderPageArgs({
     required this.address,
     required this.isCreateCart,
     required this.updateCallback,
+    required this.backRoute,
   });
 }
 
@@ -31,12 +33,14 @@ class CreateOrderPage extends StatefulWidget {
   final String address;
   final bool isCreateCart;
   final void Function() updateCallback;
+  final String backRoute;
 
   const CreateOrderPage({
     super.key,
     required this.address,
     required this.isCreateCart,
     required this.updateCallback,
+    required this.backRoute,
   });
 
   @override
@@ -71,9 +75,10 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
       carts: carts,
       isCreateCart: widget.isCreateCart,
       updateCallback: widget.updateCallback,
+      backRoute: widget.backRoute,
     );
 
-    Navigator.of(context).pushNamed("/success_create_order", arguments: successCreateOrderPageArgs);
+    Navigator.of(context).pushNamed("/complete_create_order", arguments: successCreateOrderPageArgs);
   }
 
   ConditionalButtonBarWidget getCreateOrderButton(CreateOrderProvider orderProvider, EditUserColumnProvider userProvider) {

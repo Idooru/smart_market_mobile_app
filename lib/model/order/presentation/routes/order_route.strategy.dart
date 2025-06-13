@@ -7,7 +7,7 @@ import 'package:smart_market/model/order/presentation/pages/display_payment.page
 final Map<String, RouteStrategy> orderRouteStrategies = {
   "/create_order": CreateOrderStrategy(),
   "/display_payment": DisplayPaymentStrategy(),
-  "/success_create_order": CompleteCreateOrderStrategy(),
+  "/complete_create_order": CompleteCreateOrderStrategy(),
 };
 
 class CreateOrderStrategy implements RouteStrategy {
@@ -19,6 +19,7 @@ class CreateOrderStrategy implements RouteStrategy {
         address: args.address,
         updateCallback: args.updateCallback,
         isCreateCart: args.isCreateCart,
+        backRoute: args.backRoute,
       ),
       settings: settings,
     );
@@ -48,6 +49,7 @@ class CompleteCreateOrderStrategy implements RouteStrategy {
         requestCreateOrderArgs: args.args,
         isCreateCart: args.isCreateCart,
         updateCallback: args.updateCallback,
+        backRoute: args.backRoute,
       ),
     );
   }

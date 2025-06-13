@@ -16,6 +16,7 @@ class PayNowDialog {
     required Future<ResponseCarts?> Function({required int quantity, required int totalPrice}) payNowCallback,
     required String address,
     required List<ResponseAccount> accounts,
+    required String backRoute,
   }) {
     showDialog(
       context: context,
@@ -25,6 +26,7 @@ class PayNowDialog {
           payNowCallback: payNowCallback,
           address: address,
           accounts: accounts,
+          backRoute: backRoute,
         ),
       ),
     );
@@ -36,6 +38,7 @@ class PayNowDialogWidget extends StatefulWidget {
   final Future<ResponseCarts?> Function({required int quantity, required int totalPrice}) payNowCallback;
   final String address;
   final List<ResponseAccount> accounts;
+  final String backRoute;
 
   const PayNowDialogWidget({
     super.key,
@@ -43,6 +46,7 @@ class PayNowDialogWidget extends StatefulWidget {
     required this.payNowCallback,
     required this.address,
     required this.accounts,
+    required this.backRoute,
   });
 
   @override
@@ -90,6 +94,7 @@ class _PayNowDialogWidgetState extends EditCartState<PayNowDialogWidget> {
                   address: widget.address,
                   isCreateCart: false,
                   updateCallback: () {},
+                  backRoute: widget.backRoute,
                 ),
               );
             },

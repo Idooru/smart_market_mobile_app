@@ -161,6 +161,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
       payNowCallback: payNow,
       address: address,
       accounts: accounts,
+      backRoute: "/detail_product",
     );
   }
 
