@@ -25,33 +25,25 @@ import '../widgets/payment_product_item.widget.dart';
 class CompleteCreateOrderPageArgs {
   final List<Cart> carts;
   final RequestCreateOrder args;
-  final bool isCreateCart;
-  final void Function() updateCallback;
-  final String backRoute;
+  final String? backRoute;
 
   const CompleteCreateOrderPageArgs({
     required this.carts,
     required this.args,
-    required this.isCreateCart,
-    required this.updateCallback,
-    required this.backRoute,
+    this.backRoute,
   });
 }
 
 class CompleteCreateOrderPage extends StatefulWidget {
   final List<Cart> carts;
   final RequestCreateOrder requestCreateOrderArgs;
-  final bool isCreateCart;
-  final void Function() updateCallback;
-  final String backRoute;
+  final String? backRoute;
 
   const CompleteCreateOrderPage({
     super.key,
     required this.carts,
     required this.requestCreateOrderArgs,
-    required this.isCreateCart,
-    required this.updateCallback,
-    required this.backRoute,
+    this.backRoute,
   });
 
   @override
@@ -193,8 +185,6 @@ class _CompleteCreateOrderPageState extends State<CompleteCreateOrderPage> with 
                                 Navigator.of(context).pushNamed(
                                   "/create_review",
                                   arguments: CreateReviewPageArgs(
-                                    isCreateCart: widget.isCreateCart,
-                                    updateCallback: widget.updateCallback,
                                     products: products,
                                     backRoute: widget.backRoute,
                                   ),
@@ -208,15 +198,14 @@ class _CompleteCreateOrderPageState extends State<CompleteCreateOrderPage> with 
                             title: "나중에 작성 할게요!",
                             backgroundColor: const Color.fromARGB(255, 120, 120, 120),
                             pressCallback: () {
-                              if (widget.isCreateCart) {
-                                widget.updateCallback();
+                              if (widget.backRoute != null) {
+                                Navigator.of(context).popUntil(ModalRoute.withName(widget.backRoute!));
+                              } else {
                                 Navigator.of(context).pushNamedAndRemoveUntil(
                                   "/home",
                                   (route) => false,
                                   arguments: const NavigationPageArgs(selectedIndex: 0),
                                 );
-                              } else {
-                                Navigator.of(context).popUntil(ModalRoute.withName(widget.backRoute));
                               }
                             },
                           ),

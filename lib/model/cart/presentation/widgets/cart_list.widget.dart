@@ -153,12 +153,7 @@ class CartListWidgetState extends State<CartListWidget> {
 
                 navigator.pushNamed(
                   "/create_order",
-                  arguments: CreateOrderPageArgs(
-                    address: widget.address,
-                    isCreateCart: true,
-                    updateCallback: () => updateCarts(defaultRequestCartsArgs),
-                    backRoute: "",
-                  ),
+                  arguments: CreateOrderPageArgs(address: widget.address),
                 );
               },
               isValid: carts.cartRaws.isNotEmpty,

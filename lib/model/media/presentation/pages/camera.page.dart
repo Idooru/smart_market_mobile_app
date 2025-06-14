@@ -2,49 +2,45 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:smart_market/model/media/domain/service/media.service.dart';
+
+import '../../../../core/utils/get_it_initializer.dart';
 
 enum CameraMode { photo, video }
 
-class CameraPageArgs {
-  final CameraDescription camera;
-  final Future<void> Function(File) appendMedia;
-
-  const CameraPageArgs({
-    required this.camera,
-    required this.appendMedia,
-  });
-}
-
 class CameraPage extends StatefulWidget {
-  final CameraDescription camera;
-  final Future<void> Function(File) appendMedia;
-
-  const CameraPage({
-    super.key,
-    required this.camera,
-    required this.appendMedia,
-  });
+  const CameraPage({super.key});
 
   @override
   State<CameraPage> createState() => _CameraPageState();
 }
 
 class _CameraPageState extends State<CameraPage> {
+  final MediaService _mediaService = locator<MediaService>();
+  late CameraDescription camera;
   late CameraController _controller; // 카메라 컨트롤러
-  late Future<void> _initializeControllerFuture; // 컨트롤러 초기화 작업을 담당할 Future 객체
-
+  late Future<void> _cameraPageFuture; // 컨트롤러 초기화 작업을 담당할 Future 객체
   CameraMode _mode = CameraMode.photo;
 
   @override
   void initState() {
     super.initState();
 
+    _cameraPageFuture = initCameraPageFuture();
+  }
+
+  Future<void> initCameraPageFuture() async {
+    WidgetsFlutterBinding.ensureInitialized();
+
+    final cameras = await availableCameras();
+    final camera = cameras.first;
+
     _controller = CameraController(
-      widget.camera,
+      camera,
       ResolutionPreset.max,
     );
 
-    _initializeControllerFuture = _controller.initialize();
+    return _controller.initialize();
   }
 
   @override
@@ -54,41 +50,33 @@ class _CameraPageState extends State<CameraPage> {
   }
 
   Future<void> pressPhotoCamera() async {
+    NavigatorState navigator = Navigator.of(context);
     try {
-      NavigatorState navigator = Navigator.of(context);
-      // 컨트롤러 초기화를 기다립니다.
-      // await _initializeControllerFuture;
-
       // 사진 캡처를 시도하고 결과를 저장합니다.
-      final image = await _controller.takePicture();
-      final file = File(image.path);
+      XFile image = await _controller.takePicture();
+      File file = File(image.path);
 
-      // 캡처된 사진을 보여주는 화면으로 이동합니다.
-      // if (!mounted) return;
-      // await Navigator.of(context).push(
-      //   MaterialPageRoute(
-      //     builder: (context) => DisplayPictureScreen(imagePath: image.path),
-      //   ),
-      // );
+      await _mediaService.uploadReviewImages([file]);
 
-      await widget.appendMedia(file);
-
-      navigator.pop();
-      // Navigator.pop(context);
+      navigator.pop(true);
     } catch (err) {
+      navigator.pop(false);
+    }
+  }
+
+  Future<void> pressVideoCamera() async {
+    try {} catch (err) {
       debugPrint('take a picture error');
       debugPrint('$err');
       debugPrintStack();
     }
   }
 
-  Future<void> pressVideoCamera() async {}
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder<void>(
-        future: _initializeControllerFuture,
+        future: _cameraPageFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return Stack(

@@ -9,12 +9,8 @@ final Map<String, RouteStrategy> mediaRouteStrategies = {
 class CameraRouteStrategy implements RouteStrategy {
   @override
   MaterialPageRoute route(RouteSettings settings) {
-    final args = settings.arguments as CameraPageArgs;
     return MaterialPageRoute(
-      builder: (context) => CameraPage(
-        camera: args.camera,
-        appendMedia: args.appendMedia,
-      ),
+      builder: (context) => const CameraPage(),
     );
   }
 }

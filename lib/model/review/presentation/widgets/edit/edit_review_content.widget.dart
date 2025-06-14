@@ -9,13 +9,8 @@ import '../../provider/edit_review.provider.dart';
 
 class EditReviewContentWidget extends StatefulWidget {
   final String? beforeTitle;
-  final bool isLastWidget;
 
-  const EditReviewContentWidget({
-    super.key,
-    this.beforeTitle,
-    this.isLastWidget = false,
-  });
+  const EditReviewContentWidget({super.key, this.beforeTitle});
 
   @override
   State<EditReviewContentWidget> createState() => EditReviewContentWidgetState();
@@ -96,8 +91,12 @@ class EditReviewContentWidgetState extends EditWidgetState<EditReviewContentWidg
                 child: TextField(
                   focusNode: _focusNode,
                   controller: reviewContentController,
-                  textInputAction: widget.isLastWidget ? TextInputAction.done : TextInputAction.next,
+                  textInputAction: TextInputAction.newline,
+                  keyboardType: TextInputType.multiline,
                   onChanged: detectInput,
+                  minLines: null,
+                  maxLines: null, // ← 중요: 줄 제한을 없앰
+                  expands: true, // ← 중요: Expanded와 함께 사용해 전체 공간 채움
                   decoration: const InputDecoration(
                     isDense: true,
                     border: InputBorder.none,

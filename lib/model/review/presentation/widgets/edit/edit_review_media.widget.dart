@@ -1,10 +1,14 @@
 import 'dart:io';
 
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:smart_market/core/common/input_widget.mixin.dart';
 import 'package:smart_market/core/themes/theme_data.dart';
-import 'package:smart_market/model/media/presentation/pages/camera.page.dart';
+import 'package:smart_market/core/utils/split_host_url.dart';
+import 'package:smart_market/model/media/domain/entities/media_file.entity.dart';
+
+import '../../../../../core/utils/get_it_initializer.dart';
+import '../../../../media/domain/service/media.service.dart';
 
 class EditReviewMediaWidget extends StatefulWidget {
   const EditReviewMediaWidget({super.key});
@@ -14,25 +18,34 @@ class EditReviewMediaWidget extends StatefulWidget {
 }
 
 class EditReviewMediaWidgetState extends State<EditReviewMediaWidget> with InputWidget {
-  List<File> reviewMedias = [];
-
+  final MediaService _mediaService = locator<MediaService>();
   bool _isValid = false;
   String _errorMessage = "";
+  List<MediaFile> _reviewImages = [];
+  List<MediaFile> _reviewVideos = [];
 
-  Future<bool> appendMedia(File file) async {
-    setState(() {
-      reviewMedias = [...reviewMedias, file];
-    });
-    // for (int i = 0; i < receiptImageProvider.uploadedReceipts.length; i++) {
-    //   String currentFile = extractFilename(receiptImageProvider.uploadedReceipts[i].path);
-    //   String newFile = extractFilename(file.path);
-    //
-    //   if (currentFile == newFile) {
-    //     return await showDuplicatedFileDialog(context);
-    //   }
-    // }
+  Future<void> pressTakePicture() async {
+    Object? result = await Navigator.of(context).pushNamed("/camera");
+    if (result == true) {
+      List<MediaFile> reviewImages = await _mediaService.fetchReviewImages();
 
-    return true;
+      setState(() {
+        _reviewImages = [..._reviewImages, ...reviewImages];
+      });
+    }
+  }
+
+  Future<void> pressPickAlbum() async {
+    try {
+      (await ImagePicker().pickMultiImage(limit: 5)).map((xfile) => File(xfile.path)).forEach((image) {
+        // uploadMedia(image);
+      });
+    } catch (err) {
+      setState(() {
+        _isValid = true;
+        _errorMessage = err.toString();
+      });
+    }
   }
 
   @override
@@ -44,12 +57,12 @@ class EditReviewMediaWidgetState extends State<EditReviewMediaWidget> with Input
           padding: const EdgeInsets.all(10),
           margin: const EdgeInsets.only(bottom: 10),
           decoration: commonContainerDecoration,
-          height: 150,
+          height: 400,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              SizedBox(
-                height: 60,
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
                 child: Row(
                   children: [
                     const Align(
@@ -73,35 +86,14 @@ class EditReviewMediaWidgetState extends State<EditReviewMediaWidget> with Input
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     GestureDetector(
-                                      onTap: () async {
-                                        WidgetsFlutterBinding.ensureInitialized();
-                                        NavigatorState navigator = Navigator.of(context);
-
-                                        try {
-                                          final cameras = await availableCameras();
-                                          final firstCamera = cameras.first;
-
-                                          navigator.pushNamed(
-                                            "/camera",
-                                            arguments: CameraPageArgs(
-                                              camera: firstCamera,
-                                              appendMedia: appendMedia,
-                                            ),
-                                          );
-                                        } catch (err) {
-                                          setState(() {
-                                            _isValid = true;
-                                            _errorMessage = err.toString();
-                                          });
-                                        }
-                                      },
+                                      onTap: pressTakePicture,
                                       child: const ListTile(
                                         leading: Icon(Icons.camera_alt),
                                         title: Text("직접 촬영"),
                                       ),
                                     ),
                                     GestureDetector(
-                                      onTap: () {},
+                                      onTap: pressPickAlbum,
                                       child: const ListTile(
                                         leading: Icon(Icons.photo_album_outlined),
                                         title: Text("엘범에서 가져오기"),
@@ -120,9 +112,9 @@ class EditReviewMediaWidgetState extends State<EditReviewMediaWidget> with Input
                           child: const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              Icon(Icons.camera, size: 15),
+                              Icon(Icons.upload, size: 15),
                               SizedBox(width: 5),
-                              Text("촬영"),
+                              Text("파일 업로드"),
                             ],
                           ),
                         ),
@@ -130,6 +122,35 @@ class EditReviewMediaWidgetState extends State<EditReviewMediaWidget> with Input
                     ),
                   ],
                 ),
+              ),
+              Container(
+                width: double.infinity,
+                height: 160,
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                decoration: commonContainerDecoration,
+                child: ListView.builder(
+                  itemCount: _reviewImages.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    MediaFile mediaFile = _reviewImages[index];
+                    return Container(
+                      padding: const EdgeInsets.all(5),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(5),
+                        child: Image.network(
+                          splitHostUrl(mediaFile.url),
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 15),
+              Container(
+                width: double.infinity,
+                height: 160,
+                decoration: commonContainerDecoration,
               ),
             ],
           ),

@@ -12,8 +12,6 @@ class CreateReviewStrategy implements RouteStrategy {
     final args = settings.arguments as CreateReviewPageArgs;
     return MaterialPageRoute(
       builder: (context) => CreateReviewPage(
-        isCreateCart: args.isCreateCart,
-        updateCallback: args.updateCallback,
         products: args.products,
         backRoute: args.backRoute,
       ),

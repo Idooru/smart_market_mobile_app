@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:smart_market/model/review/presentation/dialog/warn_go_out_review.dialog.dart';
 
 import '../../../../core/themes/theme_data.dart';
-import '../../../main/presentation/pages/navigation.page.dart';
 import '../widgets/item/create_review_item.widget.dart';
 
 class ProductIdentify {
@@ -15,31 +15,23 @@ class ProductIdentify {
 }
 
 class CreateReviewPageArgs {
-  final bool isCreateCart;
-  final void Function() updateCallback;
   final List<ProductIdentify> products;
-  final String backRoute;
+  final String? backRoute;
 
   const CreateReviewPageArgs({
-    required this.isCreateCart,
     required this.products,
-    required this.updateCallback,
-    required this.backRoute,
+    this.backRoute,
   });
 }
 
 class CreateReviewPage extends StatefulWidget {
-  final bool isCreateCart;
-  final void Function() updateCallback;
   final List<ProductIdentify> products;
-  final String backRoute;
+  final String? backRoute;
 
   const CreateReviewPage({
     super.key,
-    required this.isCreateCart,
-    required this.updateCallback,
     required this.products,
-    required this.backRoute,
+    this.backRoute,
   });
 
   @override
@@ -63,16 +55,7 @@ class _CreateReviewPageState extends State<CreateReviewPage> {
         centerTitle: false,
         leading: IconButton(
           onPressed: () {
-            if (widget.isCreateCart) {
-              widget.updateCallback();
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                "/home",
-                (route) => false,
-                arguments: const NavigationPageArgs(selectedIndex: 0),
-              );
-            } else {
-              Navigator.of(context).popUntil(ModalRoute.withName(widget.backRoute));
-            }
+            WarnGoOutReviewDialog.show(context, backRoute: widget.backRoute);
           },
           icon: const Icon(Icons.arrow_back_ios),
         ),

@@ -67,36 +67,42 @@ class _CreateReviewItemWidgetState extends State<CreateReviewItemWidget> {
                   ),
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  children: [
-                    FocusEditWidget<EditReviewTitleState>(
-                      editWidgetKey: _reviewTitleKey,
-                      editWidget: EditReviewTitleWidget(key: _reviewTitleKey),
-                    ),
-                    EditReviewContentWidget(key: _reviewContentKey, isLastWidget: true),
-                    EditStarRateWidget(key: _reviewStarRateKey),
-                    EditReviewMediaWidget(key: _reviewMediaKey),
-                    (() {
-                      bool isValid = provider.isReviewTitleValid && provider.isReviewContentValid;
+              GestureDetector(
+                onTap: () {
+                  _reviewTitleKey.currentState!.focusNode.unfocus();
+                  _reviewContentKey.currentState!.focusNode.unfocus();
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    children: [
+                      FocusEditWidget<EditReviewTitleState>(
+                        editWidgetKey: _reviewTitleKey,
+                        editWidget: EditReviewTitleWidget(key: _reviewTitleKey),
+                      ),
+                      EditReviewContentWidget(key: _reviewContentKey),
+                      EditStarRateWidget(key: _reviewStarRateKey),
+                      EditReviewMediaWidget(key: _reviewMediaKey),
+                      (() {
+                        bool isValid = provider.isReviewTitleValid && provider.isReviewContentValid;
 
-                      return ConditionalButtonBarWidget(
-                        icon: Icons.reviews,
-                        title: "리뷰 작성하기",
-                        isValid: isValid,
-                        pressCallback: () {
-                          if (widget.isLastWidget) {
-                          } else {
-                            widget.controller.nextPage(
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.ease,
-                            );
-                          }
-                        },
-                      );
-                    })(),
-                  ],
+                        return ConditionalButtonBarWidget(
+                          icon: Icons.reviews,
+                          title: "리뷰 작성하기",
+                          isValid: isValid,
+                          pressCallback: () {
+                            if (widget.isLastWidget) {
+                            } else {
+                              widget.controller.nextPage(
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.ease,
+                              );
+                            }
+                          },
+                        );
+                      })(),
+                    ],
+                  ),
                 ),
               ),
             ],

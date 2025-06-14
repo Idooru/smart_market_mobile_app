@@ -17,29 +17,21 @@ import '../../domain/entities/create_order.entity.dart';
 
 class CreateOrderPageArgs {
   final String address;
-  final bool isCreateCart;
-  final void Function() updateCallback;
-  final String backRoute;
+  final String? backRoute;
 
   const CreateOrderPageArgs({
     required this.address,
-    required this.isCreateCart,
-    required this.updateCallback,
-    required this.backRoute,
+    this.backRoute,
   });
 }
 
 class CreateOrderPage extends StatefulWidget {
   final String address;
-  final bool isCreateCart;
-  final void Function() updateCallback;
-  final String backRoute;
+  final String? backRoute;
 
   const CreateOrderPage({
     super.key,
     required this.address,
-    required this.isCreateCart,
-    required this.updateCallback,
     required this.backRoute,
   });
 
@@ -73,8 +65,6 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
     CompleteCreateOrderPageArgs successCreateOrderPageArgs = CompleteCreateOrderPageArgs(
       args: requestCreateOrderArgs,
       carts: carts,
-      isCreateCart: widget.isCreateCart,
-      updateCallback: widget.updateCallback,
       backRoute: widget.backRoute,
     );
 
@@ -104,7 +94,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
             flexibleSpace: appBarColor,
             leading: IconButton(
               onPressed: () {
-                if (!widget.isCreateCart) {
+                if (widget.backRoute!.isNotEmpty) {
                   final CartService cartService = locator<CartService>();
                   for (Cart cart in orderProvider.carts) {
                     cartService.deleteCart(cart.id);

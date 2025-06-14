@@ -17,8 +17,6 @@ class CreateOrderStrategy implements RouteStrategy {
     return MaterialPageRoute(
       builder: (context) => CreateOrderPage(
         address: args.address,
-        updateCallback: args.updateCallback,
-        isCreateCart: args.isCreateCart,
         backRoute: args.backRoute,
       ),
       settings: settings,
@@ -47,8 +45,6 @@ class CompleteCreateOrderStrategy implements RouteStrategy {
       builder: (context) => CompleteCreateOrderPage(
         carts: args.carts,
         requestCreateOrderArgs: args.args,
-        isCreateCart: args.isCreateCart,
-        updateCallback: args.updateCallback,
         backRoute: args.backRoute,
       ),
     );

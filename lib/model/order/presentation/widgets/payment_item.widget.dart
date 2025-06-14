@@ -50,8 +50,6 @@ class PaymentItemWidget extends StatelessWidget {
                   Navigator.of(context).pushNamed(
                     "/create_review",
                     arguments: CreateReviewPageArgs(
-                      isCreateCart: false,
-                      updateCallback: () {},
                       products: products,
                       backRoute: "/display_payment",
                     ),
