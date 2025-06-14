@@ -47,6 +47,7 @@ dependencies:
   camera: ^0.10.0+1
   image_picker: ^1.1.2
   mime: ^1.0.4
+  http_parser: ^4.0.2
 
 dev_dependencies:
   flutter_test:
