@@ -14,25 +14,32 @@ class MediaServiceImpl implements MediaService {
   final MediaRepository _mediaRepository = locator<MediaRepository>();
 
   @override
-  Future<void> uploadReviewImages(List<File> files) async {
+  Future<List<MediaFile>> uploadReviewImages(List<File> files) async {
     String? accessToken = _db.getString("access-token");
-
-    DataState<List<String>> dataState = await _mediaRepository.uploadReviewImages(files, accessToken!);
+    DataState<List<MediaFile>> dataState = await _mediaRepository.uploadReviewImages(files, accessToken!);
     if (dataState.exception != null) branchNetworkError(dataState);
-
-    List<String> newIds = dataState.data!;
-    List<String> existingIds = _db.getStringList("uploaded-review-image-ids") ?? [];
-    List<String> updatedIds = [...existingIds, ...newIds];
-    await _db.setStringList("uploaded-review-image-ids", updatedIds);
+    return dataState.data!;
   }
 
   @override
-  Future<List<MediaFile>> fetchReviewImages() async {
+  Future<void> deleteReviewImages(List<MediaFile> reviewImages) async {
     String? accessToken = _db.getString("access-token");
-    List<String> reviewImageIds = _db.getStringList("uploaded-review-image-ids")!;
+    DataState<void> dataState = await _mediaRepository.deleteReviewImages(reviewImages, accessToken!);
+    if (dataState.exception != null) branchNetworkError(dataState);
+  }
 
-    DataState<List<MediaFile>> dataState = await _mediaRepository.fetchReviewImages(reviewImageIds, accessToken!);
+  @override
+  Future<List<MediaFile>> uploadReviewVideos(List<File> files) async {
+    String? accessToken = _db.getString("access-token");
+    DataState<List<MediaFile>> dataState = await _mediaRepository.uploadReviewVideos(files, accessToken!);
     if (dataState.exception != null) branchNetworkError(dataState);
     return dataState.data!;
+  }
+
+  @override
+  Future<void> deleteReviewVideos(List<MediaFile> reviewVideos) async {
+    String? accessToken = _db.getString("access-token");
+    DataState<void> dataState = await _mediaRepository.deleteReviewVideos(reviewVideos, accessToken!);
+    if (dataState.exception != null) branchNetworkError(dataState);
   }
 }

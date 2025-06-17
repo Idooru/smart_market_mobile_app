@@ -30,15 +30,6 @@ class _CreateReviewItemWidgetState extends State<CreateReviewItemWidget> {
   final GlobalKey<EditReviewTitleState> _reviewTitleKey = GlobalKey<EditReviewTitleState>();
   final GlobalKey<EditReviewContentWidgetState> _reviewContentKey = GlobalKey<EditReviewContentWidgetState>();
   final GlobalKey<EditStarRateWidgetState> _reviewStarRateKey = GlobalKey<EditStarRateWidgetState>();
-  final GlobalKey<EditReviewMediaWidgetState> _reviewMediaKey = GlobalKey<EditReviewMediaWidgetState>();
-
-  late EditReviewProvider provider;
-
-  @override
-  void initState() {
-    super.initState();
-    provider = context.read<EditReviewProvider>();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,8 +50,9 @@ class _CreateReviewItemWidgetState extends State<CreateReviewItemWidget> {
                         widget.product.name,
                         style: const TextStyle(fontSize: 17),
                       ),
+                      const SizedBox(width: 5),
                       const Text(
-                        " 상품 리뷰 작성",
+                        "상품 리뷰 작성",
                         style: TextStyle(color: Color.fromARGB(255, 90, 90, 90)),
                       ),
                     ],
@@ -82,7 +74,7 @@ class _CreateReviewItemWidgetState extends State<CreateReviewItemWidget> {
                       ),
                       EditReviewContentWidget(key: _reviewContentKey),
                       EditStarRateWidget(key: _reviewStarRateKey),
-                      EditReviewMediaWidget(key: _reviewMediaKey),
+                      const EditReviewMediaWidget(),
                       (() {
                         bool isValid = provider.isReviewTitleValid && provider.isReviewContentValid;
 

@@ -1,16 +1,27 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 class ReviewVideoPlayerPageArgs {
-  final String url;
+  final String? url;
+  final File? file;
 
-  const ReviewVideoPlayerPageArgs({required this.url});
+  const ReviewVideoPlayerPageArgs({
+    this.url,
+    this.file,
+  });
 }
 
 class ReviewVideoPlayerPage extends StatefulWidget {
-  final String url;
+  final String? url;
+  final File? file;
 
-  const ReviewVideoPlayerPage({super.key, required this.url});
+  const ReviewVideoPlayerPage({
+    super.key,
+    this.url,
+    this.file,
+  });
 
   @override
   State<ReviewVideoPlayerPage> createState() => _ReviewVideoPlayerPageState();
@@ -22,11 +33,22 @@ class _ReviewVideoPlayerPageState extends State<ReviewVideoPlayerPage> {
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.networkUrl(Uri.parse(widget.url))
-      ..initialize().then((_) {
-        setState(() {});
-        _controller.play();
-      });
+
+    if (widget.url != null) {
+      _controller = VideoPlayerController.networkUrl(Uri.parse(widget.url!))
+        ..initialize().then((_) {
+          setState(() {});
+          _controller.play();
+        });
+    }
+
+    if (widget.file != null) {
+      _controller = VideoPlayerController.file(widget.file!)
+        ..initialize().then((_) {
+          setState(() {});
+          _controller.play();
+        });
+    }
   }
 
   @override

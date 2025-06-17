@@ -20,7 +20,6 @@ class MediaRepositoryImpl implements MediaRepository {
     for (var file in files) {
       String fileName = file.path.split('/').last;
 
-      // MIME 타입 추론 (예: image/jpeg)
       final mimeType = lookupMimeType(file.path);
       final split = mimeType?.split('/') ?? ['application', 'octet-stream'];
 
@@ -40,7 +39,7 @@ class MediaRepositoryImpl implements MediaRepository {
   }
 
   @override
-  Future<DataState<List<String>>> uploadReviewImages(List<File> files, String accessToken) async {
+  Future<DataState<List<MediaFile>>> uploadReviewImages(List<File> files, String accessToken) async {
     String url = "$_baseUrl/review/image";
     ClientArgs clientArgs = ClientArgs(accessToken: accessToken);
     Dio dio = _authorizationHttpClient.getClient(args: clientArgs);
@@ -48,31 +47,66 @@ class MediaRepositoryImpl implements MediaRepository {
 
     try {
       Response response = await dio.post(url, data: formData);
-      List<String> reviewImageIds = List<String>.from(response.headers["review_image_url_header"]!).map((item) => item.replaceAll(r'\', '').replaceAll('"', '')).toList();
-
-      return DataSuccess(data: reviewImageIds);
+      List<MediaFile> mediaFiles = List<Map<String, dynamic>>.from(response.data["result"]).map((item) => MediaFile.fromJson(item)).toList();
+      return DataSuccess(data: mediaFiles);
     } on DioException catch (err) {
       return DataFail(exception: err);
     }
   }
 
   @override
-  Future<DataState<List<MediaFile>>> fetchReviewImages(List<String> reviewImageIds, String accessToken) async {
+  Future<DataState<void>> deleteReviewImages(List<MediaFile> reviewImages, String accessToken) async {
     String url = "$_baseUrl/review/image";
     ClientArgs clientArgs = ClientArgs(accessToken: accessToken);
     Dio dio = _authorizationHttpClient.getClient(args: clientArgs);
 
     try {
-      Response response = await dio.get(
+      await dio.delete(
         url,
+        data: reviewImages.map((e) => e.toJson()).toList(),
         options: Options(
-          headers: {"review_image_url_header": reviewImageIds},
+          headers: {'Content-Type': 'application/json'},
         ),
       );
 
-      List<MediaFile> reviewImages = List<Map<String, dynamic>>.from(response.data["result"]).map((item) => MediaFile.fromJson(item)).toList();
+      return const DataSuccess(data: null);
+    } on DioException catch (err) {
+      return DataFail(exception: err);
+    }
+  }
 
-      return DataSuccess(data: reviewImages);
+  @override
+  Future<DataState<List<MediaFile>>> uploadReviewVideos(List<File> files, String accessToken) async {
+    String url = "$_baseUrl/review/video";
+    ClientArgs clientArgs = ClientArgs(accessToken: accessToken);
+    Dio dio = _authorizationHttpClient.getClient(args: clientArgs);
+    FormData formData = await _createFormData(files, "review_video");
+
+    try {
+      Response response = await dio.post(url, data: formData);
+      List<MediaFile> mediaFiles = List<Map<String, dynamic>>.from(response.data["result"]).map((item) => MediaFile.fromJson(item)).toList();
+      return DataSuccess(data: mediaFiles);
+    } on DioException catch (err) {
+      return DataFail(exception: err);
+    }
+  }
+
+  @override
+  Future<DataState<void>> deleteReviewVideos(List<MediaFile> reviewVideos, String accessToken) async {
+    String url = "$_baseUrl/review/video";
+    ClientArgs clientArgs = ClientArgs(accessToken: accessToken);
+    Dio dio = _authorizationHttpClient.getClient(args: clientArgs);
+
+    try {
+      await dio.delete(
+        url,
+        data: reviewVideos.map((e) => e.toJson()).toList(),
+        options: Options(
+          headers: {'Content-Type': 'application/json'},
+        ),
+      );
+
+      return const DataSuccess(data: null);
     } on DioException catch (err) {
       return DataFail(exception: err);
     }

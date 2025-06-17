@@ -5,6 +5,7 @@ import 'package:smart_market/core/common/route.strategy.dart';
 import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/model/account/presentation/provider/create_account.provider.dart';
+import 'package:smart_market/model/media/presentation/provider/review_image.provider.dart';
 import 'package:smart_market/model/order/presentation/provider/after_create_order.provider.dart';
 import 'package:smart_market/model/order/presentation/provider/create_order.provider.dart';
 import 'package:smart_market/model/product/presentation/provider/product_filtered.provider.dart';
@@ -14,6 +15,7 @@ import 'package:smart_market/model/user/presentation/provider/edit_user_column.p
 
 import 'model/main/presentation/pages/navigation.page.dart';
 import 'model/main/presentation/pages/splash.page.dart';
+import 'model/media/presentation/provider/review_video.provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,6 +32,8 @@ void main() async {
         ChangeNotifierProvider(create: (context) => CreateOrderProvider()),
         ChangeNotifierProvider(create: (context) => CompleteCreateOrderProvider()),
         ChangeNotifierProvider(create: (context) => EditReviewProvider()),
+        ChangeNotifierProvider(create: (context) => ReviewImageProvider()),
+        ChangeNotifierProvider(create: (context) => ReviewVideoProvider()),
       ],
       child: const MyApp(),
     ),

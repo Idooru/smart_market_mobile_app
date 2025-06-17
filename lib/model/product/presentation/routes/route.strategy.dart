@@ -34,7 +34,10 @@ class ReviewVideoRouteStrategy implements RouteStrategy {
   MaterialPageRoute route(RouteSettings settings) {
     final args = settings.arguments as ReviewVideoPlayerPageArgs;
     return MaterialPageRoute(
-      builder: (context) => ReviewVideoPlayerPage(url: args.url),
+      builder: (context) => ReviewVideoPlayerPage(
+        url: args.url,
+        file: args.file,
+      ),
       settings: settings,
     );
   }
