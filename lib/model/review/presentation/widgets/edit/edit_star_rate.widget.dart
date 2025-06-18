@@ -11,6 +11,7 @@ class EditStarRateWidget extends StatefulWidget {
 
 class EditStarRateWidgetState extends State<EditStarRateWidget> {
   double rating = 5.0;
+  int selectedRating = 5;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,7 @@ class EditStarRateWidgetState extends State<EditStarRateWidget> {
                 initialRating: rating,
                 minRating: 1,
                 direction: Axis.horizontal,
-                allowHalfRating: true,
+                allowHalfRating: false,
                 itemCount: 5,
                 itemSize: 25,
                 itemBuilder: (context, _) => const Icon(
@@ -46,6 +47,7 @@ class EditStarRateWidgetState extends State<EditStarRateWidget> {
                 onRatingUpdate: (newRating) {
                   setState(() {
                     rating = newRating;
+                    selectedRating = newRating.toInt();
                   });
                   debugPrint("rating: $rating");
                 },

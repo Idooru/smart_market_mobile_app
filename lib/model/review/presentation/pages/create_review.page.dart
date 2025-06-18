@@ -72,6 +72,7 @@ class _CreateReviewPageState extends State<CreateReviewPage> {
             product: product,
             isLastWidget: isLastWidget,
             controller: controller,
+            backRoute: widget.backRoute,
           );
         }).toList(),
       ),

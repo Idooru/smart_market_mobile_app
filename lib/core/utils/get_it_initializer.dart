@@ -6,6 +6,7 @@ import 'package:smart_market/model/cart/common/di/cart_get_it.initializer.dart';
 import 'package:smart_market/model/media/common/di/media_get_it.initializer.dart';
 import 'package:smart_market/model/order/common/di/order_get_it.initializer.dart';
 import 'package:smart_market/model/product/common/di/product_get_it.initializer.dart';
+import 'package:smart_market/model/review/common/di/review_get_it.initializer.dart';
 import 'package:smart_market/model/user/common/di/user_get_it.initializer.dart';
 
 GetIt locator = GetIt.instance;
@@ -21,4 +22,5 @@ Future<void> initLocator() async {
   initCartLocator(locator);
   initOrderLocator(locator);
   initMediaLocator(locator);
+  initReviewLocator(locator);
 }

@@ -1,3 +1,5 @@
+import 'package:smart_market/model/review/domain/entity/create_review.entity.dart';
+
 abstract interface class ReviewService {
-  Future<void> createReview();
+  Future<void> createReview(RequestCreateReview args);
 }
