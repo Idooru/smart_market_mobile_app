@@ -8,19 +8,16 @@ import 'package:smart_market/model/order/presentation/pages/display_payment.page
 
 import '../../common/util/parse_delivery_option.dart';
 
-class OrderItemWidget extends StatefulWidget {
+class OrderItemWidget extends StatelessWidget {
   final ResponseOrders responseOrders;
+  final EdgeInsets margin;
 
   const OrderItemWidget({
     super.key,
     required this.responseOrders,
+    required this.margin,
   });
 
-  @override
-  State<OrderItemWidget> createState() => _OrderItemWidgetState();
-}
-
-class _OrderItemWidgetState extends State<OrderItemWidget> {
   IconData parseTransactionStatusIcon(String transactionStatus) {
     if (transactionStatus == "success") {
       return Icons.check;
@@ -30,7 +27,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
     return Icons.import_contacts;
   }
 
-  Widget getCategoryItem({required String title, required List<Widget> widgets}) {
+  Widget CategoryItem({required String title, required List<Widget> widgets}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -50,18 +47,18 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(10),
-      margin: const EdgeInsets.only(bottom: 10),
+      margin: margin,
       decoration: commonContainerDecoration,
       child: Column(
         children: <Widget>[
-          getCategoryItem(title: "주문 정보", widgets: [
+          CategoryItem(title: "주문 정보", widgets: [
             Padding(
               padding: const EdgeInsets.only(bottom: 1.5),
               child: Row(
                 children: [
                   const Text("주문 일시: "),
                   Text(
-                    widget.responseOrders.order.createdAt,
+                    responseOrders.order.createdAt,
                     style: const TextStyle(
                       color: Color.fromARGB(255, 100, 100, 100),
                       fontSize: 12,
@@ -77,7 +74,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
                   const Text("주문 상태: "),
                   const SizedBox(width: 3),
                   Icon(
-                    parseTransactionStatusIcon(widget.responseOrders.order.transactionStatus),
+                    parseTransactionStatusIcon(responseOrders.order.transactionStatus),
                     color: const Color.fromARGB(255, 100, 100, 100),
                     size: 15,
                   ),
@@ -86,7 +83,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
             ),
           ]),
           const SizedBox(height: 10),
-          getCategoryItem(
+          CategoryItem(
             title: "배송 정보",
             widgets: [
               Padding(
@@ -96,7 +93,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
                     const Text("배송 옵션: "),
                     const SizedBox(width: 3),
                     Text(
-                      parseDeliveryOption(widget.responseOrders.order.deliveryOption),
+                      parseDeliveryOption(responseOrders.order.deliveryOption),
                       style: const TextStyle(fontSize: 13, color: Color.fromARGB(255, 100, 100, 100)),
                     ),
                   ],
@@ -112,7 +109,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
                     Padding(
                       padding: const EdgeInsets.only(left: 5),
                       child: Text(
-                        widget.responseOrders.order.deliveryAddress,
+                        responseOrders.order.deliveryAddress,
                         style: const TextStyle(fontSize: 13, color: Color.fromARGB(255, 100, 100, 100)),
                       ),
                     ),
@@ -122,7 +119,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
             ],
           ),
           const SizedBox(height: 10),
-          getCategoryItem(
+          CategoryItem(
             title: "금액 정보",
             widgets: [
               Padding(
@@ -132,7 +129,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
                     const Text("상품 비용: "),
                     const SizedBox(width: 3),
                     Text(
-                      "${formatNumber(widget.responseOrders.order.totalPrice - widget.responseOrders.order.surtaxPrice)}원",
+                      "${formatNumber(responseOrders.order.totalPrice - responseOrders.order.surtaxPrice)}원",
                       style: const TextStyle(fontSize: 17),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -146,7 +143,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
                     const Text("추가 비용: "),
                     const SizedBox(width: 3),
                     Text(
-                      "${formatNumber(widget.responseOrders.order.surtaxPrice)}원",
+                      "${formatNumber(responseOrders.order.surtaxPrice)}원",
                       style: const TextStyle(fontSize: 17),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -160,7 +157,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
                     const Text("총합 금액: "),
                     const SizedBox(width: 3),
                     Text(
-                      "${formatNumber(widget.responseOrders.order.totalPrice)}원",
+                      "${formatNumber(responseOrders.order.totalPrice)}원",
                       style: const TextStyle(fontSize: 17),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -180,7 +177,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
                 Navigator.of(context).pushNamed(
                   "/display_payment",
                   arguments: DisplayPaymentPageArgs(
-                    responseOrders: widget.responseOrders,
+                    responseOrders: responseOrders,
                   ),
                 );
               },

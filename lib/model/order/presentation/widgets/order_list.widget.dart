@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_market/core/themes/theme_data.dart';
+import 'package:smart_market/core/widgets/common/custom_scrollbar.widget.dart';
 import 'package:smart_market/model/order/domain/entities/order.entity.dart';
 import 'package:smart_market/model/order/domain/service/order.service.dart';
 import 'package:smart_market/model/order/presentation/dialog/order_filter.dialog.dart';
@@ -33,6 +34,7 @@ class _OrderListWidgetState extends State<OrderListWidget> {
     deliveryOption: "none",
     transactionStatus: "none",
   );
+  final ScrollController controller = ScrollController();
 
   late Future<List<ResponseOrders>> _getOrdersFuture;
   bool _isFirstRendering = true;
@@ -97,12 +99,21 @@ class _OrderListWidgetState extends State<OrderListWidget> {
         ),
         const SizedBox(height: 10),
         _isShow
-            ? Column(
-                children: orders
-                    .map(
-                      (order) => OrderItemWidget(responseOrders: order),
-                    )
-                    .toList(),
+            ? CustomScrollbarWidget(
+                scrollController: controller,
+                childWidget: Container(
+                  padding: const EdgeInsets.only(right: 15),
+                  margin: const EdgeInsets.only(bottom: 13),
+                  height: 700,
+                  child: ListView.builder(
+                    controller: controller,
+                    itemCount: orders.length,
+                    itemBuilder: (context, index) => OrderItemWidget(
+                      responseOrders: orders[index],
+                      margin: index != orders.length - 1 ? const EdgeInsets.only(bottom: 13) : EdgeInsets.zero,
+                    ),
+                  ),
+                ),
               )
             : const SizedBox.shrink(),
         const CommonBorder(color: Colors.grey),
