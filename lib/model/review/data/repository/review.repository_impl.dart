@@ -26,7 +26,6 @@ class ReviewRepositoryImpl implements ReviewRepository {
   Future<FormData> _createFormData(ReviewForm args) async {
     FormData formData = FormData();
 
-    formData.fields.add(MapEntry("title", args.title));
     formData.fields.add(MapEntry("content", args.content));
     formData.fields.add(MapEntry("starRateScore", args.starRateScore.toString()));
 

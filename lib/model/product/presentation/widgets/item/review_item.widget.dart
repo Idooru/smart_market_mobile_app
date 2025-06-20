@@ -37,10 +37,6 @@ class _ReviewItemWidgetState extends State<ReviewItemWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            widget.review.title,
-            style: const TextStyle(fontWeight: FontWeight.w600),
-          ),
           Row(
             children: [
               Text(

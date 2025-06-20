@@ -5,7 +5,6 @@ class RequestCreateReview extends ReviewForm {
 
   const RequestCreateReview({
     required this.productId,
-    required super.title,
     required super.content,
     required super.starRateScore,
     required super.reviewImages,

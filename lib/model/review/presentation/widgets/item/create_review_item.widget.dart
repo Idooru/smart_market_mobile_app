@@ -17,7 +17,6 @@ import '../../../../main/presentation/pages/navigation.page.dart';
 import '../../../domain/entity/create_review.entity.dart';
 import '../../provider/edit_review.provider.dart';
 import '../edit/edit_review_content.widget.dart';
-import '../edit/edit_review_title.widget.dart';
 
 class CreateReviewItemWidget extends StatefulWidget {
   final ProductIdentify product;
@@ -39,7 +38,6 @@ class CreateReviewItemWidget extends StatefulWidget {
 
 class _CreateReviewItemWidgetState extends State<CreateReviewItemWidget> with NetWorkHandler {
   final ReviewService _reviewService = locator<ReviewService>();
-  final GlobalKey<EditReviewTitleState> _reviewTitleKey = GlobalKey<EditReviewTitleState>();
   final GlobalKey<EditReviewContentWidgetState> _reviewContentKey = GlobalKey<EditReviewContentWidgetState>();
   final GlobalKey<EditStarRateWidgetState> _reviewStarRateKey = GlobalKey<EditStarRateWidgetState>();
 
@@ -76,23 +74,19 @@ class _CreateReviewItemWidgetState extends State<CreateReviewItemWidget> with Ne
               ),
               GestureDetector(
                 onTap: () {
-                  _reviewTitleKey.currentState!.focusNode.unfocus();
                   _reviewContentKey.currentState!.focusNode.unfocus();
                 },
                 child: Container(
                   padding: const EdgeInsets.all(10),
                   child: Column(
                     children: [
-                      FocusEditWidget<EditReviewTitleState>(
-                        editWidgetKey: _reviewTitleKey,
-                        editWidget: EditReviewTitleWidget(key: _reviewTitleKey),
+                      FocusEditWidget<EditReviewContentWidgetState>(
+                        editWidgetKey: _reviewContentKey,
+                        editWidget: EditReviewContentWidget(key: _reviewContentKey),
                       ),
-                      EditReviewContentWidget(key: _reviewContentKey),
                       EditStarRateWidget(key: _reviewStarRateKey),
                       const EditReviewMediaWidget(),
                       (() {
-                        bool isValid = provider.isReviewTitleValid && provider.isReviewContentValid;
-
                         return Consumer2<ReviewImageProvider, ReviewVideoProvider>(builder: (
                           BuildContext context,
                           ReviewImageProvider reviewImageProvider,
@@ -102,14 +96,13 @@ class _CreateReviewItemWidgetState extends State<CreateReviewItemWidget> with Ne
                           return ConditionalButtonBarWidget(
                             icon: Icons.reviews,
                             title: "리뷰 작성하기",
-                            isValid: isValid,
+                            isValid: provider.isReviewContentValid,
                             pressCallback: () async {
                               NavigatorState navigator = Navigator.of(context);
                               ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
 
                               RequestCreateReview args = RequestCreateReview(
                                 productId: widget.product.id,
-                                title: _reviewTitleKey.currentState!.reviewTitleController.text,
                                 content: _reviewContentKey.currentState!.reviewContentController.text,
                                 starRateScore: _reviewStarRateKey.currentState!.selectedRating,
                                 reviewImages: reviewImageProvider.reviewImages,
@@ -156,6 +149,7 @@ class _CreateReviewItemWidgetState extends State<CreateReviewItemWidget> with Ne
                           padding: const EdgeInsets.only(top: 10),
                           child: getErrorMessageWidget(_errorMessage),
                         ),
+                      const SizedBox(height: 30),
                     ],
                   ),
                 ),

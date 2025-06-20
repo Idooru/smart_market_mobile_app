@@ -54,7 +54,6 @@ class Product {
 
 class Review {
   final String id;
-  final String title;
   final String content;
   final double starRateScore;
   final List<String> imageUrls;
@@ -64,7 +63,6 @@ class Review {
 
   const Review({
     required this.id,
-    required this.title,
     required this.content,
     required this.starRateScore,
     required this.imageUrls,
@@ -76,7 +74,6 @@ class Review {
   factory Review.fromJson(Map<String, dynamic> json) {
     return Review(
       id: json["id"],
-      title: json["title"],
       content: json["content"],
       starRateScore: double.parse(json["starRateScore"]),
       imageUrls: List<String>.from(json["imageUrls"]).map(splitHostUrl).toList(),
