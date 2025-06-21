@@ -93,44 +93,38 @@ class _OrdersPageState extends State<OrdersPage> {
           } else {
             List<ResponseOrders> orders = snapshot.data!;
             updateHasFilterButton(orders.isNotEmpty);
-            return Column(
-              children: [
-                Expanded(
-                  child: CustomScrollbarWidget(
-                    scrollController: controller,
-                    childWidget: Padding(
-                      padding: EdgeInsets.only(
-                        left: 10,
-                        right: controller.hasClients ? 13 : 10,
-                      ),
-                      child: Builder(
-                        builder: (context) {
-                          if (orders.isNotEmpty) {
-                            return ListView.builder(
-                              controller: controller,
-                              itemCount: orders.length,
-                              itemBuilder: (context, index) => OrderItemWidget(
-                                responseOrders: orders[index],
-                                margin: index != orders.length - 1 ? const EdgeInsets.only(bottom: 10) : EdgeInsets.zero,
-                              ),
-                            );
-                          } else {
-                            return const Center(
-                              child: Text(
-                                "작성된 리뷰가 없습니다.",
-                                style: TextStyle(
-                                  color: Color.fromARGB(255, 90, 90, 90),
-                                  fontSize: 15,
-                                ),
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                  ),
+            return CustomScrollbarWidget(
+              scrollController: controller,
+              childWidget: Padding(
+                padding: EdgeInsets.only(
+                  left: 10,
+                  right: controller.hasClients ? 13 : 10,
                 ),
-              ],
+                child: Builder(
+                  builder: (context) {
+                    if (orders.isNotEmpty) {
+                      return ListView.builder(
+                        controller: controller,
+                        itemCount: orders.length,
+                        itemBuilder: (context, index) => OrderItemWidget(
+                          responseOrders: orders[index],
+                          margin: index != orders.length - 1 ? const EdgeInsets.only(bottom: 10) : EdgeInsets.zero,
+                        ),
+                      );
+                    } else {
+                      return const Center(
+                        child: Text(
+                          "구매 내역이 없습니다.",
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 90, 90, 90),
+                            fontSize: 15,
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ),
             );
           }
         },

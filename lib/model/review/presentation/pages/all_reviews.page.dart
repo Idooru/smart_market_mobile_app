@@ -92,44 +92,38 @@ class _AllReviewsPageState extends State<AllReviewsPage> {
           } else {
             List<ResponseAllReview> reviews = snapshot.data!;
             updateIsShow(reviews.isNotEmpty);
-            return Column(
-              children: [
-                Expanded(
-                  child: CustomScrollbarWidget(
-                    scrollController: controller,
-                    childWidget: Padding(
-                      padding: EdgeInsets.only(
-                        left: 10,
-                        right: controller.hasClients ? 13 : 10,
-                      ),
-                      child: Builder(
-                        builder: (context) {
-                          if (reviews.isNotEmpty) {
-                            return ListView.builder(
-                              controller: controller,
-                              itemCount: reviews.length,
-                              itemBuilder: (context, index) => AllReviewItemWidget(
-                                responseAllReview: reviews[index],
-                                margin: index != reviews.length - 1 ? const EdgeInsets.only(bottom: 10) : EdgeInsets.zero,
-                              ),
-                            );
-                          } else {
-                            return const Center(
-                              child: Text(
-                                "작성된 리뷰가 없습니다.",
-                                style: TextStyle(
-                                  color: Color.fromARGB(255, 90, 90, 90),
-                                  fontSize: 15,
-                                ),
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                  ),
+            return CustomScrollbarWidget(
+              scrollController: controller,
+              childWidget: Padding(
+                padding: EdgeInsets.only(
+                  left: 10,
+                  right: controller.hasClients ? 13 : 10,
                 ),
-              ],
+                child: Builder(
+                  builder: (context) {
+                    if (reviews.isNotEmpty) {
+                      return ListView.builder(
+                        controller: controller,
+                        itemCount: reviews.length,
+                        itemBuilder: (context, index) => AllReviewItemWidget(
+                          responseAllReview: reviews[index],
+                          margin: index != reviews.length - 1 ? const EdgeInsets.only(bottom: 10) : EdgeInsets.zero,
+                        ),
+                      );
+                    } else {
+                      return const Center(
+                        child: Text(
+                          "작성된 리뷰가 없습니다.",
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 90, 90, 90),
+                            fontSize: 15,
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ),
             );
           }
         },

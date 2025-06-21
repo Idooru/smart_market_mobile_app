@@ -98,11 +98,11 @@ class _BasicProfileWidgetState extends State<BasicProfileWidget> {
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Color.fromARGB(255, 65, 65, 65)),
           ),
         ),
-        // const SizedBox(height: 5),
         GestureDetector(
           onLongPress: () => pressTrailingIcon(profile),
           child: Container(
             width: double.infinity,
+            margin: const EdgeInsets.only(bottom: 10),
             height: 130,
             padding: const EdgeInsets.all(10),
             decoration: commonContainerDecoration,
