@@ -7,7 +7,7 @@ import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/utils/get_snackbar.dart';
 import 'package:smart_market/core/widgets/handler/loading_handler.widget.dart';
 import 'package:smart_market/model/main/presentation/pages/navigation.page.dart';
-import 'package:smart_market/model/order/presentation/widgets/order_list.widget.dart';
+import 'package:smart_market/model/order/presentation/widgets/navigate_orders.widget.dart';
 import 'package:smart_market/model/review/presentation/widgets/navigate_all_reviews.widget.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
 
@@ -17,8 +17,6 @@ import '../../../../core/widgets/handler/network_error_handler.widget.dart';
 import '../../../account/domain/entities/account.entity.dart';
 import '../../../account/domain/service/account.service.dart';
 import '../../../account/presentation/widgets/account_list.widget.dart';
-import '../../../order/domain/entities/order.entity.dart';
-import '../../../order/domain/service/order.service.dart';
 import '../../domain/entities/profile.entity.dart';
 import '../dialog/force_logout.dialog.dart';
 import '../widgets/profile/basic_profile.widget.dart';
@@ -33,15 +31,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final UserService _userService = locator<UserService>();
   final AccountService _accountService = locator<AccountService>();
-  final OrderService _orderService = locator<OrderService>();
-
   final RequestAccounts defaultRequestAccountsArgs = const RequestAccounts(align: "DESC", column: "createdAt");
-  final RequestOrders defaultRequestOrdersArgs = const RequestOrders(
-    align: "DESC",
-    column: "createdAt",
-    deliveryOption: "none",
-    transactionStatus: "none",
-  );
 
   late Future<Map<String, dynamic>> _profilePageFuture;
 
@@ -58,12 +48,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
     ResponseProfile profile = await _userService.getProfile();
     List<ResponseAccount> accounts = await _accountService.getAccounts(defaultRequestAccountsArgs);
-    List<ResponseOrders> orders = await _orderService.fetchOrders(defaultRequestOrdersArgs);
 
     return {
       "profile": profile,
       "accounts": accounts,
-      "orders": orders,
     };
   }
 
@@ -139,7 +127,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: [
                       BasicProfileWidget(profile: snapshot.data!["profile"]),
                       AccountListWidget(accounts: snapshot.data!["accounts"]),
-                      OrderListWidget(orders: snapshot.data!["orders"]),
+                      const NavigateOrdersWidget(),
                       const NavigateAllReviewsWidget(),
                     ],
                   ),
