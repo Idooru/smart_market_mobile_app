@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
-import 'package:smart_market/core/widgets/common/common_border.widget.dart';
 import 'package:smart_market/core/widgets/handler/internal_server_error_handler.widget.dart';
 import 'package:smart_market/core/widgets/handler/loading_handler.widget.dart';
 import 'package:smart_market/core/widgets/handler/network_error_handler.widget.dart';
@@ -29,7 +28,6 @@ class _BasicProfileWidgetState extends State<BasicProfileWidget> {
   final UserService _userService = locator<UserService>();
   late Future<ResponseProfile> _getProfileFuture;
   bool _isFirstRendering = true;
-  bool _isShow = false;
 
   @override
   void initState() {
@@ -90,174 +88,155 @@ class _BasicProfileWidgetState extends State<BasicProfileWidget> {
 
   Widget getPageElement(ResponseProfile profile) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Container(
+          color: Colors.transparent,
+          height: 30,
+          child: const Text(
+            "내 프로필",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Color.fromARGB(255, 65, 65, 65)),
+          ),
+        ),
+        // const SizedBox(height: 5),
         GestureDetector(
-          onTap: () {
-            setState(() {
-              _isShow = !_isShow;
-            });
-          },
+          onLongPress: () => pressTrailingIcon(profile),
           child: Container(
-            color: Colors.transparent,
-            height: 30,
-            child: Row(
+            width: double.infinity,
+            height: 130,
+            padding: const EdgeInsets.all(10),
+            decoration: commonContainerDecoration,
+            child: Stack(
               children: [
-                const Text(
-                  "내 프로필",
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  child: SizedBox(
+                    height: 30,
+                    child: Row(
+                      children: [
+                        Text(
+                          profile.realName,
+                          style: const TextStyle(fontSize: 20),
+                        ),
+                        const SizedBox(width: 3),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 5),
+                          child: Icon(
+                            profile.role == "client" ? Icons.person : Icons.security,
+                            size: 20,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-                const SizedBox(width: 5),
-                Icon(
-                  _isShow ? Icons.arrow_drop_down : Icons.arrow_drop_up,
-                  size: 22,
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: SizedBox(
+                    height: 20,
+                    child: Row(
+                      children: [
+                        Text(
+                          parseStringDate(profile.birth),
+                          style: const TextStyle(
+                            color: Color.fromARGB(255, 80, 80, 80),
+                            fontSize: 13,
+                          ),
+                        ),
+                        const SizedBox(width: 3),
+                        Icon(
+                          profile.gender == "male" ? Icons.male : Icons.female,
+                          color: profile.gender == "male" ? Colors.blue : Colors.pink,
+                          size: 18,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 30,
+                  left: 0,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 2),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.email,
+                            size: 15,
+                            color: Color.fromARGB(255, 70, 70, 70),
+                          ),
+                          const SizedBox(width: 3),
+                          Text(
+                            profile.email,
+                            style: const TextStyle(fontSize: 12, color: Color.fromARGB(255, 70, 70, 70)),
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 2),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.phone,
+                            size: 15,
+                            color: Color.fromARGB(255, 70, 70, 70),
+                          ),
+                          const SizedBox(width: 3),
+                          Text(
+                            profile.phoneNumber,
+                            style: const TextStyle(fontSize: 12, color: Color.fromARGB(255, 70, 70, 70)),
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 2),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.home,
+                            size: 15,
+                            color: Color.fromARGB(255, 70, 70, 70),
+                          ),
+                          const SizedBox(width: 3),
+                          Text(
+                            profile.address,
+                            style: const TextStyle(fontSize: 12, color: Color.fromARGB(255, 70, 70, 70)),
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 2),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.tag,
+                            size: 15,
+                            color: Color.fromARGB(255, 70, 70, 70),
+                          ),
+                          const SizedBox(width: 3),
+                          Text(
+                            profile.nickName,
+                            style: const TextStyle(fontSize: 12, color: Color.fromARGB(255, 70, 70, 70)),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Positioned(
+                  bottom: -10,
+                  right: -10,
+                  child: IconButton(
+                    constraints: const BoxConstraints(), // 크기 최소화
+                    icon: const Icon(Icons.more_vert, size: 18),
+                    onPressed: () => pressTrailingIcon(profile),
+                  ),
                 )
               ],
             ),
           ),
         ),
-        const SizedBox(height: 10),
-        _isShow
-            ? GestureDetector(
-                onLongPress: () => pressTrailingIcon(profile),
-                child: Container(
-                  width: double.infinity,
-                  height: 130,
-                  padding: const EdgeInsets.all(10),
-                  decoration: commonContainerDecoration,
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        top: 0,
-                        left: 0,
-                        child: SizedBox(
-                          height: 30,
-                          child: Row(
-                            children: [
-                              Text(
-                                profile.realName,
-                                style: const TextStyle(fontSize: 20),
-                              ),
-                              const SizedBox(width: 3),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 5),
-                                child: Icon(
-                                  profile.role == "client" ? Icons.person : Icons.security,
-                                  size: 20,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 0,
-                        right: 0,
-                        child: SizedBox(
-                          height: 20,
-                          child: Row(
-                            children: [
-                              Text(
-                                parseStringDate(profile.birth),
-                                style: const TextStyle(
-                                  color: Color.fromARGB(255, 80, 80, 80),
-                                  fontSize: 13,
-                                ),
-                              ),
-                              const SizedBox(width: 3),
-                              Icon(
-                                profile.gender == "male" ? Icons.male : Icons.female,
-                                color: profile.gender == "male" ? Colors.blue : Colors.pink,
-                                size: 18,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 30,
-                        left: 0,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 2),
-                            Row(
-                              children: [
-                                const Icon(
-                                  Icons.email,
-                                  size: 15,
-                                  color: Color.fromARGB(255, 70, 70, 70),
-                                ),
-                                const SizedBox(width: 3),
-                                Text(
-                                  profile.email,
-                                  style: const TextStyle(fontSize: 12, color: Color.fromARGB(255, 70, 70, 70)),
-                                )
-                              ],
-                            ),
-                            const SizedBox(height: 2),
-                            Row(
-                              children: [
-                                const Icon(
-                                  Icons.phone,
-                                  size: 15,
-                                  color: Color.fromARGB(255, 70, 70, 70),
-                                ),
-                                const SizedBox(width: 3),
-                                Text(
-                                  profile.phoneNumber,
-                                  style: const TextStyle(fontSize: 12, color: Color.fromARGB(255, 70, 70, 70)),
-                                )
-                              ],
-                            ),
-                            const SizedBox(height: 2),
-                            Row(
-                              children: [
-                                const Icon(
-                                  Icons.home,
-                                  size: 15,
-                                  color: Color.fromARGB(255, 70, 70, 70),
-                                ),
-                                const SizedBox(width: 3),
-                                Text(
-                                  profile.address,
-                                  style: const TextStyle(fontSize: 12, color: Color.fromARGB(255, 70, 70, 70)),
-                                )
-                              ],
-                            ),
-                            const SizedBox(height: 2),
-                            Row(
-                              children: [
-                                const Icon(
-                                  Icons.tag,
-                                  size: 15,
-                                  color: Color.fromARGB(255, 70, 70, 70),
-                                ),
-                                const SizedBox(width: 3),
-                                Text(
-                                  profile.nickName,
-                                  style: const TextStyle(fontSize: 12, color: Color.fromARGB(255, 70, 70, 70)),
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      Positioned(
-                        bottom: -10,
-                        right: -10,
-                        child: IconButton(
-                          constraints: const BoxConstraints(), // 크기 최소화
-                          icon: const Icon(Icons.more_vert, size: 18),
-                          onPressed: () => pressTrailingIcon(profile),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              )
-            : const SizedBox.shrink(),
-        SizedBox(height: _isShow ? 10 : 0),
-        const CommonBorder(color: Colors.grey),
       ],
     );
   }
