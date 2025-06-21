@@ -6,6 +6,7 @@ import 'package:smart_market/core/utils/check_jwt_duration.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/utils/get_snackbar.dart';
 import 'package:smart_market/core/widgets/handler/loading_handler.widget.dart';
+import 'package:smart_market/model/account/presentation/widgets/navigate_accounts.widget.dart';
 import 'package:smart_market/model/main/presentation/pages/navigation.page.dart';
 import 'package:smart_market/model/order/presentation/widgets/navigate_orders.widget.dart';
 import 'package:smart_market/model/review/presentation/widgets/navigate_all_reviews.widget.dart';
@@ -14,9 +15,6 @@ import 'package:smart_market/model/user/domain/service/user.service.dart';
 import '../../../../core/widgets/dialog/handle_network_error_on_dialog.dialog.dart';
 import '../../../../core/widgets/handler/internal_server_error_handler.widget.dart';
 import '../../../../core/widgets/handler/network_error_handler.widget.dart';
-import '../../../account/domain/entities/account.entity.dart';
-import '../../../account/domain/service/account.service.dart';
-import '../../../account/presentation/widgets/account_list.widget.dart';
 import '../../domain/entities/profile.entity.dart';
 import '../dialog/force_logout.dialog.dart';
 import '../widgets/profile/basic_profile.widget.dart';
@@ -30,8 +28,6 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final UserService _userService = locator<UserService>();
-  final AccountService _accountService = locator<AccountService>();
-  final RequestAccounts defaultRequestAccountsArgs = const RequestAccounts(align: "DESC", column: "createdAt");
 
   late Future<Map<String, dynamic>> _profilePageFuture;
 
@@ -47,12 +43,8 @@ class _ProfilePageState extends State<ProfilePage> {
     await checkJwtDuration();
 
     ResponseProfile profile = await _userService.getProfile();
-    List<ResponseAccount> accounts = await _accountService.getAccounts(defaultRequestAccountsArgs);
 
-    return {
-      "profile": profile,
-      "accounts": accounts,
-    };
+    return {"profile": profile};
   }
 
   void handleLogoutError(Object err) {
@@ -126,7 +118,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: Column(
                     children: [
                       BasicProfileWidget(profile: snapshot.data!["profile"]),
-                      AccountListWidget(accounts: snapshot.data!["accounts"]),
+                      const NavigateAccountsWidget(),
                       const NavigateOrdersWidget(),
                       const NavigateAllReviewsWidget(),
                     ],

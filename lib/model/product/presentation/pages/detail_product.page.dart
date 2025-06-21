@@ -73,7 +73,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
     if (isLogined) {
       await checkJwtDuration();
       ResponseProfile profile = await _userService.getProfile();
-      List<ResponseAccount> accounts = await _accountService.getAccounts(defaultRequestAccountsArgs);
+      List<ResponseAccount> accounts = await _accountService.fetchAccounts(defaultRequestAccountsArgs);
 
       return {
         "products": products,

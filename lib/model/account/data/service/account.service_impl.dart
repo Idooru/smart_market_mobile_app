@@ -14,7 +14,7 @@ class AccountServiceImpl implements AccountService {
   final AccountRepository _accountRepository = locator<AccountRepository>();
 
   @override
-  Future<List<ResponseAccount>> getAccounts(RequestAccounts args) async {
+  Future<List<ResponseAccount>> fetchAccounts(RequestAccounts args) async {
     String? accessToken = _db.getString("access-token");
     DataState<List<ResponseAccount>> dataState = await _accountRepository.fetchAccounts(accessToken!, args);
     if (dataState.exception != null) branchNetworkError(dataState);

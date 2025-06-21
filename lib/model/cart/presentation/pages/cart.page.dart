@@ -43,7 +43,7 @@ class _CartPageState extends State<CartPage> {
 
     ResponseCarts carts = await _cartService.fetchCarts(const RequestCarts(align: "DESC", column: "createdAt"));
     ResponseProfile profile = await _userService.getProfile();
-    List<ResponseAccount> accounts = await _accountService.getAccounts(defaultRequestAccountsArgs);
+    List<ResponseAccount> accounts = await _accountService.fetchAccounts(defaultRequestAccountsArgs);
 
     return {
       "carts": carts,

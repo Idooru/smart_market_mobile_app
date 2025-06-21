@@ -30,19 +30,19 @@ class AccountListWidget extends StatefulWidget {
 class _AccountListWidgetState extends State<AccountListWidget> {
   final AccountService _accountService = locator<AccountService>();
   final RequestAccounts defaultRequestAccountsArgs = const RequestAccounts(align: "DESC", column: "createdAt");
-  late Future<List<ResponseAccount>> _getAccountsFuture;
+  late Future<List<ResponseAccount>> _fetchAccountsFuture;
   bool _isFirstRendering = true;
   bool _isShow = false;
 
   @override
   void initState() {
     super.initState();
-    _getAccountsFuture = _accountService.getAccounts(defaultRequestAccountsArgs);
+    _fetchAccountsFuture = _accountService.fetchAccounts(defaultRequestAccountsArgs);
   }
 
   void updateAccounts(RequestAccounts args) {
     setState(() {
-      _getAccountsFuture = _accountService.getAccounts(args);
+      _fetchAccountsFuture = _accountService.fetchAccounts(args);
     });
   }
 
@@ -175,7 +175,7 @@ class _AccountListWidgetState extends State<AccountListWidget> {
           })
         : (() {
             return FutureBuilder(
-              future: _getAccountsFuture,
+              future: _fetchAccountsFuture,
               builder: (BuildContext context, AsyncSnapshot<List<ResponseAccount>> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Column(
@@ -189,7 +189,7 @@ class _AccountListWidgetState extends State<AccountListWidget> {
                   if (error is ConnectionError) {
                     return NetworkErrorHandlerWidget(reconnectCallback: () {
                       setState(() {
-                        _getAccountsFuture = _accountService.getAccounts(defaultRequestAccountsArgs);
+                        _fetchAccountsFuture = _accountService.fetchAccounts(defaultRequestAccountsArgs);
                       });
                     });
                   } else if (error is DioFailError) {
