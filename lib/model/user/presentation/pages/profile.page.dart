@@ -8,6 +8,7 @@ import 'package:smart_market/core/utils/get_snackbar.dart';
 import 'package:smart_market/core/widgets/handler/loading_handler.widget.dart';
 import 'package:smart_market/model/main/presentation/pages/navigation.page.dart';
 import 'package:smart_market/model/order/presentation/widgets/order_list.widget.dart';
+import 'package:smart_market/model/review/presentation/widgets/navigate_all_reviews.widget.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
 
 import '../../../../core/widgets/dialog/handle_network_error_on_dialog.dialog.dart';
@@ -33,6 +34,7 @@ class _ProfilePageState extends State<ProfilePage> {
   final UserService _userService = locator<UserService>();
   final AccountService _accountService = locator<AccountService>();
   final OrderService _orderService = locator<OrderService>();
+
   final RequestAccounts defaultRequestAccountsArgs = const RequestAccounts(align: "DESC", column: "createdAt");
   final RequestOrders defaultRequestOrdersArgs = const RequestOrders(
     align: "DESC",
@@ -40,6 +42,7 @@ class _ProfilePageState extends State<ProfilePage> {
     deliveryOption: "none",
     transactionStatus: "none",
   );
+
   late Future<Map<String, dynamic>> _profilePageFuture;
 
   @override
@@ -137,6 +140,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       BasicProfileWidget(profile: snapshot.data!["profile"]),
                       AccountListWidget(accounts: snapshot.data!["accounts"]),
                       OrderListWidget(orders: snapshot.data!["orders"]),
+                      const NavigateAllReviewsWidget(),
                     ],
                   ),
                 ),

@@ -9,7 +9,8 @@ import 'package:smart_market/model/review/domain/entity/create_review.entity.dar
 import 'package:smart_market/model/review/domain/repository/review.repository.dart';
 
 import '../../../../core/utils/get_it_initializer.dart';
-import '../../domain/entity/review.entity.dart';
+import '../../domain/entity/all_review.entity.dart';
+import '../../domain/entity/review_form.entity.dart';
 
 class ReviewRepositoryImpl implements ReviewRepository {
   final DioInitializer _authorizationHttpClient = locator<DioInitializer>(instanceName: "authorization");
@@ -47,6 +48,22 @@ class ReviewRepositoryImpl implements ReviewRepository {
     await appendMediaForm("review_video", args.reviewVideos);
 
     return formData;
+  }
+
+  @override
+  Future<DataState<List<ResponseAllReview>>> fetchReviews(String accessToken, RequestAllReviews args) async {
+    String url = "$_baseUrl/all?align=${args.align}&column=${args.column}";
+    ClientArgs clientArgs = ClientArgs(accessToken: accessToken);
+    Dio dio = _authorizationHttpClient.getClient(args: clientArgs);
+
+    try {
+      Response response = await dio.get(url);
+
+      List<ResponseAllReview> reviews = List<Map<String, dynamic>>.from(response.data["result"]).map((e) => ResponseAllReview.fromJson(e)).toList();
+      return DataSuccess(data: reviews);
+    } on DioException catch (err) {
+      return DataFail(exception: err);
+    }
   }
 
   @override

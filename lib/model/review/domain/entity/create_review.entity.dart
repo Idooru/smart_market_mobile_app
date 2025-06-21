@@ -1,4 +1,4 @@
-import 'package:smart_market/model/review/domain/entity/review.entity.dart';
+import 'package:smart_market/model/review/domain/entity/review_form.entity.dart';
 
 class RequestCreateReview extends ReviewForm {
   final String productId;
