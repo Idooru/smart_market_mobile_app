@@ -49,6 +49,7 @@ class _CartItemWidgetState extends State<CartItemWidget> {
         productId: widget.cart.product.id,
         quantity: quantity,
         totalPrice: totalPrice,
+        isPayNow: widget.cart.isPayNow,
       );
 
       try {
@@ -232,6 +233,14 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                 constraints: const BoxConstraints(), // 크기 최소화
                 icon: const Icon(Icons.more_vert, size: 18),
                 onPressed: pressTrailingIcon,
+              ),
+            ),
+            Positioned(
+              top: 35,
+              right: 10,
+              child: Icon(
+                widget.cart.isPayNow ? Icons.remove_shopping_cart : Icons.shopping_cart,
+                size: 17,
               ),
             ),
           ],

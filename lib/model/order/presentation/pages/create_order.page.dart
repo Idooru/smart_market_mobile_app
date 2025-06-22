@@ -102,7 +102,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                 if (widget.backRoute != null) {
                   CartService cartService = locator<CartService>();
                   for (Cart cart in orderProvider.carts) {
-                    cartService.deleteCart(cart.id);
+                    if (cart.isPayNow) cartService.deleteCart(cart.id);
                   }
                 }
 

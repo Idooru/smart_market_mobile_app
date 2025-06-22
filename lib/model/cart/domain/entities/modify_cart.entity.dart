@@ -8,5 +8,6 @@ class RequestModifyCart extends RequestCreateCart {
     required super.productId,
     required super.quantity,
     required super.totalPrice,
+    required super.isPayNow,
   });
 }

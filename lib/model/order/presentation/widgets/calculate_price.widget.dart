@@ -40,6 +40,13 @@ class _CalculatePriceWidgetState extends State<CalculatePriceWidget> {
           ),
           Row(
             children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 2),
+                child: Icon(
+                  cart.isPayNow ? Icons.remove_shopping_cart : Icons.shopping_cart,
+                  size: 17,
+                ),
+              ),
               const Spacer(),
               const Icon(
                 Icons.add,
@@ -102,7 +109,7 @@ class _CalculatePriceWidgetState extends State<CalculatePriceWidget> {
         Icon(
           icon,
           size: 20,
-          color: Colors.red,
+          color: Colors.blue,
         ),
         const SizedBox(width: 3),
         Text(

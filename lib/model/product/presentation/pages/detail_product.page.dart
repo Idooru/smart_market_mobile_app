@@ -8,6 +8,7 @@ import 'package:smart_market/model/cart/common/const/default_request_carts_args.
 import 'package:smart_market/model/cart/domain/entities/cart_product.entity.dart';
 import 'package:smart_market/model/cart/domain/entities/create_cart.entity.dart';
 import 'package:smart_market/model/cart/presentation/dialog/create_cart.dialog.dart';
+import 'package:smart_market/model/order/presentation/dialog/warn_already_has_carts.dialog.dart';
 import 'package:smart_market/model/product/domain/service/product.service.dart';
 import 'package:smart_market/model/product/presentation/widgets/image/product_image_grid.widget.dart';
 
@@ -102,6 +103,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
         productId: widget.productId,
         quantity: quantity,
         totalPrice: totalPrice,
+        isPayNow: false,
       );
 
       try {
@@ -136,12 +138,25 @@ class _DetailProductPageState extends State<DetailProductPage> {
         productId: widget.productId,
         quantity: quantity,
         totalPrice: totalPrice,
+        isPayNow: true,
       );
 
       try {
-        await _cartService.createCart(createCartArgs);
-        navigator.pop();
-        return _cartService.fetchCarts(defaultRequestCartsArgs);
+        ResponseCarts responseCarts = await _cartService.fetchCarts(defaultRequestCartsArgs);
+        if (responseCarts.cartRaws.isNotEmpty) {
+          navigator.pop();
+          WarnAlreadyHasCartsDialog.show(
+            context,
+            createCartArgs: createCartArgs,
+            address: address,
+            accounts: accounts,
+            backRoute: "/detail_product",
+          );
+        } else {
+          await _cartService.createCart(createCartArgs);
+          navigator.pop();
+          return _cartService.fetchCarts(defaultRequestCartsArgs);
+        }
       } catch (err) {
         handleCartError(err);
         return null;

@@ -33,6 +33,7 @@ class Cart {
   final int totalPrice;
   final String createdAt;
   final Product product;
+  final bool isPayNow;
 
   const Cart({
     required this.id,
@@ -40,6 +41,7 @@ class Cart {
     required this.totalPrice,
     required this.createdAt,
     required this.product,
+    required this.isPayNow,
   });
 
   factory Cart.fromJson(Map<String, dynamic> json) {
@@ -49,6 +51,7 @@ class Cart {
       totalPrice: json["totalPrice"],
       createdAt: json["createdAt"],
       product: Product.fromJson(json["product"]),
+      isPayNow: json["isPayNow"],
     );
   }
 }
