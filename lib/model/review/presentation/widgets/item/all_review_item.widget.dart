@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/model/review/domain/entity/all_review.entity.dart';
+import 'package:smart_market/model/review/presentation/pages/detail_review.page.dart';
 
 import '../../../../product/presentation/pages/detail_product.page.dart';
 import '../../../../product/presentation/widgets/display_average_score.widget.dart';
@@ -38,7 +39,13 @@ class AllReviewItemWidget extends StatelessWidget {
                 ),
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pushNamed(
+                    "/detail_review",
+                    arguments: DetailReviewPageArgs(reviewId: responseAllReview.review.id),
+                  );
+                },
                 child: const ListTile(
                   leading: Icon(Icons.reviews),
                   title: Text("리뷰 상세 보기"),

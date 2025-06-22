@@ -60,7 +60,7 @@ class _AllReviewsPageState extends State<AllReviewsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("my reviews"),
+        title: const Text("My reviews"),
         centerTitle: false,
         flexibleSpace: appBarColor,
         actions: [
