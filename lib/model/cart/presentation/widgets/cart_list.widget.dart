@@ -14,6 +14,7 @@ import '../../../../core/widgets/handler/internal_server_error_handler.widget.da
 import '../../../../core/widgets/handler/loading_handler.widget.dart';
 import '../../../../core/widgets/handler/network_error_handler.widget.dart';
 import '../../../account/domain/entities/account.entity.dart';
+import '../../common/const/default_request_carts_args.dart';
 import '../../domain/entities/cart.entity.dart';
 import '../../domain/service/cart.service.dart';
 import '../dialog/sort_carts.dialog.dart';
@@ -37,7 +38,7 @@ class CartListWidget extends StatefulWidget {
 
 class CartListWidgetState extends State<CartListWidget> {
   final CartService _cartService = locator<CartService>();
-  final RequestCarts defaultRequestCartsArgs = const RequestCarts(align: "DESC", column: "createdAt");
+
   late Future<ResponseCarts> _getCartsFuture;
   bool _isFirstRendering = true;
 

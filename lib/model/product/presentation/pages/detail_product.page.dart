@@ -4,6 +4,7 @@ import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/widgets/common/common_button_bar.widget.dart';
 import 'package:smart_market/core/widgets/handler/loading_handler.widget.dart';
+import 'package:smart_market/model/cart/common/const/default_request_carts_args.dart';
 import 'package:smart_market/model/cart/domain/entities/cart_product.entity.dart';
 import 'package:smart_market/model/cart/domain/entities/create_cart.entity.dart';
 import 'package:smart_market/model/cart/presentation/dialog/create_cart.dialog.dart';
@@ -137,15 +138,10 @@ class _DetailProductPageState extends State<DetailProductPage> {
         totalPrice: totalPrice,
       );
 
-      RequestCarts fetchCartArgs = const RequestCarts(
-        align: "DESC",
-        column: "createdAt",
-      );
-
       try {
         await _cartService.createCart(createCartArgs);
         navigator.pop();
-        return _cartService.fetchCarts(fetchCartArgs);
+        return _cartService.fetchCarts(defaultRequestCartsArgs);
       } catch (err) {
         handleCartError(err);
         return null;
