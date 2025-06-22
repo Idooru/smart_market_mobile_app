@@ -118,6 +118,7 @@ class _CreateReviewItemWidgetState extends State<CreateReviewItemWidget> with Ne
                                 scaffoldMessenger.showSnackBar(getSnackBar("${widget.product.name}상품의 리뷰를 작성하였습니다."));
 
                                 if (!widget.isLastWidget) {
+                                  navigator.pop();
                                   widget.controller.nextPage(
                                     duration: const Duration(milliseconds: 300),
                                     curve: Curves.ease,
