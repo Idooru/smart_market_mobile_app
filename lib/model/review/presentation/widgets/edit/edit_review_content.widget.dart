@@ -8,9 +8,9 @@ import '../../../../user/common/interface/edit_detector.interface.dart';
 import '../../provider/edit_review.provider.dart';
 
 class EditReviewContentWidget extends StatefulWidget {
-  final String? beforeTitle;
+  final String? beforeContent;
 
-  const EditReviewContentWidget({super.key, this.beforeTitle});
+  const EditReviewContentWidget({super.key, this.beforeContent});
 
   @override
   State<EditReviewContentWidget> createState() => EditReviewContentWidgetState();
@@ -31,6 +31,10 @@ class EditReviewContentWidgetState extends EditWidgetState<EditReviewContentWidg
   void initState() {
     super.initState();
     _provider = context.read<EditReviewProvider>();
+
+    if (widget.beforeContent != null) {
+      reviewContentController.text = widget.beforeContent!;
+    }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _provider.setIsReviewContentValid(_isValid);

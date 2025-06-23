@@ -39,6 +39,7 @@ class DetailReviewStrategy implements RouteStrategy {
     return MaterialPageRoute(
       builder: (context) => DetailReviewPage(
         reviewId: args.reviewId,
+        productName: args.productName,
       ),
     );
   }

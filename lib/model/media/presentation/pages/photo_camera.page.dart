@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_market/model/media/domain/entities/file_source.entity.dart';
 import 'package:smart_market/model/media/presentation/pages/camera.page.dart';
 
 import '../../../../core/widgets/handler/loading_handler.widget.dart';
@@ -52,8 +53,9 @@ class _PhotoCameraPageState extends CameraPageState<PhotoCameraPage> {
     try {
       XFile xfile = await _controller.takePicture();
       File file = File(xfile.path);
+      FileSource fileSource = FileSource(file: file, source: MediaSource.file);
 
-      provider.appendReviewImages([file]);
+      provider.appendReviewImages([fileSource]);
     } catch (err) {
       debugPrint("err: $err");
     } finally {

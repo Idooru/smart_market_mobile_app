@@ -1,26 +1,13 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:smart_market/model/media/domain/entities/file_source.entity.dart';
 import 'package:video_player/video_player.dart';
 
-class ReviewVideoPlayerPageArgs {
-  final String? url;
-  final File? file;
-
-  const ReviewVideoPlayerPageArgs({
-    this.url,
-    this.file,
-  });
-}
-
 class ReviewVideoPlayerPage extends StatefulWidget {
-  final String? url;
-  final File? file;
+  final FileSource fileSource;
 
   const ReviewVideoPlayerPage({
     super.key,
-    this.url,
-    this.file,
+    required this.fileSource,
   });
 
   @override
@@ -34,16 +21,16 @@ class _ReviewVideoPlayerPageState extends State<ReviewVideoPlayerPage> {
   void initState() {
     super.initState();
 
-    if (widget.url != null) {
-      _controller = VideoPlayerController.networkUrl(Uri.parse(widget.url!))
+    if (widget.fileSource.source == MediaSource.server) {
+      _controller = VideoPlayerController.networkUrl(Uri.parse(widget.fileSource.file.path))
         ..initialize().then((_) {
           setState(() {});
           _controller.play();
         });
     }
 
-    if (widget.file != null) {
-      _controller = VideoPlayerController.file(widget.file!)
+    if (widget.fileSource.source == MediaSource.file) {
+      _controller = VideoPlayerController.file(widget.fileSource.file)
         ..initialize().then((_) {
           setState(() {});
           _controller.play();

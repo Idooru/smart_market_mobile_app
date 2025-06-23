@@ -10,6 +10,7 @@ import 'package:smart_market/model/review/domain/repository/review.repository.da
 
 import '../../../../core/utils/get_it_initializer.dart';
 import '../../domain/entity/all_review.entity.dart';
+import '../../domain/entity/detail_review.entity.dart';
 import '../../domain/entity/review_form.entity.dart';
 
 class ReviewRepositoryImpl implements ReviewRepository {
@@ -61,6 +62,22 @@ class ReviewRepositoryImpl implements ReviewRepository {
 
       List<ResponseAllReview> reviews = List<Map<String, dynamic>>.from(response.data["result"]).map((e) => ResponseAllReview.fromJson(e)).toList();
       return DataSuccess(data: reviews);
+    } on DioException catch (err) {
+      return DataFail(exception: err);
+    }
+  }
+
+  @override
+  Future<DataState<ResponseDetailReview>> fetchDetailReview(String accessToken, String reviewId) async {
+    String url = "$_baseUrl/$reviewId";
+    ClientArgs clientArgs = ClientArgs(accessToken: accessToken);
+    Dio dio = _authorizationHttpClient.getClient(args: clientArgs);
+
+    try {
+      Response response = await dio.get(url);
+
+      ResponseDetailReview review = ResponseDetailReview.fromJson(response.data["result"]);
+      return DataSuccess(data: review);
     } on DioException catch (err) {
       return DataFail(exception: err);
     }

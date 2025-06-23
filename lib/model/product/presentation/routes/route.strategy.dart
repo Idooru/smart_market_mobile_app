@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_market/core/common/route.strategy.dart';
+import 'package:smart_market/model/media/domain/entities/file_source.entity.dart';
 import 'package:smart_market/model/product/presentation/pages/detail_product.page.dart';
 import 'package:smart_market/model/product/presentation/pages/review_video_player.page.dart';
 
@@ -32,11 +33,10 @@ class DetailProductRouteStrategy implements RouteStrategy {
 class ReviewVideoRouteStrategy implements RouteStrategy {
   @override
   MaterialPageRoute route(RouteSettings settings) {
-    final args = settings.arguments as ReviewVideoPlayerPageArgs;
+    final args = settings.arguments as FileSource;
     return MaterialPageRoute(
       builder: (context) => ReviewVideoPlayerPage(
-        url: args.url,
-        file: args.file,
+        fileSource: args,
       ),
       settings: settings,
     );

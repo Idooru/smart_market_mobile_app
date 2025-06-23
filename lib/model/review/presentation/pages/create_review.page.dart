@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smart_market/model/review/presentation/dialog/warn_go_out_review.dialog.dart';
+import 'package:smart_market/model/review/presentation/dialog/warn_go_out_create_review.dialog.dart';
 
 import '../../../../core/themes/theme_data.dart';
 import '../widgets/item/create_review_item.widget.dart';
@@ -55,7 +55,7 @@ class _CreateReviewPageState extends State<CreateReviewPage> {
         centerTitle: false,
         leading: IconButton(
           onPressed: () {
-            WarnGoOutReviewDialog.show(context, backRoute: widget.backRoute);
+            WarnGoOutCreateReviewDialog.show(context, backRoute: widget.backRoute);
           },
           icon: const Icon(Icons.arrow_back_ios),
         ),

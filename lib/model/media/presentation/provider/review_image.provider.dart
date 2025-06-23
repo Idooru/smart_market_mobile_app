@@ -1,22 +1,21 @@
-import 'dart:io';
-
+import 'package:smart_market/model/media/domain/entities/file_source.entity.dart';
 import 'package:smart_market/model/media/presentation/provider/media.provider.dart';
 
 class ReviewImageProvider extends MediaProvider {
   final int maxCount = 10;
 
   bool _isUploading = false;
-  List<File> _reviewImages = [];
+  List<FileSource> _reviewImages = [];
 
   bool get isUploading => _isUploading;
-  List<File> get reviewImages => _reviewImages;
+  List<FileSource> get reviewImages => _reviewImages;
 
   void setIsUploading(bool isUploading) {
     _isUploading = isUploading;
     notifyListeners();
   }
 
-  void appendReviewImages(List<File> newImages) {
+  void appendReviewImages(List<FileSource> newImages) {
     _reviewImages = [...reviewImages, ...newImages];
     notifyListeners();
   }

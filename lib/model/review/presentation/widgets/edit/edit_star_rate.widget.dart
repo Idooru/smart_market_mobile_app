@@ -3,7 +3,12 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:smart_market/core/themes/theme_data.dart';
 
 class EditStarRateWidget extends StatefulWidget {
-  const EditStarRateWidget({super.key});
+  final int? beforeRating;
+
+  const EditStarRateWidget({
+    super.key,
+    this.beforeRating,
+  });
 
   @override
   State<EditStarRateWidget> createState() => EditStarRateWidgetState();
@@ -12,6 +17,15 @@ class EditStarRateWidget extends StatefulWidget {
 class EditStarRateWidgetState extends State<EditStarRateWidget> {
   double rating = 5.0;
   int selectedRating = 5;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.beforeRating != null) {
+      rating = widget.beforeRating!.toDouble();
+      selectedRating = widget.beforeRating!;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

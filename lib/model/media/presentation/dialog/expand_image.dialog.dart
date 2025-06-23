@@ -1,9 +1,11 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:smart_market/model/media/domain/entities/file_source.entity.dart';
 
 class ExpandImageDialog {
-  static void show(BuildContext context, {required File imageFile}) {
+  static void show(
+    BuildContext context, {
+    required FileSource imageFile,
+  }) {
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -11,9 +13,7 @@ class ExpandImageDialog {
         return Dialog(
           backgroundColor: Colors.transparent,
           insetPadding: const EdgeInsets.all(10),
-          child: ExpandImageDialogWidget(
-            imageFile: imageFile,
-          ),
+          child: ExpandImageDialogWidget(imageFile: imageFile),
         );
       },
     );
@@ -21,7 +21,7 @@ class ExpandImageDialog {
 }
 
 class ExpandImageDialogWidget extends StatelessWidget {
-  final File imageFile;
+  final FileSource imageFile;
 
   const ExpandImageDialogWidget({
     super.key,
@@ -35,10 +35,15 @@ class ExpandImageDialogWidget extends StatelessWidget {
       child: InteractiveViewer(
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10),
-          child: Image.file(
-            imageFile,
-            fit: BoxFit.contain,
-          ),
+          child: imageFile.source == MediaSource.file
+              ? Image.file(
+                  imageFile.file,
+                  fit: BoxFit.contain,
+                )
+              : Image.network(
+                  imageFile.file.path,
+                  fit: BoxFit.fill,
+                ),
         ),
       ),
     );

@@ -43,7 +43,10 @@ class AllReviewItemWidget extends StatelessWidget {
                   Navigator.of(context).pop();
                   Navigator.of(context).pushNamed(
                     "/detail_review",
-                    arguments: DetailReviewPageArgs(reviewId: responseAllReview.review.id),
+                    arguments: DetailReviewPageArgs(
+                      reviewId: responseAllReview.review.id,
+                      productName: responseAllReview.product.name,
+                    ),
                   );
                 },
                 child: const ListTile(

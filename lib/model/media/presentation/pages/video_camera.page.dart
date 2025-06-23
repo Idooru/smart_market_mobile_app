@@ -7,6 +7,7 @@ import 'package:smart_market/model/media/presentation/pages/camera.page.dart';
 import 'package:smart_market/model/media/presentation/provider/review_video.provider.dart';
 
 import '../../../../core/widgets/handler/loading_handler.widget.dart';
+import '../../domain/entities/file_source.entity.dart';
 
 class VideoCameraPage extends StatefulWidget {
   const VideoCameraPage({super.key});
@@ -61,10 +62,11 @@ class _VideoCameraPageState extends CameraPageState<VideoCameraPage> {
 
     try {
       XFile xFile = await _controller.stopVideoRecording();
-      File videoFile = File(xFile.path);
+      File file = File(xFile.path);
+      FileSource fileSource = FileSource(file: file, source: MediaSource.file);
 
       setState(() => _isRecording = false);
-      provider.appendReviewVideos([videoFile]);
+      provider.appendReviewVideos([fileSource]);
     } catch (err) {
       debugPrint("err: $err");
     } finally {

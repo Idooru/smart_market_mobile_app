@@ -1,3 +1,5 @@
+import 'package:smart_market/core/utils/split_host_url.dart';
+
 class ResponseDetailReview {
   final String id;
   final String content;
@@ -21,8 +23,8 @@ class ResponseDetailReview {
       content: json["content"],
       starRateScore: json["starRateScore"],
       countForModify: json["countForModify"],
-      imageUrls: json["imageUrls"],
-      videoUrls: json["videoUrls"],
+      imageUrls: List<String>.from(json["imageUrls"]).map(splitHostUrl).toList(),
+      videoUrls: List<String>.from(json["videoUrls"]).map(splitHostUrl).toList(),
     );
   }
 }
