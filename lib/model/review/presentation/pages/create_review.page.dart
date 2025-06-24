@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:smart_market/model/review/presentation/dialog/warn_go_out_create_review.dialog.dart';
+import 'package:smart_market/core/widgets/common/common_button_bar.widget.dart';
 
 import '../../../../core/themes/theme_data.dart';
+import '../../../main/presentation/pages/navigation.page.dart';
+import '../dialog/warn_go_out_review.dialog.dart';
 import '../widgets/item/create_review_item.widget.dart';
 
 class ProductIdentify {
@@ -55,7 +57,36 @@ class _CreateReviewPageState extends State<CreateReviewPage> {
         centerTitle: false,
         leading: IconButton(
           onPressed: () {
-            WarnGoOutCreateReviewDialog.show(context, backRoute: widget.backRoute);
+            // WarnGoOutCreateReviewDialog.show(context, backRoute: widget.backRoute);
+            WarnGoOutReviewDialog.show(
+              context,
+              title: '작성중인 리뷰는 저장되지 않습니다._뒤로 가시겠습니까?',
+              buttons: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: CommonButtonBarWidget(
+                    icon: Icons.arrow_back_ios,
+                    title: "뒤로 가기",
+                    pressCallback: () {
+                      if (widget.backRoute != null) {
+                        Navigator.of(context).popUntil(ModalRoute.withName(widget.backRoute!));
+                      } else {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                          "/home",
+                          (route) => false,
+                          arguments: const NavigationPageArgs(selectedIndex: 0),
+                        );
+                      }
+                    },
+                  ),
+                ),
+                CommonButtonBarWidget(
+                  backgroundColor: const Color.fromARGB(255, 120, 120, 120),
+                  title: "취소",
+                  pressCallback: () => Navigator.of(context).pop(),
+                ),
+              ],
+            );
           },
           icon: const Icon(Icons.arrow_back_ios),
         ),

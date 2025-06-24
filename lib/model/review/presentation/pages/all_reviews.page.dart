@@ -108,6 +108,7 @@ class _AllReviewsPageState extends State<AllReviewsPage> {
                         itemBuilder: (context, index) => AllReviewItemWidget(
                           responseAllReview: reviews[index],
                           margin: index != reviews.length - 1 ? const EdgeInsets.only(bottom: 10) : EdgeInsets.zero,
+                          updateCallback: updateReviews,
                         ),
                       );
                     } else {

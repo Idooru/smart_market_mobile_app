@@ -53,12 +53,12 @@ class EditReviewContentWidgetState extends EditWidgetState<EditReviewContentWidg
     bool isValidLocal;
     String errorMessage;
 
-    String reviewTitle = reviewContentController.text;
+    String reviewContent = reviewContentController.text;
 
-    if (reviewTitle.isEmpty) {
+    if (reviewContent.isEmpty) {
       isValidLocal = false;
       errorMessage = "입력된 내용이 없습니다.";
-    } else if (reviewTitle.length > 300) {
+    } else if (reviewContent.length > 300) {
       isValidLocal = false;
       errorMessage = "길이가 300자를 넘어갑니다.";
     } else {
@@ -70,6 +70,10 @@ class EditReviewContentWidgetState extends EditWidgetState<EditReviewContentWidg
       _isValid = isValidLocal;
       _errorMessage = errorMessage;
     });
+
+    if (widget.beforeContent == reviewContent) {
+      _isValid = false;
+    }
 
     _provider.setIsReviewContentValid(_isValid);
   }

@@ -3,6 +3,7 @@ import 'package:smart_market/core/utils/throw_network_error.dart';
 import 'package:smart_market/model/review/domain/entity/all_review.entity.dart';
 import 'package:smart_market/model/review/domain/entity/create_review.entity.dart';
 import 'package:smart_market/model/review/domain/entity/detail_review.entity.dart';
+import 'package:smart_market/model/review/domain/entity/modify_review.entity.dart';
 import 'package:smart_market/model/review/domain/repository/review.repository.dart';
 
 import '../../../../core/common/data_state.dart';
@@ -34,5 +35,12 @@ class ReviewServiceImpl implements ReviewService {
     DataState<ResponseDetailReview> dataState = await _reviewRepository.fetchDetailReview(accessToken!, reviewId);
     if (dataState.exception != null) branchNetworkError(dataState);
     return dataState.data!;
+  }
+
+  @override
+  Future<void> modifyReview(RequestModifyReview args) async {
+    String? accessToken = _db.getString("access-token");
+    DataState<void> dataState = await _reviewRepository.modifyReview(accessToken!, args);
+    if (dataState.exception != null) branchNetworkError(dataState);
   }
 }

@@ -62,65 +62,63 @@ class _CreateReviewItemWidgetState extends AccessReviewItemWidget<CreateReviewIt
                   ),
                   EditStarRateWidget(key: _reviewStarRateKey),
                   const EditReviewMediaWidget(),
-                  (() {
-                    return Consumer2<ReviewImageProvider, ReviewVideoProvider>(builder: (
-                      BuildContext context,
-                      ReviewImageProvider reviewImageProvider,
-                      ReviewVideoProvider reviewVideoProvider,
-                      Widget? child,
-                    ) {
-                      return ConditionalButtonBarWidget(
-                        icon: Icons.reviews,
-                        title: "리뷰 작성하기",
-                        isValid: provider.isReviewContentValid,
-                        pressCallback: () async {
-                          NavigatorState navigator = Navigator.of(context);
-                          ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
+                  Consumer2<ReviewImageProvider, ReviewVideoProvider>(builder: (
+                    BuildContext context,
+                    ReviewImageProvider reviewImageProvider,
+                    ReviewVideoProvider reviewVideoProvider,
+                    Widget? child,
+                  ) {
+                    return ConditionalButtonBarWidget(
+                      icon: Icons.reviews,
+                      title: "리뷰 작성하기",
+                      isValid: provider.isReviewContentValid,
+                      pressCallback: () async {
+                        NavigatorState navigator = Navigator.of(context);
+                        ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
 
-                          RequestCreateReview args = RequestCreateReview(
-                            productId: widget.product.id,
-                            content: _reviewContentKey.currentState!.reviewContentController.text,
-                            starRateScore: _reviewStarRateKey.currentState!.selectedRating,
-                            reviewImages: reviewImageProvider.reviewImages.map((image) => image.file).toList(),
-                            reviewVideos: reviewVideoProvider.reviewVideos.map((video) => video.file).toList(),
-                          );
+                        RequestCreateReview args = RequestCreateReview(
+                          productId: widget.product.id,
+                          content: _reviewContentKey.currentState!.reviewContentController.text,
+                          starRateScore: _reviewStarRateKey.currentState!.selectedRating,
+                          reviewImages: reviewImageProvider.reviewImages,
+                          reviewVideos: reviewVideoProvider.reviewVideos,
+                        );
 
-                          try {
-                            LoadingDialog.show(context, title: "리뷰 생성 중..");
+                        try {
+                          LoadingDialog.show(context, title: "리뷰 생성 중..");
 
-                            await _reviewService.createReview(args);
-                            reviewImageProvider.clearAll();
-                            reviewVideoProvider.clearAll();
-                            scaffoldMessenger.showSnackBar(getSnackBar("${widget.product.name}상품의 리뷰를 작성하였습니다."));
+                          await _reviewService.createReview(args);
+                          reviewImageProvider.clearAll();
+                          reviewVideoProvider.clearAll();
+                          scaffoldMessenger.showSnackBar(getSnackBar("${widget.product.name}상품의 리뷰를 작성하였습니다."));
 
-                            if (!widget.isLastWidget) {
-                              navigator.pop();
-                              widget.controller.nextPage(
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.ease,
-                              );
-                            } else {
-                              if (widget.backRoute != null) {
-                                navigator.popUntil(ModalRoute.withName(widget.backRoute!));
-                              } else {
-                                navigator.pushNamedAndRemoveUntil(
-                                  "/home",
-                                  (route) => false,
-                                  arguments: const NavigationPageArgs(selectedIndex: 0),
-                                );
-                              }
-                            }
-                          } catch (err) {
-                            setState(() {
-                              _hasError = true;
-                              _errorMessage = branchErrorMessage(err);
-                            });
+                          if (!widget.isLastWidget) {
                             navigator.pop();
+                            widget.controller.nextPage(
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.ease,
+                            );
+                          } else {
+                            if (widget.backRoute != null) {
+                              navigator.popUntil(ModalRoute.withName(widget.backRoute!));
+                            } else {
+                              navigator.pushNamedAndRemoveUntil(
+                                "/home",
+                                (route) => false,
+                                arguments: const NavigationPageArgs(selectedIndex: 0),
+                              );
+                            }
                           }
-                        },
-                      );
-                    });
-                  })(),
+                        } catch (err) {
+                          setState(() {
+                            _hasError = true;
+                            _errorMessage = branchErrorMessage(err);
+                          });
+                          navigator.pop();
+                        }
+                      },
+                    );
+                  }),
                   if (_hasError)
                     Padding(
                       padding: const EdgeInsets.only(top: 10),

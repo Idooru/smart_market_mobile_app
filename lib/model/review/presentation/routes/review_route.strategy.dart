@@ -15,6 +15,7 @@ class AllReviewsStrategy implements RouteStrategy {
   MaterialPageRoute route(RouteSettings settings) {
     return MaterialPageRoute(
       builder: (context) => const AllReviewsPage(),
+      settings: settings,
     );
   }
 }
@@ -28,6 +29,7 @@ class CreateReviewStrategy implements RouteStrategy {
         products: args.products,
         backRoute: args.backRoute,
       ),
+      settings: settings,
     );
   }
 }
@@ -39,8 +41,11 @@ class DetailReviewStrategy implements RouteStrategy {
     return MaterialPageRoute(
       builder: (context) => DetailReviewPage(
         reviewId: args.reviewId,
+        productId: args.productId,
         productName: args.productName,
+        updateCallback: args.updateCallback,
       ),
+      settings: settings,
     );
   }
 }

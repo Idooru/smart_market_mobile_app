@@ -9,11 +9,13 @@ import '../../../../product/presentation/widgets/display_average_score.widget.da
 class AllReviewItemWidget extends StatelessWidget {
   final ResponseAllReview responseAllReview;
   final EdgeInsets margin;
+  final void Function(RequestAllReviews) updateCallback;
 
   const AllReviewItemWidget({
     super.key,
     required this.responseAllReview,
     required this.margin,
+    required this.updateCallback,
   });
 
   void pressTrailingIcon(BuildContext context) {
@@ -45,7 +47,9 @@ class AllReviewItemWidget extends StatelessWidget {
                     "/detail_review",
                     arguments: DetailReviewPageArgs(
                       reviewId: responseAllReview.review.id,
+                      productId: responseAllReview.product.id,
                       productName: responseAllReview.product.name,
+                      updateCallback: updateCallback,
                     ),
                   );
                 },
