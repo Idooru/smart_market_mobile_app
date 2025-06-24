@@ -43,4 +43,11 @@ class ReviewServiceImpl implements ReviewService {
     DataState<void> dataState = await _reviewRepository.modifyReview(accessToken!, args);
     if (dataState.exception != null) branchNetworkError(dataState);
   }
+
+  @override
+  Future<void> deleteReview(String reviewId) async {
+    String? accessToken = _db.getString("access-token");
+    DataState<void> dataState = await _reviewRepository.deleteReview(accessToken!, reviewId);
+    if (dataState.exception != null) branchNetworkError(dataState);
+  }
 }

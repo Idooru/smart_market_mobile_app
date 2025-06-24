@@ -134,4 +134,19 @@ class ReviewRepositoryImpl implements ReviewRepository {
       return DataFail(exception: err);
     }
   }
+
+  @override
+  Future<DataState<void>> deleteReview(String accessToken, String reviewId) async {
+    String url = "$_baseUrl/$reviewId";
+    ClientArgs clientArgs = ClientArgs(accessToken: accessToken);
+    Dio dio = _authorizationHttpClient.getClient(args: clientArgs);
+
+    try {
+      await dio.delete(url);
+
+      return const DataSuccess(data: null);
+    } on DioException catch (err) {
+      return DataFail(exception: err);
+    }
+  }
 }

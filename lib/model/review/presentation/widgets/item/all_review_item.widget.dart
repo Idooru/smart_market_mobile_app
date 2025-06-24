@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:smart_market/core/themes/theme_data.dart';
+import 'package:smart_market/model/review/common/const/default_request_all_review_args.dart';
 import 'package:smart_market/model/review/domain/entity/all_review.entity.dart';
+import 'package:smart_market/model/review/domain/service/review.service.dart';
 import 'package:smart_market/model/review/presentation/pages/detail_review.page.dart';
 
+import '../../../../../core/utils/get_it_initializer.dart';
 import '../../../../product/presentation/pages/detail_product.page.dart';
 import '../../../../product/presentation/widgets/display_average_score.widget.dart';
 
@@ -19,6 +22,8 @@ class AllReviewItemWidget extends StatelessWidget {
   });
 
   void pressTrailingIcon(BuildContext context) {
+    final ReviewService reviewService = locator<ReviewService>();
+
     showModalBottomSheet(
       context: context,
       backgroundColor: const Color.fromARGB(255, 245, 245, 245),
@@ -56,6 +61,17 @@ class AllReviewItemWidget extends StatelessWidget {
                 child: const ListTile(
                   leading: Icon(Icons.reviews),
                   title: Text("리뷰 상세 보기"),
+                ),
+              ),
+              GestureDetector(
+                onTap: () async {
+                  Navigator.of(context).pop();
+                  await reviewService.deleteReview(responseAllReview.review.id);
+                  updateCallback(defaultRequestAllReviewArgs);
+                },
+                child: const ListTile(
+                  leading: Icon(Icons.delete),
+                  title: Text("리뷰 삭제"),
                 ),
               ),
             ],

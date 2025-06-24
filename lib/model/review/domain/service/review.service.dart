@@ -8,4 +8,5 @@ abstract interface class ReviewService {
   Future<List<ResponseAllReview>> fetchReviews(RequestAllReviews args);
   Future<ResponseDetailReview> fetchDetailReview(String reviewId);
   Future<void> modifyReview(RequestModifyReview args);
+  Future<void> deleteReview(String reviewId);
 }

@@ -10,4 +10,5 @@ abstract interface class ReviewRepository {
   Future<DataState<List<ResponseAllReview>>> fetchReviews(String accessToken, RequestAllReviews args);
   Future<DataState<ResponseDetailReview>> fetchDetailReview(String accessToken, String reviewId);
   Future<DataState<void>> modifyReview(String accessToken, RequestModifyReview args);
+  Future<DataState<void>> deleteReview(String accessToken, String reviewId);
 }

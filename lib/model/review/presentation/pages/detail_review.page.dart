@@ -108,7 +108,7 @@ class _DetailReviewPageState extends AccessReviewItemWidget<DetailReviewPage> {
       await _reviewService.modifyReview(args);
       reviewImageProvider.clearAll();
       reviewVideoProvider.clearAll();
-      scaffoldMessenger.showSnackBar(getSnackBar("${widget.productName}상품의 리뷰를 작성하였습니다."));
+      scaffoldMessenger.showSnackBar(getSnackBar("${widget.productName}상품의 리뷰를 수정하였습니다."));
 
       widget.updateCallback(defaultRequestAllReviewArgs);
       navigator.popUntil(ModalRoute.withName("/all_reviews"));
