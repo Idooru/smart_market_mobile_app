@@ -71,7 +71,7 @@ class _ReviewImageAreaWidgetState extends ReviewMediaWidgetState<ReviewImageArea
         .toList();
 
     if (imageFiles.length + provider.reviewImages.length > provider.maxCount) {
-      MediaOverflowDialog.show(context, title: "이미지");
+      MediaOverflowDialog.show(context, title: "이미지 업로드 개수를_ 초과하였습니다.");
     } else {
       provider.appendReviewImages(imageFiles);
     }
@@ -89,7 +89,7 @@ class _ReviewImageAreaWidgetState extends ReviewMediaWidgetState<ReviewImageArea
               title: "리뷰 이미지 (${widget.provider.reviewImages.length}/${widget.provider.maxCount})",
               pressTakePicture: () {
                 if (widget.provider.reviewImages.length >= widget.provider.maxCount) {
-                  MediaOverflowDialog.show(context, title: "이미지");
+                  MediaOverflowDialog.show(context, title: "이미지 업로드 개수를_ 초과하였습니다.");
                 } else {
                   Navigator.of(context).pushNamed("/photo_camera");
                 }

@@ -9,7 +9,7 @@ import 'package:smart_market/model/account/presentation/dialog/account_transacti
 
 import '../../../../core/utils/format_number.dart';
 import '../../../../core/utils/parse_date.dart';
-import '../../../../core/widgets/dialog/handle_network_error_on_dialog.dialog.dart';
+import '../../../../core/widgets/dialog/handle_network_error.dialog.dart';
 
 class AccountItemWidget extends StatefulWidget {
   final ResponseAccount account;
@@ -29,7 +29,7 @@ class _AccountItemWidgetState extends State<AccountItemWidget> {
   final AccountService _accountService = locator<AccountService>();
 
   void handleAccountTransactionError(Object err) {
-    HandleNetworkErrorOnDialogDialog.show(context, err);
+    HandleNetworkErrorDialog.show(context, err);
   }
 
   void pressDeposit() {

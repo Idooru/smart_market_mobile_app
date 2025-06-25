@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:smart_market/core/themes/theme_data.dart';
 
-class WarnGoOutReviewDialog {
+import '../common/common_button_bar.widget.dart';
+
+class WarnDialog {
   static void show(
     BuildContext context, {
     required String title,
@@ -10,7 +13,7 @@ class WarnGoOutReviewDialog {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) => Dialog(
-        child: WarnGoOutReviewDialogWidget(
+        child: WarnDialogWidget(
           title: title,
           buttons: buttons,
         ),
@@ -19,11 +22,11 @@ class WarnGoOutReviewDialog {
   }
 }
 
-class WarnGoOutReviewDialogWidget extends StatelessWidget {
+class WarnDialogWidget extends StatelessWidget {
   final String title;
   final List<Widget> buttons;
 
-  const WarnGoOutReviewDialogWidget({
+  const WarnDialogWidget({
     super.key,
     required this.title,
     required this.buttons,
@@ -32,11 +35,7 @@ class WarnGoOutReviewDialogWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 250,
-      decoration: BoxDecoration(
-        color: Colors.grey[200], // 연한 회색 배경
-        borderRadius: BorderRadius.circular(10),
-      ),
+      decoration: commonDialogDecoration,
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
@@ -51,7 +50,13 @@ class WarnGoOutReviewDialogWidget extends StatelessWidget {
                   ),
                 ),
             const SizedBox(height: 10),
-            ...buttons,
+            if (buttons.isNotEmpty) ...buttons,
+            if (buttons.isEmpty)
+              CommonButtonBarWidget(
+                title: "확인",
+                backgroundColor: const Color.fromARGB(255, 120, 120, 120),
+                pressCallback: () => Navigator.of(context).pop(),
+              ),
           ],
         ),
       ),

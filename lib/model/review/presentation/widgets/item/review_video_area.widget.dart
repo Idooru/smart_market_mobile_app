@@ -9,7 +9,6 @@ import 'package:smart_market/model/media/presentation/provider/media.provider.da
 import 'package:smart_market/model/review/presentation/widgets/item/review_media_area.widget.dart';
 
 import '../../../../media/presentation/provider/review_video.provider.dart';
-import '../../../../product/presentation/pages/review_video_player.page.dart';
 
 class ReviewVideoAreaWidget extends StatefulWidget {
   final ReviewVideoProvider provider;
@@ -67,7 +66,7 @@ class ReviewVideoAreaWidgetState extends ReviewMediaWidgetState<ReviewVideoAreaW
         .toList();
 
     if (videoFiles.length + provider.reviewVideos.length > provider.maxCount) {
-      MediaOverflowDialog.show(context, title: "비디오");
+      MediaOverflowDialog.show(context, title: "비디오 업로드 개수를_ 초과하였습니다.");
     } else {
       provider.appendReviewVideos(videoFiles);
     }
@@ -90,7 +89,7 @@ class ReviewVideoAreaWidgetState extends ReviewMediaWidgetState<ReviewVideoAreaW
               title: "리뷰 비디오 (${provider.reviewVideos.length}/${provider.maxCount})",
               pressTakePicture: () {
                 if (provider.reviewVideos.length >= provider.maxCount) {
-                  MediaOverflowDialog.show(context, title: "비디오");
+                  MediaOverflowDialog.show(context, title: "비디오 업로드 개수를_ 초과하였습니다.");
                 } else {
                   Navigator.of(context).pushNamed("/video_camera");
                 }

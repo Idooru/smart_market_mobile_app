@@ -14,6 +14,11 @@ final BoxDecoration commonContainerDecoration = BoxDecoration(
   borderRadius: BorderRadius.circular(12),
 );
 
+final BoxDecoration commonDialogDecoration = BoxDecoration(
+  color: Colors.grey[200],
+  borderRadius: BorderRadius.circular(10),
+);
+
 final BoxDecoration searchBarDecoration = BoxDecoration(
   color: Colors.white,
   border: Border.all(width: 2, color: const Color.fromARGB(255, 210, 210, 210)),

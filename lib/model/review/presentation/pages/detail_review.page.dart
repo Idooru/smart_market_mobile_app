@@ -24,7 +24,7 @@ import '../../../../core/widgets/handler/network_error_handler.widget.dart';
 import '../../../user/presentation/dialog/force_logout.dialog.dart';
 import '../../common/const/default_request_all_review_args.dart';
 import '../../domain/entity/modify_review.entity.dart';
-import '../dialog/warn_go_out_review.dialog.dart';
+import '../dialog/go_out_review.dialog.dart';
 import '../widgets/edit/edit_review_content.widget.dart';
 import '../widgets/edit/edit_review_media.widget.dart';
 import '../widgets/edit/edit_star_rate.widget.dart';
@@ -168,7 +168,7 @@ class _DetailReviewPageState extends AccessReviewItemWidget<DetailReviewPage> {
                               String beforeContent = responseDetailProduct.content;
                               String currentContent = _reviewContentKey.currentState!.reviewContentController.text;
                               if (beforeContent != currentContent) {
-                                WarnGoOutReviewDialog.show(
+                                GoOutReviewDialog.show(
                                   context,
                                   title: "리뷰가 일부 수정되었습니다._저장 하시겠습니까?",
                                   buttons: [

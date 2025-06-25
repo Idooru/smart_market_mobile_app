@@ -7,7 +7,7 @@ import 'package:smart_market/model/cart/presentation/dialog/modify_cart.dialog.d
 
 import '../../../../core/utils/get_it_initializer.dart';
 import '../../../../core/utils/get_snackbar.dart';
-import '../../../../core/widgets/dialog/handle_network_error_on_dialog.dialog.dart';
+import '../../../../core/widgets/dialog/handle_network_error.dialog.dart';
 import '../../../product/presentation/pages/detail_product.page.dart';
 import '../../domain/entities/cart.entity.dart';
 import '../../domain/service/cart.service.dart';
@@ -30,7 +30,7 @@ class _CartItemWidgetState extends State<CartItemWidget> {
   final CartService _cartService = locator<CartService>();
 
   void handleCartError(Object err) {
-    HandleNetworkErrorOnDialogDialog.show(context, err);
+    HandleNetworkErrorDialog.show(context, err);
   }
 
   void pressShowProductDetail() {

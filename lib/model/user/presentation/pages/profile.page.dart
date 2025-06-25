@@ -12,7 +12,7 @@ import 'package:smart_market/model/order/presentation/widgets/navigate_orders.wi
 import 'package:smart_market/model/review/presentation/widgets/navigate_all_reviews.widget.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
 
-import '../../../../core/widgets/dialog/handle_network_error_on_dialog.dialog.dart';
+import '../../../../core/widgets/dialog/handle_network_error.dialog.dart';
 import '../../../../core/widgets/handler/internal_server_error_handler.widget.dart';
 import '../../../../core/widgets/handler/network_error_handler.widget.dart';
 import '../../domain/entities/profile.entity.dart';
@@ -47,10 +47,6 @@ class _ProfilePageState extends State<ProfilePage> {
     return {"profile": profile};
   }
 
-  void handleLogoutError(Object err) {
-    HandleNetworkErrorOnDialogDialog.show(context, err);
-  }
-
   Future<void> pressLogout() async {
     ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
     NavigatorState navigator = Navigator.of(context);
@@ -64,7 +60,7 @@ class _ProfilePageState extends State<ProfilePage> {
         arguments: const NavigationPageArgs(selectedIndex: 0),
       );
     } catch (err) {
-      handleLogoutError(err);
+      HandleNetworkErrorDialog.show(context, err);
     }
   }
 

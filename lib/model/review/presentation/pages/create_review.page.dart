@@ -3,7 +3,7 @@ import 'package:smart_market/core/widgets/common/common_button_bar.widget.dart';
 
 import '../../../../core/themes/theme_data.dart';
 import '../../../main/presentation/pages/navigation.page.dart';
-import '../dialog/warn_go_out_review.dialog.dart';
+import '../dialog/go_out_review.dialog.dart';
 import '../widgets/item/create_review_item.widget.dart';
 
 class ProductIdentify {
@@ -57,8 +57,7 @@ class _CreateReviewPageState extends State<CreateReviewPage> {
         centerTitle: false,
         leading: IconButton(
           onPressed: () {
-            // WarnGoOutCreateReviewDialog.show(context, backRoute: widget.backRoute);
-            WarnGoOutReviewDialog.show(
+            GoOutReviewDialog.show(
               context,
               title: '작성중인 리뷰는 저장되지 않습니다._뒤로 가시겠습니까?',
               buttons: [

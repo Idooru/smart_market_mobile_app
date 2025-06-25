@@ -17,8 +17,8 @@ import '../../../account/domain/entities/account.entity.dart';
 import '../../common/const/default_request_carts_args.dart';
 import '../../domain/entities/cart.entity.dart';
 import '../../domain/service/cart.service.dart';
+import '../dialog/delete_all_carts.dialog.dart';
 import '../dialog/sort_carts.dialog.dart';
-import '../dialog/warn_delete_all_carts.dialog.dart';
 
 class CartListWidget extends StatefulWidget {
   final String address;
@@ -89,7 +89,7 @@ class CartListWidgetState extends State<CartListWidget> {
                   children: [
                     getButton(
                       pressCallback: () {
-                        WarnDeleteAllCartsDialog.show(
+                        DeleteAllCartsDialog.show(
                           context,
                           updateCallback: () => updateCarts(defaultRequestCartsArgs),
                         );

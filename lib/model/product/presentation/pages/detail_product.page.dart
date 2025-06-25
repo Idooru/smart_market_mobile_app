@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
@@ -8,7 +9,7 @@ import 'package:smart_market/model/cart/common/const/default_request_carts_args.
 import 'package:smart_market/model/cart/domain/entities/cart_product.entity.dart';
 import 'package:smart_market/model/cart/domain/entities/create_cart.entity.dart';
 import 'package:smart_market/model/cart/presentation/dialog/create_cart.dialog.dart';
-import 'package:smart_market/model/order/presentation/dialog/warn_already_has_carts.dialog.dart';
+import 'package:smart_market/model/order/presentation/dialog/already_has_carts.dialog.dart';
 import 'package:smart_market/model/product/domain/service/product.service.dart';
 import 'package:smart_market/model/product/presentation/widgets/image/product_image_grid.widget.dart';
 
@@ -17,7 +18,7 @@ import '../../../../core/errors/refresh_token_expired.error.dart';
 import '../../../../core/utils/check_jwt_duration.dart';
 import '../../../../core/utils/format_number.dart';
 import '../../../../core/utils/get_snackbar.dart';
-import '../../../../core/widgets/dialog/handle_network_error_on_dialog.dialog.dart';
+import '../../../../core/widgets/dialog/handle_network_error.dialog.dart';
 import '../../../../core/widgets/handler/internal_server_error_handler.widget.dart';
 import '../../../../core/widgets/handler/network_error_handler.widget.dart';
 import '../../../account/domain/entities/account.entity.dart';
@@ -25,6 +26,7 @@ import '../../../account/domain/service/account.service.dart';
 import '../../../cart/domain/entities/cart.entity.dart';
 import '../../../cart/domain/service/cart.service.dart';
 import '../../../cart/presentation/dialog/pay_now.dialog.dart';
+import '../../../order/presentation/provider/create_order.provider.dart';
 import '../../../user/domain/entities/profile.entity.dart';
 import '../../../user/domain/service/user.service.dart';
 import '../../../user/presentation/dialog/force_logout.dialog.dart';
@@ -86,10 +88,6 @@ class _DetailProductPageState extends State<DetailProductPage> {
     return {"products": products};
   }
 
-  void handleCartError(Object err) {
-    HandleNetworkErrorOnDialogDialog.show(context, err);
-  }
-
   Future<void> pressCreateCart(ResponseDetailProduct responseDetailProduct) async {
     bool isLogined = checkIsLogined();
     if (!isLogined) return InvitationLoginDialog.show(context);
@@ -106,12 +104,12 @@ class _DetailProductPageState extends State<DetailProductPage> {
         isPayNow: false,
       );
 
+      navigator.pop();
       try {
         await _cartService.createCart(args);
         scaffoldMessenger.showSnackBar(getSnackBar("해당 상품을 장바구니에 추가하였습니다."));
-        navigator.pop();
       } catch (err) {
-        handleCartError(err);
+        HandleNetworkErrorDialog.show(context, err);
       }
     }
 
@@ -129,6 +127,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
     ResponseDetailProduct responseDetailProduct,
     List<ResponseAccount> accounts,
     String address,
+    CreateOrderProvider provider,
   ) async {
     await checkJwtDuration();
 
@@ -145,12 +144,13 @@ class _DetailProductPageState extends State<DetailProductPage> {
         ResponseCarts responseCarts = await _cartService.fetchCarts(defaultRequestCartsArgs);
         if (responseCarts.cartRaws.isNotEmpty) {
           navigator.pop();
-          WarnAlreadyHasCartsDialog.show(
+          AlreadyHasCartsDialog.show(
             context,
             createCartArgs: createCartArgs,
             address: address,
             accounts: accounts,
             backRoute: "/detail_product",
+            provider: provider,
           );
         } else {
           await _cartService.createCart(createCartArgs);
@@ -158,9 +158,10 @@ class _DetailProductPageState extends State<DetailProductPage> {
           return _cartService.fetchCarts(defaultRequestCartsArgs);
         }
       } catch (err) {
-        handleCartError(err);
+        HandleNetworkErrorDialog.show(context, err);
         return null;
       }
+      return null;
     }
 
     PayNowDialog.show(
@@ -317,16 +318,25 @@ class _DetailProductPageState extends State<DetailProductPage> {
                       const SizedBox(width: 10),
                       Flexible(
                         flex: 1,
-                        child: CommonButtonBarWidget(
-                          icon: Icons.payment,
-                          title: "바로 구매하기",
-                          backgroundColor: Colors.orange,
-                          pressCallback: () {
-                            if (checkIsLogined()) {
-                              pressPayNow(responseDetailProduct, data["accounts"], data["address"]);
-                            } else {
-                              InvitationLoginDialog.show(context);
-                            }
+                        child: Consumer<CreateOrderProvider>(
+                          builder: (BuildContext context, CreateOrderProvider provider, Widget? child) {
+                            return CommonButtonBarWidget(
+                              icon: Icons.payment,
+                              title: "바로 구매하기",
+                              backgroundColor: Colors.orange,
+                              pressCallback: () {
+                                if (checkIsLogined()) {
+                                  pressPayNow(
+                                    responseDetailProduct,
+                                    data["accounts"],
+                                    data["address"],
+                                    provider,
+                                  );
+                                } else {
+                                  InvitationLoginDialog.show(context);
+                                }
+                              },
+                            );
                           },
                         ),
                       ),
