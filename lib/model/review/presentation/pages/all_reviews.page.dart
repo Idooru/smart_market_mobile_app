@@ -59,19 +59,6 @@ class _AllReviewsPageState extends State<AllReviewsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("My reviews"),
-        centerTitle: false,
-        flexibleSpace: appBarColor,
-        actions: [
-          _hasFilterButton
-              ? IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.tune, color: Colors.black),
-                )
-              : const SizedBox.shrink(),
-        ],
-      ),
       body: FutureBuilder<List<ResponseAllReview>>(
         future: _getAllReviewsFuture,
         builder: (BuildContext context, AsyncSnapshot<List<ResponseAllReview>> snapshot) {
@@ -92,37 +79,52 @@ class _AllReviewsPageState extends State<AllReviewsPage> {
           } else {
             List<ResponseAllReview> reviews = snapshot.data!;
             updateIsShow(reviews.isNotEmpty);
-            return CustomScrollbarWidget(
-              scrollController: controller,
-              childWidget: Padding(
-                padding: EdgeInsets.only(
-                  left: 10,
-                  right: controller.hasClients ? 13 : 10,
-                ),
-                child: Builder(
-                  builder: (context) {
-                    if (reviews.isNotEmpty) {
-                      return ListView.builder(
-                        controller: controller,
-                        itemCount: reviews.length,
-                        itemBuilder: (context, index) => AllReviewItemWidget(
-                          responseAllReview: reviews[index],
-                          margin: index != reviews.length - 1 ? const EdgeInsets.only(bottom: 10) : EdgeInsets.zero,
-                          updateCallback: updateReviews,
-                        ),
-                      );
-                    } else {
-                      return const Center(
-                        child: Text(
-                          "작성된 리뷰가 없습니다.",
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 90, 90, 90),
-                            fontSize: 15,
+            return Scaffold(
+              appBar: AppBar(
+                title: const Text("My reviews"),
+                centerTitle: false,
+                flexibleSpace: appBarColor,
+                actions: [
+                  _hasFilterButton
+                      ? IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.tune, color: Colors.black),
+                        )
+                      : const SizedBox.shrink(),
+                ],
+              ),
+              body: CustomScrollbarWidget(
+                scrollController: controller,
+                childWidget: Padding(
+                  padding: EdgeInsets.only(
+                    left: 10,
+                    right: controller.hasClients ? 13 : 10,
+                  ),
+                  child: Builder(
+                    builder: (context) {
+                      if (reviews.isNotEmpty) {
+                        return ListView.builder(
+                          controller: controller,
+                          itemCount: reviews.length,
+                          itemBuilder: (context, index) => AllReviewItemWidget(
+                            responseAllReview: reviews[index],
+                            margin: index != reviews.length - 1 ? const EdgeInsets.only(bottom: 10) : EdgeInsets.zero,
+                            updateCallback: updateReviews,
                           ),
-                        ),
-                      );
-                    }
-                  },
+                        );
+                      } else {
+                        return const Center(
+                          child: Text(
+                            "작성된 리뷰가 없습니다.",
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 90, 90, 90),
+                              fontSize: 15,
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                  ),
                 ),
               ),
             );

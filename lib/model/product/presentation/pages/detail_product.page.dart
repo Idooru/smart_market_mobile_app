@@ -177,7 +177,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
     );
   }
 
-  Widget getItemArea(String title, Widget child) {
+  Widget ItemArea(String title, Widget child) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -207,146 +207,139 @@ class _DetailProductPageState extends State<DetailProductPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        flexibleSpace: appBarColor,
-        title: const Text("Product Detail"),
-      ),
-      backgroundColor: const Color.fromARGB(255, 240, 240, 240),
-      body: Padding(
-        padding: const EdgeInsets.all(10),
-        child: FutureBuilder(
-          future: _detailProductPageFuture,
-          builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const LoadingHandlerWidget(title: "상품 상세 데이터 불러오기..");
-            } else if (snapshot.hasError) {
-              final error = snapshot.error;
-              if (error is ConnectionError) {
-                return NetworkErrorHandlerWidget(reconnectCallback: () {
-                  setState(() {
-                    _detailProductPageFuture = initDetailProductPageFuture();
-                  });
+      body: FutureBuilder(
+        future: _detailProductPageFuture,
+        builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const LoadingHandlerWidget(title: "상품 상세 데이터 불러오기..");
+          } else if (snapshot.hasError) {
+            final error = snapshot.error;
+            if (error is ConnectionError) {
+              return NetworkErrorHandlerWidget(reconnectCallback: () {
+                setState(() {
+                  _detailProductPageFuture = initDetailProductPageFuture();
                 });
-              } else if (error is RefreshTokenExpiredError) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  ForceLogoutDialog.show(context);
-                });
-                return const SizedBox.shrink();
-              } else if (error is DioFailError) {
-                return const InternalServerErrorHandlerWidget();
-              } else {
-                return Center(child: Text("$error"));
-              }
+              });
+            } else if (error is RefreshTokenExpiredError) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                ForceLogoutDialog.show(context);
+              });
+              return const SizedBox.shrink();
+            } else if (error is DioFailError) {
+              return const InternalServerErrorHandlerWidget();
             } else {
-              final data = snapshot.data!;
-              ResponseDetailProduct responseDetailProduct = data["products"];
+              return Center(child: Text("$error"));
+            }
+          } else {
+            final data = snapshot.data!;
+            ResponseDetailProduct responseDetailProduct = data["products"];
 
-              return Scaffold(
-                backgroundColor: const Color.fromARGB(255, 240, 240, 240),
-                body: Column(
-                  children: [
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
+            return Scaffold(
+              appBar: AppBar(
+                flexibleSpace: appBarColor,
+                title: const Text("Product Detail"),
+              ),
+              body: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ItemArea("상품 이미지", ProductImageGridWidget(imageUrls: responseDetailProduct.product.imageUrls)),
+                      ItemArea(
+                        "상품 정보",
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            getItemArea("상품 이미지", ProductImageGridWidget(imageUrls: responseDetailProduct.product.imageUrls)),
-                            getItemArea(
-                              "상품 정보",
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("이름: ${responseDetailProduct.product.name}", style: const TextStyle(fontSize: 14, color: Color.fromARGB(255, 50, 50, 50))),
-                                  Text("가격: ${formatNumber(responseDetailProduct.product.price)}원", style: const TextStyle(fontSize: 14, color: Color.fromARGB(255, 50, 50, 50))),
-                                  Text("원산지: ${responseDetailProduct.product.origin}", style: const TextStyle(fontSize: 14, color: Color.fromARGB(255, 50, 50, 50))),
-                                  Text("분류: ${responseDetailProduct.product.category}", style: const TextStyle(fontSize: 14, color: Color.fromARGB(255, 50, 50, 50))),
-                                  Text("설명: ${responseDetailProduct.product.description}", style: const TextStyle(fontSize: 14, color: Color.fromARGB(255, 50, 50, 50))),
-                                  Row(
-                                    children: [
-                                      const Text("평점: ", style: TextStyle(fontSize: 14, color: Color.fromARGB(255, 50, 50, 50))),
-                                      DisplayAverageScoreWidget(averageScore: responseDetailProduct.product.averageScore),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            getItemArea(
-                              "상품 리뷰",
-                              SizedBox(
-                                height: responseDetailProduct.reviews.isEmpty ? 70 : 450,
-                                child: responseDetailProduct.reviews.isEmpty
-                                    ? const Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Icon(Icons.warning, size: 18),
-                                          SizedBox(width: 5),
-                                          Text("아직 상품 리뷰가 존재하지 않습니다."),
-                                        ],
-                                      )
-                                    : SingleChildScrollView(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: responseDetailProduct.reviews.asMap().entries.map((entry) {
-                                            int index = entry.key;
-                                            Review review = entry.value;
-                                            EdgeInsets margin = index != responseDetailProduct.reviews.length - 1 ? const EdgeInsets.fromLTRB(8, 8, 8, 0) : const EdgeInsets.fromLTRB(8, 8, 8, 8);
-                                            return ReviewItemWidget(review: review, margin: margin);
-                                          }).toList(),
-                                        ),
-                                      ),
-                              ),
+                            Text("이름: ${responseDetailProduct.product.name}", style: const TextStyle(fontSize: 14, color: Color.fromARGB(255, 50, 50, 50))),
+                            Text("가격: ${formatNumber(responseDetailProduct.product.price)}원", style: const TextStyle(fontSize: 14, color: Color.fromARGB(255, 50, 50, 50))),
+                            Text("원산지: ${responseDetailProduct.product.origin}", style: const TextStyle(fontSize: 14, color: Color.fromARGB(255, 50, 50, 50))),
+                            Text("분류: ${responseDetailProduct.product.category}", style: const TextStyle(fontSize: 14, color: Color.fromARGB(255, 50, 50, 50))),
+                            Text("설명: ${responseDetailProduct.product.description}", style: const TextStyle(fontSize: 14, color: Color.fromARGB(255, 50, 50, 50))),
+                            Row(
+                              children: [
+                                const Text("평점: ", style: TextStyle(fontSize: 14, color: Color.fromARGB(255, 50, 50, 50))),
+                                DisplayAverageScoreWidget(averageScore: responseDetailProduct.product.averageScore),
+                              ],
                             ),
                           ],
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                bottomNavigationBar: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: Row(
-                    children: [
-                      Flexible(
-                        flex: 1,
-                        child: CommonButtonBarWidget(
-                          icon: Icons.shopping_cart,
-                          title: "장바구니 담기",
-                          backgroundColor: Colors.blue,
-                          pressCallback: () => pressCreateCart(responseDetailProduct),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Flexible(
-                        flex: 1,
-                        child: Consumer<CreateOrderProvider>(
-                          builder: (BuildContext context, CreateOrderProvider provider, Widget? child) {
-                            return CommonButtonBarWidget(
-                              icon: Icons.payment,
-                              title: "바로 구매하기",
-                              backgroundColor: Colors.orange,
-                              pressCallback: () {
-                                if (checkIsLogined()) {
-                                  pressPayNow(
-                                    responseDetailProduct,
-                                    data["accounts"],
-                                    data["address"],
-                                    provider,
-                                  );
-                                } else {
-                                  InvitationLoginDialog.show(context);
-                                }
-                              },
-                            );
-                          },
+                      ItemArea(
+                        "상품 리뷰",
+                        SizedBox(
+                          height: responseDetailProduct.reviews.isEmpty ? 70 : 450,
+                          child: responseDetailProduct.reviews.isEmpty
+                              ? const Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.warning, size: 18),
+                                    SizedBox(width: 5),
+                                    Text("아직 상품 리뷰가 존재하지 않습니다."),
+                                  ],
+                                )
+                              : SingleChildScrollView(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: responseDetailProduct.reviews.asMap().entries.map((entry) {
+                                      int index = entry.key;
+                                      Review review = entry.value;
+                                      EdgeInsets margin = index != responseDetailProduct.reviews.length - 1 ? const EdgeInsets.fromLTRB(8, 8, 8, 0) : const EdgeInsets.fromLTRB(8, 8, 8, 8);
+                                      return ReviewItemWidget(review: review, margin: margin);
+                                    }).toList(),
+                                  ),
+                                ),
                         ),
                       ),
                     ],
                   ),
                 ),
-              );
-            }
-          },
-        ),
+              ),
+              bottomNavigationBar: Container(
+                padding: const EdgeInsets.all(10),
+                margin: const EdgeInsets.only(bottom: 15),
+                child: Row(
+                  children: [
+                    Flexible(
+                      flex: 1,
+                      child: CommonButtonBarWidget(
+                        icon: Icons.shopping_cart,
+                        title: "장바구니 담기",
+                        backgroundColor: Colors.blue,
+                        pressCallback: () => pressCreateCart(responseDetailProduct),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Flexible(
+                      flex: 1,
+                      child: Consumer<CreateOrderProvider>(
+                        builder: (BuildContext context, CreateOrderProvider provider, Widget? child) {
+                          return CommonButtonBarWidget(
+                            icon: Icons.payment,
+                            title: "바로 구매하기",
+                            backgroundColor: Colors.orange,
+                            pressCallback: () {
+                              if (checkIsLogined()) {
+                                pressPayNow(
+                                  responseDetailProduct,
+                                  data["accounts"],
+                                  data["address"],
+                                  provider,
+                                );
+                              } else {
+                                InvitationLoginDialog.show(context);
+                              }
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+        },
       ),
     );
   }

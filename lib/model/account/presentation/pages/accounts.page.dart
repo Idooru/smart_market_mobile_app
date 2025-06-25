@@ -83,19 +83,6 @@ class _AccountPageState extends State<AccountsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("My accounts"),
-        centerTitle: false,
-        flexibleSpace: appBarColor,
-        actions: [
-          _hasFilterButton
-              ? IconButton(
-                  onPressed: () => SortAccountsDialog.show(context, updateCallback: updateAccounts),
-                  icon: const Icon(Icons.tune, color: Colors.black),
-                )
-              : const SizedBox.shrink(),
-        ],
-      ),
       body: FutureBuilder<List<ResponseAccount>>(
         future: _getAccountsFuture,
         builder: (BuildContext context, AsyncSnapshot<List<ResponseAccount>> snapshot) {
@@ -116,82 +103,85 @@ class _AccountPageState extends State<AccountsPage> {
           } else {
             List<ResponseAccount> accounts = snapshot.data!;
             updateHasFilterButton(accounts.isNotEmpty);
-            return Column(
-              children: [
-                Expanded(
-                  child: CustomScrollbarWidget(
-                    scrollController: controller,
-                    childWidget: Padding(
-                      padding: EdgeInsets.only(
-                        left: 10,
-                        right: controller.hasClients ? 13 : 10,
-                      ),
-                      child: accounts.isEmpty
-                          ? const Center(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.warning,
-                                    size: 45,
-                                    color: Colors.black,
-                                  ),
-                                  SizedBox(width: 10),
-                                  Text(
-                                    "현재 등록된 계좌가 없습니다.",
-                                    style: TextStyle(
-                                      color: Color.fromARGB(255, 70, 70, 70),
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          : SingleChildScrollView(
-                              controller: controller,
-                              child: Column(
-                                children: (() {
-                                  if (accounts.isNotEmpty && accounts.length >= 5) {
-                                    updateHasCreateAccountButton(false);
-                                    return accounts
-                                        .map((account) => AccountItemWidget(
-                                              account: account,
-                                              updateCallback: () => updateAccounts(defaultRequestAccountsArgs),
-                                            ))
-                                        .toList();
-                                  } else if (accounts.isNotEmpty && accounts.length <= 4) {
-                                    updateHasCreateAccountButton(true);
-                                    return accounts
-                                        .map(
-                                          (account) => AccountItemWidget(
-                                            account: account,
-                                            updateCallback: () => updateAccounts(defaultRequestAccountsArgs),
-                                          ),
-                                        )
-                                        .toList();
-                                  } else {
-                                    return [const SizedBox.shrink()];
-                                  }
-                                })(),
-                              ),
-                            ),
-                    ),
-                  ),
-                ),
-                Builder(
-                  builder: (context) => _hasCreateAccountButton
-                      ? Container(
-                          padding: const EdgeInsets.fromLTRB(10, 10, 10, 30),
-                          child: CommonButtonBarWidget(
-                            icon: Icons.account_balance_outlined,
-                            title: "계좌 등록하기",
-                            pressCallback: () => pressCreateAccount(accounts),
-                          ),
+            return Scaffold(
+              appBar: AppBar(
+                title: const Text("My accounts"),
+                centerTitle: false,
+                flexibleSpace: appBarColor,
+                actions: [
+                  _hasFilterButton
+                      ? IconButton(
+                          onPressed: () => SortAccountsDialog.show(context, updateCallback: updateAccounts),
+                          icon: const Icon(Icons.tune, color: Colors.black),
                         )
                       : const SizedBox.shrink(),
-                ),
-              ],
+                ],
+              ),
+              body: Column(
+                children: [
+                  Expanded(
+                    child: CustomScrollbarWidget(
+                      scrollController: controller,
+                      childWidget: Padding(
+                        padding: EdgeInsets.only(
+                          left: 10,
+                          right: controller.hasClients ? 13 : 10,
+                        ),
+                        child: accounts.isEmpty
+                            ? const Center(
+                                child: Text(
+                                  "현재 등록된 계좌가 없습니다.",
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 90, 90, 90),
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              )
+                            : SingleChildScrollView(
+                                controller: controller,
+                                child: Column(
+                                  children: (() {
+                                    if (accounts.isNotEmpty && accounts.length >= 5) {
+                                      updateHasCreateAccountButton(false);
+                                      return accounts
+                                          .map((account) => AccountItemWidget(
+                                                account: account,
+                                                updateCallback: () => updateAccounts(defaultRequestAccountsArgs),
+                                              ))
+                                          .toList();
+                                    } else if (accounts.isNotEmpty && accounts.length <= 4) {
+                                      updateHasCreateAccountButton(true);
+                                      return accounts
+                                          .map(
+                                            (account) => AccountItemWidget(
+                                              account: account,
+                                              updateCallback: () => updateAccounts(defaultRequestAccountsArgs),
+                                            ),
+                                          )
+                                          .toList();
+                                    } else {
+                                      return [const SizedBox.shrink()];
+                                    }
+                                  })(),
+                                ),
+                              ),
+                      ),
+                    ),
+                  ),
+                  Builder(
+                    builder: (context) => _hasCreateAccountButton
+                        ? Container(
+                            padding: const EdgeInsets.fromLTRB(10, 10, 10, 30),
+                            child: CommonButtonBarWidget(
+                              icon: Icons.account_balance_outlined,
+                              title: "계좌 등록하기",
+                              pressCallback: () => pressCreateAccount(accounts),
+                            ),
+                          )
+                        : const SizedBox.shrink(),
+                  ),
+                ],
+              ),
             );
           }
         },

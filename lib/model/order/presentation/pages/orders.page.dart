@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/utils/check_jwt_duration.dart';
 import 'package:smart_market/model/order/common/const/default_request_order_args.dart';
 import 'package:smart_market/model/order/presentation/widgets/order_item.widget.dart';
 
 import '../../../../core/errors/connection_error.dart';
 import '../../../../core/errors/dio_fail.error.dart';
+import '../../../../core/themes/theme_data.dart';
 import '../../../../core/utils/get_it_initializer.dart';
 import '../../../../core/widgets/common/custom_scrollbar.widget.dart';
 import '../../../../core/widgets/handler/internal_server_error_handler.widget.dart';
@@ -60,19 +60,6 @@ class _OrdersPageState extends State<OrdersPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("My orders"),
-        centerTitle: false,
-        flexibleSpace: appBarColor,
-        actions: [
-          _hasFilterButton
-              ? IconButton(
-                  onPressed: () => OrderFilterDialog.show(context, updateCallback: updateOrders),
-                  icon: const Icon(Icons.tune, color: Colors.black),
-                )
-              : const SizedBox.shrink(),
-        ],
-      ),
       body: FutureBuilder<List<ResponseOrders>>(
         future: _getOrdersFuture,
         builder: (BuildContext context, AsyncSnapshot<List<ResponseOrders>> snapshot) {
@@ -93,36 +80,51 @@ class _OrdersPageState extends State<OrdersPage> {
           } else {
             List<ResponseOrders> orders = snapshot.data!;
             updateHasFilterButton(orders.isNotEmpty);
-            return CustomScrollbarWidget(
-              scrollController: controller,
-              childWidget: Padding(
-                padding: EdgeInsets.only(
-                  left: 10,
-                  right: controller.hasClients ? 13 : 10,
-                ),
-                child: Builder(
-                  builder: (context) {
-                    if (orders.isNotEmpty) {
-                      return ListView.builder(
-                        controller: controller,
-                        itemCount: orders.length,
-                        itemBuilder: (context, index) => OrderItemWidget(
-                          responseOrders: orders[index],
-                          margin: index != orders.length - 1 ? const EdgeInsets.only(bottom: 10) : EdgeInsets.zero,
-                        ),
-                      );
-                    } else {
-                      return const Center(
-                        child: Text(
-                          "구매 내역이 없습니다.",
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 90, 90, 90),
-                            fontSize: 15,
+            return Scaffold(
+              appBar: AppBar(
+                title: const Text("My orders"),
+                centerTitle: false,
+                flexibleSpace: appBarColor,
+                actions: [
+                  _hasFilterButton
+                      ? IconButton(
+                          onPressed: () => OrderFilterDialog.show(context, updateCallback: updateOrders),
+                          icon: const Icon(Icons.tune, color: Colors.black),
+                        )
+                      : const SizedBox.shrink(),
+                ],
+              ),
+              body: CustomScrollbarWidget(
+                scrollController: controller,
+                childWidget: Padding(
+                  padding: EdgeInsets.only(
+                    left: 10,
+                    right: controller.hasClients ? 13 : 10,
+                  ),
+                  child: Builder(
+                    builder: (context) {
+                      if (orders.isNotEmpty) {
+                        return ListView.builder(
+                          controller: controller,
+                          itemCount: orders.length,
+                          itemBuilder: (context, index) => OrderItemWidget(
+                            responseOrders: orders[index],
+                            margin: index != orders.length - 1 ? const EdgeInsets.only(bottom: 10) : EdgeInsets.zero,
                           ),
-                        ),
-                      );
-                    }
-                  },
+                        );
+                      } else {
+                        return const Center(
+                          child: Text(
+                            "구매 내역이 없습니다.",
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 90, 90, 90),
+                              fontSize: 15,
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                  ),
                 ),
               ),
             );
