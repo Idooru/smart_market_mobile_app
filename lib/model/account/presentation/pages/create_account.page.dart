@@ -5,7 +5,7 @@ import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/utils/get_snackbar.dart';
 import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.dart';
 import 'package:smart_market/core/widgets/dialog/loading_dialog.dart';
-import 'package:smart_market/model/account/common/const/default_request_accounts_args.dart';
+import 'package:smart_market/model/account/common/const/request_accounts.args.dart';
 import 'package:smart_market/model/account/domain/entities/create_account.entity.dart';
 import 'package:smart_market/model/account/domain/service/account.service.dart';
 import 'package:smart_market/model/account/presentation/provider/create_account.provider.dart';
@@ -89,7 +89,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
         (route) => false,
         arguments: const NavigationPageArgs(selectedIndex: 3),
       );
-      widget.updateCallback(defaultRequestAccountsArgs);
+      widget.updateCallback(RequestAccountsArgs.args);
       scaffoldMessenger.showSnackBar(getSnackBar('계좌 생성이 완료되었습니다.'));
     }).catchError((err) {
       navigator.pop();

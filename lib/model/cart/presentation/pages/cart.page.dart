@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_market/core/errors/connection_error.dart';
-import 'package:smart_market/model/cart/common/const/default_request_carts_args.dart';
+import 'package:smart_market/model/cart/common/const/request_carts.args.dart';
 import 'package:smart_market/model/cart/domain/entities/cart.entity.dart';
 import 'package:smart_market/model/cart/domain/service/cart.service.dart';
 import 'package:smart_market/model/cart/presentation/widgets/cart_list.widget.dart';
@@ -14,7 +14,7 @@ import '../../../../core/utils/get_it_initializer.dart';
 import '../../../../core/widgets/handler/internal_server_error_handler.widget.dart';
 import '../../../../core/widgets/handler/loading_handler.widget.dart';
 import '../../../../core/widgets/handler/network_error_handler.widget.dart';
-import '../../../account/common/const/default_request_accounts_args.dart';
+import '../../../account/common/const/request_accounts.args.dart';
 import '../../../account/domain/entities/account.entity.dart';
 import '../../../account/domain/service/account.service.dart';
 import '../../../user/presentation/dialog/force_logout.dialog.dart';
@@ -43,9 +43,9 @@ class _CartPageState extends State<CartPage> {
     await Future.delayed(const Duration(milliseconds: 500));
     await checkJwtDuration();
 
-    ResponseCarts carts = await _cartService.fetchCarts(defaultRequestCartsArgs);
+    ResponseCarts carts = await _cartService.fetchCarts(RequestCartsArgs.args);
     ResponseProfile profile = await _userService.getProfile();
-    List<ResponseAccount> accounts = await _accountService.fetchAccounts(defaultRequestAccountsArgs);
+    List<ResponseAccount> accounts = await _accountService.fetchAccounts(RequestAccountsArgs.args);
 
     return {
       "carts": carts,

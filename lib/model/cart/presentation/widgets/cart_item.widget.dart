@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/utils/format_number.dart';
 import 'package:smart_market/core/utils/parse_date.dart';
+import 'package:smart_market/model/cart/common/const/request_carts.args.dart';
 import 'package:smart_market/model/cart/domain/entities/modify_cart.entity.dart';
 import 'package:smart_market/model/cart/presentation/dialog/modify_cart.dialog.dart';
 
@@ -14,7 +15,7 @@ import '../../domain/service/cart.service.dart';
 
 class CartItemWidget extends StatefulWidget {
   final Cart cart;
-  final void Function() updateCallback;
+  final void Function(RequestCarts) updateCallback;
 
   const CartItemWidget({
     super.key,
@@ -54,7 +55,7 @@ class _CartItemWidgetState extends State<CartItemWidget> {
 
       try {
         await _cartService.modifyCart(args);
-        widget.updateCallback();
+        widget.updateCallback(RequestCartsArgs.args);
         scaffoldMessenger.showSnackBar(getSnackBar("해당 장바구니를 수정하였습니다."));
       } catch (err) {
         handleCartError(err);
@@ -75,7 +76,7 @@ class _CartItemWidgetState extends State<CartItemWidget> {
 
     try {
       await _cartService.deleteCart(widget.cart.id);
-      widget.updateCallback();
+      widget.updateCallback(RequestCartsArgs.args);
       scaffoldMessenger.showSnackBar(getSnackBar("해당 장바구니를 삭제하였습니다."));
       navigator.pop();
     } catch (err) {

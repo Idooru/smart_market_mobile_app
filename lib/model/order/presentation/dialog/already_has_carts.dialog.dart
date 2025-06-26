@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:smart_market/core/widgets/dialog/handle_network_error.dialog.dart';
 import 'package:smart_market/model/order/presentation/provider/create_order.provider.dart';
 
 import '../../../../core/utils/get_it_initializer.dart';
 import '../../../../core/widgets/common/common_button_bar.widget.dart';
 import '../../../../core/widgets/dialog/warn_dialog.dart';
 import '../../../account/domain/entities/account.entity.dart';
-import '../../../cart/common/const/default_request_carts_args.dart';
+import '../../../cart/common/const/request_carts.args.dart';
 import '../../../cart/domain/entities/cart.entity.dart';
 import '../../../cart/domain/entities/create_cart.entity.dart';
 import '../../../cart/domain/service/cart.service.dart';
@@ -34,20 +35,24 @@ class AlreadyHasCartsDialog {
               NavigatorState navigator = Navigator.of(context);
               navigator.pop();
 
-              await _cartService.createCart(createCartArgs);
-              ResponseCarts responseCarts = await _cartService.fetchCarts(defaultRequestCartsArgs);
+              try {
+                await _cartService.createCart(createCartArgs);
+                ResponseCarts responseCarts = await _cartService.fetchCarts(RequestCartsArgs.args);
 
-              provider.setCarts(responseCarts.cartRaws);
-              provider.setCartTotalPrice(responseCarts.totalPrice);
-              provider.setAccounts(accounts);
+                provider.setCarts(responseCarts.cartRaws);
+                provider.setCartTotalPrice(responseCarts.totalPrice);
+                provider.setAccounts(accounts);
 
-              navigator.pushNamed(
-                "/create_order",
-                arguments: CreateOrderPageArgs(
-                  address: address,
-                  backRoute: backRoute,
-                ),
-              );
+                navigator.pushNamed(
+                  "/create_order",
+                  arguments: CreateOrderPageArgs(
+                    address: address,
+                    backRoute: backRoute,
+                  ),
+                );
+              } catch (err) {
+                HandleNetworkErrorDialog.show(context, err);
+              }
             },
           ),
         ),
@@ -60,21 +65,25 @@ class AlreadyHasCartsDialog {
               NavigatorState navigator = Navigator.of(context);
               navigator.pop();
 
-              await _cartService.createCart(createCartArgs);
-              ResponseCarts responseCarts = await _cartService.fetchCarts(defaultRequestCartsArgs);
+              try {
+                await _cartService.createCart(createCartArgs);
+                ResponseCarts responseCarts = await _cartService.fetchCarts(RequestCartsArgs.args);
 
-              List<Cart> payNowCarts = responseCarts.cartRaws.where((cart) => cart.isPayNow).toList();
-              provider.setCarts(payNowCarts);
-              provider.setCartTotalPrice(responseCarts.totalPrice);
-              provider.setAccounts(accounts);
+                List<Cart> payNowCarts = responseCarts.cartRaws.where((cart) => cart.isPayNow).toList();
+                provider.setCarts(payNowCarts);
+                provider.setCartTotalPrice(responseCarts.totalPrice);
+                provider.setAccounts(accounts);
 
-              navigator.pushNamed(
-                "/create_order",
-                arguments: CreateOrderPageArgs(
-                  address: address,
-                  backRoute: backRoute,
-                ),
-              );
+                navigator.pushNamed(
+                  "/create_order",
+                  arguments: CreateOrderPageArgs(
+                    address: address,
+                    backRoute: backRoute,
+                  ),
+                );
+              } catch (err) {
+                HandleNetworkErrorDialog.show(context, err);
+              }
             },
           ),
         ),

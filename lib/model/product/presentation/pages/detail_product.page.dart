@@ -5,7 +5,7 @@ import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/widgets/common/common_button_bar.widget.dart';
 import 'package:smart_market/core/widgets/handler/loading_handler.widget.dart';
-import 'package:smart_market/model/cart/common/const/default_request_carts_args.dart';
+import 'package:smart_market/model/cart/common/const/request_carts.args.dart';
 import 'package:smart_market/model/cart/domain/entities/cart_product.entity.dart';
 import 'package:smart_market/model/cart/domain/entities/create_cart.entity.dart';
 import 'package:smart_market/model/cart/presentation/dialog/create_cart.dialog.dart';
@@ -141,7 +141,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
       );
 
       try {
-        ResponseCarts responseCarts = await _cartService.fetchCarts(defaultRequestCartsArgs);
+        ResponseCarts responseCarts = await _cartService.fetchCarts(RequestCartsArgs.args);
         if (responseCarts.cartRaws.isNotEmpty) {
           navigator.pop();
           AlreadyHasCartsDialog.show(
@@ -155,7 +155,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
         } else {
           await _cartService.createCart(createCartArgs);
           navigator.pop();
-          return _cartService.fetchCarts(defaultRequestCartsArgs);
+          return _cartService.fetchCarts(RequestCartsArgs.args);
         }
       } catch (err) {
         HandleNetworkErrorDialog.show(context, err);

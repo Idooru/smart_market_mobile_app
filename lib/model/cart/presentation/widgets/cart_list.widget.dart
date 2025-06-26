@@ -14,7 +14,7 @@ import '../../../../core/widgets/handler/internal_server_error_handler.widget.da
 import '../../../../core/widgets/handler/loading_handler.widget.dart';
 import '../../../../core/widgets/handler/network_error_handler.widget.dart';
 import '../../../account/domain/entities/account.entity.dart';
-import '../../common/const/default_request_carts_args.dart';
+import '../../common/const/request_carts.args.dart';
 import '../../domain/entities/cart.entity.dart';
 import '../../domain/service/cart.service.dart';
 import '../dialog/delete_all_carts.dialog.dart';
@@ -45,7 +45,7 @@ class CartListWidgetState extends State<CartListWidget> {
   @override
   void initState() {
     super.initState();
-    _getCartsFuture = _cartService.fetchCarts(defaultRequestCartsArgs);
+    _getCartsFuture = _cartService.fetchCarts(RequestCartsArgs.args);
   }
 
   void updateCarts(RequestCarts args) {
@@ -91,7 +91,7 @@ class CartListWidgetState extends State<CartListWidget> {
                       pressCallback: () {
                         DeleteAllCartsDialog.show(
                           context,
-                          updateCallback: () => updateCarts(defaultRequestCartsArgs),
+                          updateCallback: updateCarts,
                         );
                       },
                       icon: Icons.delete,
@@ -121,7 +121,7 @@ class CartListWidgetState extends State<CartListWidget> {
                   itemCount: carts.cartRaws.length,
                   itemBuilder: (context, index) => CartItemWidget(
                     cart: carts.cartRaws[index],
-                    updateCallback: () => updateCarts(defaultRequestCartsArgs),
+                    updateCallback: updateCarts,
                   ),
                 ),
         ),
@@ -185,7 +185,7 @@ class CartListWidgetState extends State<CartListWidget> {
                   if (error is ConnectionError) {
                     return NetworkErrorHandlerWidget(reconnectCallback: () {
                       setState(() {
-                        _getCartsFuture = _cartService.fetchCarts(defaultRequestCartsArgs);
+                        _getCartsFuture = _cartService.fetchCarts(RequestCartsArgs.args);
                       });
                     });
                   } else if (error is DioFailError) {

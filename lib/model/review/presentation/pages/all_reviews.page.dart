@@ -9,7 +9,7 @@ import '../../../../core/widgets/common/custom_scrollbar.widget.dart';
 import '../../../../core/widgets/handler/internal_server_error_handler.widget.dart';
 import '../../../../core/widgets/handler/loading_handler.widget.dart';
 import '../../../../core/widgets/handler/network_error_handler.widget.dart';
-import '../../common/const/default_request_all_review_args.dart';
+import '../../common/const/request_all_review.args.dart';
 import '../../domain/entity/all_review.entity.dart';
 import '../../domain/service/review.service.dart';
 import '../widgets/item/all_review_item.widget.dart';
@@ -38,7 +38,7 @@ class _AllReviewsPageState extends State<AllReviewsPage> {
     await Future.delayed(const Duration(milliseconds: 500));
     await checkJwtDuration();
 
-    return _reviewService.fetchReviews(defaultRequestAllReviewArgs);
+    return _reviewService.fetchReviews(RequestAllReviewsArgs.args);
   }
 
   void updateIsShow(bool value) {
@@ -70,7 +70,7 @@ class _AllReviewsPageState extends State<AllReviewsPage> {
             if (error is ConnectionError) {
               return NetworkErrorHandlerWidget(
                 reconnectCallback: () {
-                  updateReviews(defaultRequestAllReviewArgs);
+                  updateReviews(RequestAllReviewsArgs.args);
                 },
                 hasReturn: true,
               );

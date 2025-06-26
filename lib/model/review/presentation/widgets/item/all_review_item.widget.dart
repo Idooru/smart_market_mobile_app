@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_market/core/themes/theme_data.dart';
-import 'package:smart_market/model/review/common/const/default_request_all_review_args.dart';
+import 'package:smart_market/model/review/common/const/request_all_review.args.dart';
 import 'package:smart_market/model/review/domain/entity/all_review.entity.dart';
 import 'package:smart_market/model/review/domain/service/review.service.dart';
 import 'package:smart_market/model/review/presentation/pages/detail_review.page.dart';
@@ -67,7 +67,7 @@ class AllReviewItemWidget extends StatelessWidget {
                 onTap: () async {
                   Navigator.of(context).pop();
                   await reviewService.deleteReview(responseAllReview.review.id);
-                  updateCallback(defaultRequestAllReviewArgs);
+                  updateCallback(RequestAllReviewsArgs.args);
                 },
                 child: const ListTile(
                   leading: Icon(Icons.delete),

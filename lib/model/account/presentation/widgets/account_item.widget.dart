@@ -10,10 +10,11 @@ import 'package:smart_market/model/account/presentation/dialog/account_transacti
 import '../../../../core/utils/format_number.dart';
 import '../../../../core/utils/parse_date.dart';
 import '../../../../core/widgets/dialog/handle_network_error.dialog.dart';
+import '../../common/const/request_accounts.args.dart';
 
 class AccountItemWidget extends StatefulWidget {
   final ResponseAccount account;
-  final void Function() updateCallback;
+  final void Function(RequestAccounts) updateCallback;
 
   const AccountItemWidget({
     super.key,
@@ -42,7 +43,7 @@ class _AccountItemWidgetState extends State<AccountItemWidget> {
 
       try {
         await _accountService.deposit(args);
-        widget.updateCallback();
+        widget.updateCallback(RequestAccountsArgs.args);
         scaffoldMessenger.showSnackBar(getSnackBar("입금을 완료하였습니다."));
       } catch (err) {
         handleAccountTransactionError(err);
@@ -68,7 +69,7 @@ class _AccountItemWidgetState extends State<AccountItemWidget> {
 
       try {
         await _accountService.withdraw(args);
-        widget.updateCallback();
+        widget.updateCallback(RequestAccountsArgs.args);
         scaffoldMessenger.showSnackBar(getSnackBar("출금을 완료하였습니다."));
       } catch (err) {
         handleAccountTransactionError(err);
@@ -90,7 +91,7 @@ class _AccountItemWidgetState extends State<AccountItemWidget> {
 
     try {
       await _accountService.setMainAccount(widget.account.id);
-      widget.updateCallback();
+      widget.updateCallback(RequestAccountsArgs.args);
       scaffoldMessenger.showSnackBar(getSnackBar("해당 계좌를 주 사용 계좌로 설정하였습니다."));
       navigator.pop();
     } catch (err) {
@@ -105,7 +106,7 @@ class _AccountItemWidgetState extends State<AccountItemWidget> {
 
     try {
       await _accountService.deleteAccount(widget.account.id);
-      widget.updateCallback();
+      widget.updateCallback(RequestAccountsArgs.args);
       scaffoldMessenger.showSnackBar(getSnackBar("해당 계좌를 삭제하였습니다."));
       navigator.pop();
     } catch (err) {

@@ -113,14 +113,14 @@ class _AccountListWidgetState extends State<AccountListWidget> {
                     return accounts
                         .map((account) => AccountItemWidget(
                               account: account,
-                              updateCallback: () => updateAccounts(defaultRequestAccountsArgs),
+                              updateCallback: updateAccounts,
                             ))
                         .toList();
                   } else if (accounts.isNotEmpty && accounts.length <= 4) {
                     return [
                       ...accounts.map((account) => AccountItemWidget(
                             account: account,
-                            updateCallback: () => updateAccounts(defaultRequestAccountsArgs),
+                            updateCallback: updateAccounts,
                           )),
                       CommonButtonBarWidget(
                         icon: Icons.account_balance_outlined,

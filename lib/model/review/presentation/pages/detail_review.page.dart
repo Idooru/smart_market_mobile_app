@@ -22,7 +22,7 @@ import '../../../../core/widgets/handler/internal_server_error_handler.widget.da
 import '../../../../core/widgets/handler/loading_handler.widget.dart';
 import '../../../../core/widgets/handler/network_error_handler.widget.dart';
 import '../../../user/presentation/dialog/force_logout.dialog.dart';
-import '../../common/const/default_request_all_review_args.dart';
+import '../../common/const/request_all_review.args.dart';
 import '../../domain/entity/modify_review.entity.dart';
 import '../dialog/go_out_review.dialog.dart';
 import '../widgets/edit/edit_review_content.widget.dart';
@@ -110,7 +110,7 @@ class _DetailReviewPageState extends AccessReviewItemWidget<DetailReviewPage> {
       reviewVideoProvider.clearAll();
       scaffoldMessenger.showSnackBar(getSnackBar("${widget.productName}상품의 리뷰를 수정하였습니다."));
 
-      widget.updateCallback(defaultRequestAllReviewArgs);
+      widget.updateCallback(RequestAllReviewsArgs.args);
       navigator.popUntil(ModalRoute.withName("/all_reviews"));
     } catch (err) {
       navigator.pop();

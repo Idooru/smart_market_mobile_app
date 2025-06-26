@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/utils/get_snackbar.dart';
 import 'package:smart_market/core/widgets/common/common_button_bar.widget.dart';
+import 'package:smart_market/model/cart/common/const/request_carts.args.dart';
 import 'package:smart_market/model/cart/domain/service/cart.service.dart';
 
 import '../../../../core/widgets/dialog/handle_network_error.dialog.dart';
 import '../../../../core/widgets/dialog/warn_dialog.dart';
+import '../../domain/entities/cart.entity.dart';
 
 class DeleteAllCartsDialog {
   static final CartService _cartService = locator<CartService>();
 
-  static void show(BuildContext context, {required void Function() updateCallback}) {
+  static void show(BuildContext context, {required void Function(RequestCarts) updateCallback}) {
     WarnDialog.show(
       context,
       title: "장바구니를 전부 삭제하시겠습니까?",
@@ -28,7 +30,7 @@ class DeleteAllCartsDialog {
               navigator.pop();
               try {
                 await _cartService.deleteAllCarts();
-                updateCallback();
+                updateCallback(RequestCartsArgs.args);
                 scaffoldMessenger.showSnackBar(getSnackBar("장바구니를 전부 삭제합니다."));
               } catch (err) {
                 HandleNetworkErrorDialog.show(context, err);

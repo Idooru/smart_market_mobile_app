@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_market/core/widgets/common/custom_scrollbar.widget.dart';
-import 'package:smart_market/model/account/common/const/default_request_accounts_args.dart';
+import 'package:smart_market/model/account/common/const/request_accounts.args.dart';
 
 import '../../../../core/errors/connection_error.dart';
 import '../../../../core/errors/dio_fail.error.dart';
@@ -42,7 +42,7 @@ class _AccountPageState extends State<AccountsPage> {
     await Future.delayed(const Duration(milliseconds: 500));
     await checkJwtDuration();
 
-    return _accountService.fetchAccounts(defaultRequestAccountsArgs);
+    return _accountService.fetchAccounts(RequestAccountsArgs.args);
   }
 
   void updateHasFilterButton(bool value) {
@@ -93,7 +93,7 @@ class _AccountPageState extends State<AccountsPage> {
             if (error is ConnectionError) {
               return NetworkErrorHandlerWidget(
                 reconnectCallback: () {
-                  updateAccounts(defaultRequestAccountsArgs);
+                  updateAccounts(RequestAccountsArgs.args);
                 },
                 hasReturn: true,
               );
@@ -148,7 +148,7 @@ class _AccountPageState extends State<AccountsPage> {
                                       return accounts
                                           .map((account) => AccountItemWidget(
                                                 account: account,
-                                                updateCallback: () => updateAccounts(defaultRequestAccountsArgs),
+                                                updateCallback: updateAccounts,
                                               ))
                                           .toList();
                                     } else if (accounts.isNotEmpty && accounts.length <= 4) {
@@ -157,7 +157,7 @@ class _AccountPageState extends State<AccountsPage> {
                                           .map(
                                             (account) => AccountItemWidget(
                                               account: account,
-                                              updateCallback: () => updateAccounts(defaultRequestAccountsArgs),
+                                              updateCallback: updateAccounts,
                                             ),
                                           )
                                           .toList();

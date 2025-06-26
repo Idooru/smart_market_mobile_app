@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_market/core/utils/check_jwt_duration.dart';
-import 'package:smart_market/model/order/common/const/default_request_order_args.dart';
+import 'package:smart_market/model/order/common/const/request_order.args.dart';
 import 'package:smart_market/model/order/presentation/widgets/order_item.widget.dart';
 
 import '../../../../core/errors/connection_error.dart';
@@ -39,7 +39,7 @@ class _OrdersPageState extends State<OrdersPage> {
     await Future.delayed(const Duration(milliseconds: 500));
     await checkJwtDuration();
 
-    return _orderService.fetchOrders(defaultRequestOrdersArgs);
+    return _orderService.fetchOrders(RequestOrdersArgs.args);
   }
 
   void updateHasFilterButton(bool value) {
@@ -71,7 +71,7 @@ class _OrdersPageState extends State<OrdersPage> {
             if (error is ConnectionError) {
               return NetworkErrorHandlerWidget(
                 reconnectCallback: () {
-                  updateOrders(defaultRequestOrdersArgs);
+                  updateOrders(RequestOrdersArgs.args);
                 },
                 hasReturn: true,
               );

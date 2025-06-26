@@ -3,6 +3,8 @@ import 'package:smart_market/core/common/network_handler.mixin.dart';
 import 'package:smart_market/core/widgets/common/radio.widget.dart';
 import 'package:smart_market/model/account/domain/entities/account.entity.dart';
 
+import '../../common/const/request_accounts.args.dart';
+
 final Map<String, String> _filterMap = {};
 
 class SortAccountsDialog {
@@ -40,6 +42,13 @@ class SortAccountsDialogWidgetState extends State<SortAccountsDialogWidget> with
       _selectedAlign = "DESC";
       _selectedColumn = "createdAt";
     });
+
+    RequestAccounts args = RequestAccounts(
+      align: _selectedAlign,
+      column: _selectedColumn,
+    );
+
+    RequestAccountsArgs.setArgs(args);
   }
 
   void sortAccount() {
@@ -48,6 +57,7 @@ class SortAccountsDialogWidgetState extends State<SortAccountsDialogWidget> with
       column: _selectedColumn,
     );
 
+    RequestAccountsArgs.setArgs(args);
     widget.updateCallback(args);
 
     _filterMap["select-align"] = _selectedAlign;

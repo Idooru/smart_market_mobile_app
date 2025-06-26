@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_market/model/cart/common/const/request_carts.args.dart';
 
 import '../../../../core/widgets/common/radio.widget.dart';
 import '../../domain/entities/cart.entity.dart';
@@ -40,6 +41,13 @@ class _SortCartDialogWidgetState extends State<SortCartsDialogWidget> {
       _selectedAlign = "DESC";
       _selectedColumn = "createdAt";
     });
+
+    RequestCarts args = RequestCarts(
+      align: _selectedAlign,
+      column: _selectedColumn,
+    );
+
+    RequestCartsArgs.setArgs(args);
   }
 
   void sortCart() {
@@ -48,6 +56,7 @@ class _SortCartDialogWidgetState extends State<SortCartsDialogWidget> {
       column: _selectedColumn,
     );
 
+    RequestCartsArgs.setArgs(args);
     widget.updateCallback(args);
 
     _filterMap["select-align"] = _selectedAlign;
