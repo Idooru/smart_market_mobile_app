@@ -15,26 +15,31 @@ import 'package:smart_market/model/account/presentation/widgets/select_bank.widg
 import 'package:smart_market/model/account/presentation/widgets/set_main_account.widget.dart';
 
 import '../../../../core/widgets/dialog/handle_network_error.dialog.dart';
+import '../../../main/presentation/pages/navigation.page.dart';
 import '../../domain/entities/account.entity.dart';
 
 class CreateAccountPageArgs {
   final bool isAccountsEmpty;
-  final void Function(RequestAccounts) updateCallback;
+  final String? backRoute;
+  final void Function(RequestAccounts)? updateCallback;
 
   const CreateAccountPageArgs({
     required this.isAccountsEmpty,
-    required this.updateCallback,
+    this.backRoute,
+    this.updateCallback,
   });
 }
 
 class CreateAccountPage extends StatefulWidget {
   final bool isAccountsEmpty;
-  final void Function(RequestAccounts) updateCallback;
+  final String? backRoute;
+  final void Function(RequestAccounts)? updateCallback;
 
   const CreateAccountPage({
     super.key,
     required this.isAccountsEmpty,
-    required this.updateCallback,
+    this.backRoute,
+    this.updateCallback,
   });
 
   @override
@@ -83,8 +88,20 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
     LoadingDialog.show(context, title: "계좌 생성 중..");
 
     _accountService.createAccount(args).then((_) {
-      navigator.popUntil(ModalRoute.withName("/accounts"));
-      widget.updateCallback(RequestAccountsArgs.args);
+      if (widget.backRoute != null) {
+        navigator.popUntil(ModalRoute.withName(widget.backRoute!));
+      } else {
+        navigator.pushNamedAndRemoveUntil(
+          "/home",
+          (route) => false,
+          arguments: const NavigationPageArgs(selectedIndex: 2),
+        );
+      }
+
+      if (widget.updateCallback != null) {
+        widget.updateCallback!(RequestAccountsArgs.args);
+      }
+
       scaffoldMessenger.showSnackBar(getSnackBar('계좌 생성이 완료되었습니다.'));
     }).catchError((err) {
       navigator.pop();

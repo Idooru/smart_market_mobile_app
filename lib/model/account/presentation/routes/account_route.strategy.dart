@@ -26,6 +26,7 @@ class CreateAccountStrategy implements RouteStrategy {
       builder: (context) => CreateAccountPage(
         isAccountsEmpty: args.isAccountsEmpty,
         updateCallback: args.updateCallback,
+        backRoute: args.backRoute,
       ),
       settings: settings,
     );
