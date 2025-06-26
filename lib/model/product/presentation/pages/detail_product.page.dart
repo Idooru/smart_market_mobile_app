@@ -287,7 +287,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
                                     children: responseDetailProduct.reviews.asMap().entries.map((entry) {
                                       int index = entry.key;
                                       Review review = entry.value;
-                                      EdgeInsets margin = index != responseDetailProduct.reviews.length - 1 ? const EdgeInsets.fromLTRB(8, 8, 8, 0) : const EdgeInsets.fromLTRB(8, 8, 8, 8);
+                                      EdgeInsets margin = index != responseDetailProduct.reviews.length - 1 ? EdgeInsets.zero : const EdgeInsets.only(bottom: 10);
                                       return ReviewItemWidget(review: review, margin: margin);
                                     }).toList(),
                                   ),
