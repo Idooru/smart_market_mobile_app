@@ -20,7 +20,7 @@ class LoginRouteStrategy implements RouteStrategy {
   @override
   MaterialPageRoute route(RouteSettings settings) {
     return MaterialPageRoute(
-      builder: (context) => LoginPage(),
+      builder: (context) => const LoginPage(),
       settings: settings,
     );
   }
