@@ -321,7 +321,10 @@ class _DetailProductPageState extends State<DetailProductPage> {
                           if (checkIsLogined()) {
                             pressCreateCart(responseDetailProduct);
                           } else {
-                            InvitationLoginDialog.show(context);
+                            InvitationLoginDialog.show(
+                              context,
+                              backRoute: "/detail_product",
+                            );
                           }
                         },
                       ),
@@ -342,7 +345,10 @@ class _DetailProductPageState extends State<DetailProductPage> {
                                   provider,
                                 );
                               } else {
-                                InvitationLoginDialog.show(context);
+                                InvitationLoginDialog.show(
+                                  context,
+                                  backRoute: "/detail_product",
+                                );
                               }
                             },
                           );

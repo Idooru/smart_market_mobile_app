@@ -19,8 +19,12 @@ final Map<String, RouteStrategy> userRouteStrategies = {
 class LoginRouteStrategy implements RouteStrategy {
   @override
   MaterialPageRoute route(RouteSettings settings) {
+    final args = settings.arguments as LoginPageArgs;
     return MaterialPageRoute(
-      builder: (context) => const LoginPage(),
+      builder: (context) => LoginPage(
+        backRoute: args.backRoute,
+        navigationIndex: args.navigationIndex,
+      ),
       settings: settings,
     );
   }

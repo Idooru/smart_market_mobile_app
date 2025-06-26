@@ -11,8 +11,25 @@ import '../../../../core/widgets/dialog/handle_network_error.dialog.dart';
 import '../../../../core/widgets/dialog/loading_dialog.dart';
 import '../../../main/presentation/pages/navigation.page.dart';
 
+class LoginPageArgs {
+  final String? backRoute;
+  final int? navigationIndex;
+
+  const LoginPageArgs({
+    this.backRoute,
+    this.navigationIndex,
+  });
+}
+
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  final String? backRoute;
+  final int? navigationIndex;
+
+  const LoginPage({
+    super.key,
+    this.backRoute,
+    this.navigationIndex,
+  });
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -54,11 +71,16 @@ class _LoginPageState extends State<LoginPage> {
     LoadingDialog.show(context, title: "로그인 중..");
 
     _userService.login(args).then((_) {
-      navigator.pushNamedAndRemoveUntil(
-        "/home",
-        (route) => false,
-        arguments: const NavigationPageArgs(selectedIndex: 0),
-      );
+      if (widget.backRoute != null) {
+        navigator.popUntil(ModalRoute.withName(widget.backRoute!));
+      } else {
+        navigator.pushNamedAndRemoveUntil(
+          "/home",
+          (route) => false,
+          arguments: NavigationPageArgs(selectedIndex: widget.navigationIndex!),
+        );
+      }
+
       scaffoldMessenger.showSnackBar(getSnackBar('로그인이 완료되었습니다.'));
     }).catchError((err) {
       navigator.pop();

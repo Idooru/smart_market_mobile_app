@@ -46,7 +46,7 @@ class NavigationPageState extends State<NavigationPage> {
 
   void tapBottomNavigator(int index) {
     if ((index == 2 || index == 3) && !checkIsLogined()) {
-      return InvitationLoginDialog.show(context);
+      return InvitationLoginDialog.show(context, navigationIndex: index);
     }
 
     Navigator.of(context).pushNamedAndRemoveUntil(
