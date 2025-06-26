@@ -15,7 +15,6 @@ import 'package:smart_market/model/account/presentation/widgets/select_bank.widg
 import 'package:smart_market/model/account/presentation/widgets/set_main_account.widget.dart';
 
 import '../../../../core/widgets/dialog/handle_network_error.dialog.dart';
-import '../../../main/presentation/pages/navigation.page.dart';
 import '../../domain/entities/account.entity.dart';
 
 class CreateAccountPageArgs {
@@ -84,11 +83,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
     LoadingDialog.show(context, title: "계좌 생성 중..");
 
     _accountService.createAccount(args).then((_) {
-      navigator.pushNamedAndRemoveUntil(
-        "/home",
-        (route) => false,
-        arguments: const NavigationPageArgs(selectedIndex: 3),
-      );
+      navigator.popUntil(ModalRoute.withName("/accounts"));
       widget.updateCallback(RequestAccountsArgs.args);
       scaffoldMessenger.showSnackBar(getSnackBar('계좌 생성이 완료되었습니다.'));
     }).catchError((err) {
