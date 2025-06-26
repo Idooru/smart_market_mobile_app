@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.dart';
 import 'package:smart_market/core/widgets/common/custom_scrollbar.widget.dart';
 import 'package:smart_market/model/account/common/const/request_accounts.args.dart';
 
@@ -7,7 +8,6 @@ import '../../../../core/errors/dio_fail.error.dart';
 import '../../../../core/themes/theme_data.dart';
 import '../../../../core/utils/check_jwt_duration.dart';
 import '../../../../core/utils/get_it_initializer.dart';
-import '../../../../core/widgets/common/common_button_bar.widget.dart';
 import '../../../../core/widgets/handler/internal_server_error_handler.widget.dart';
 import '../../../../core/widgets/handler/loading_handler.widget.dart';
 import '../../../../core/widgets/handler/network_error_handler.widget.dart';
@@ -170,17 +170,14 @@ class _AccountPageState extends State<AccountsPage> {
                       ),
                     ),
                   ),
-                  Builder(
-                    builder: (context) => _hasCreateAccountButton
-                        ? Container(
-                            padding: const EdgeInsets.fromLTRB(10, 10, 10, 30),
-                            child: CommonButtonBarWidget(
-                              icon: Icons.account_balance_outlined,
-                              title: "계좌 등록하기",
-                              pressCallback: () => pressCreateAccount(accounts),
-                            ),
-                          )
-                        : const SizedBox.shrink(),
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 30),
+                    child: ConditionalButtonBarWidget(
+                      icon: Icons.account_balance_outlined,
+                      title: "계좌 등록하기",
+                      isValid: _hasCreateAccountButton,
+                      pressCallback: () => pressCreateAccount(accounts),
+                    ),
                   ),
                 ],
               ),
