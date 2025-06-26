@@ -6,6 +6,8 @@ import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/widgets/common/common_button_bar.widget.dart';
 import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.dart';
 import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
+import 'package:smart_market/core/widgets/dialog/handle_network_error.dialog.dart';
+import 'package:smart_market/core/widgets/dialog/loading_dialog.dart';
 import 'package:smart_market/model/user/domain/entities/find_email.entity.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
 import 'package:smart_market/model/user/presentation/pages/reset_password.page.dart';
@@ -25,15 +27,17 @@ class _FindEmailPageState extends State<FindEmailPage> with NetWorkHandler {
   final GlobalKey<EditRealNameWidgetState> _realNameKey = GlobalKey<EditRealNameWidgetState>();
   final GlobalKey<EditPhoneNumberWidgetState> _phoneNumberKey = GlobalKey<EditPhoneNumberWidgetState>();
 
-  bool _hasError = false;
-  String _errorMessage = "";
   String _email = "";
 
   Future<void> pressFindEmail() async {
+    NavigatorState navigator = Navigator.of(context);
+
     RequestFindEmail args = RequestFindEmail(
       realName: _realNameKey.currentState!.realNameController.text,
       phoneNumber: _phoneNumberKey.currentState!.phoneNumberController.text,
     );
+
+    LoadingDialog.show(context, title: "이메일 찾는 중..");
 
     try {
       String email = await _userService.findEmail(args);
@@ -42,27 +46,20 @@ class _FindEmailPageState extends State<FindEmailPage> with NetWorkHandler {
         _phoneNumberKey.currentState!.focusNode.unfocus();
       });
 
+      navigator.pop();
       setState(() {
-        _hasError = false;
         _email = email;
       });
     } catch (err) {
+      navigator.pop();
+      HandleNetworkErrorDialog.show(context, err);
       setState(() {
-        _hasError = true;
         _email = "";
-        _errorMessage = branchErrorMessage(err);
       });
     }
   }
 
-  void pressResetPassword() {
-    Navigator.of(context).pushNamed(
-      "/reset_password",
-      arguments: ResetPasswordPageArgs(email: _email),
-    );
-  }
-
-  Widget getEmail() {
+  Widget FoundEmail() {
     if (_email.isEmpty) return Container();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,10 +76,7 @@ class _FindEmailPageState extends State<FindEmailPage> with NetWorkHandler {
           height: 50,
           padding: const EdgeInsets.all(10.0),
           margin: const EdgeInsets.only(bottom: 10),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: const Color.fromARGB(255, 230, 230, 230),
-          ),
+          decoration: commonContainerDecoration,
           child: Center(
             child: Text(_email),
           ),
@@ -90,13 +84,18 @@ class _FindEmailPageState extends State<FindEmailPage> with NetWorkHandler {
         CommonButtonBarWidget(
           icon: Icons.lock,
           title: "비밀번호 초기화하기",
-          pressCallback: pressResetPassword,
+          pressCallback: () {
+            Navigator.of(context).pushNamed(
+              "/reset_password",
+              arguments: ResetPasswordPageArgs(email: _email),
+            );
+          },
         ),
       ],
     );
   }
 
-  ConditionalButtonBarWidget getFindEmailButton(EditUserColumnProvider provider) {
+  ConditionalButtonBarWidget FindEmailButton(EditUserColumnProvider provider) {
     bool isAllValid = provider.isRealNameValid && provider.isPhoneNumberValid;
 
     // 이메일을 한번 찾은 후 다시 이메일 찾기를 시도할 때 필드가 유효하지 않으면 이전에 찾은 이메일을 가려버림
@@ -139,10 +138,9 @@ class _FindEmailPageState extends State<FindEmailPage> with NetWorkHandler {
                     hasDuplicateValidation: false,
                   ),
                   const SizedBox(height: 10),
-                  getFindEmailButton(provider),
+                  FindEmailButton(provider),
                   const SizedBox(height: 10),
-                  if (_hasError) getErrorMessageWidget(_errorMessage),
-                  getEmail(),
+                  FoundEmail(),
                 ],
               ),
             ),

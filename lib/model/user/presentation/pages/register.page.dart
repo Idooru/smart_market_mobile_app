@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_market/core/common/network_handler.mixin.dart';
 import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
-import 'package:smart_market/core/utils/get_snackbar.dart';
 import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.dart';
 import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
+import 'package:smart_market/core/widgets/dialog/handle_network_error.dialog.dart';
 import 'package:smart_market/model/user/domain/entities/register.entity.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
 import 'package:smart_market/model/user/presentation/provider/edit_user_column.provider.dart';
@@ -18,6 +17,9 @@ import 'package:smart_market/model/user/presentation/widgets/edit/edit_password.
 import 'package:smart_market/model/user/presentation/widgets/edit/edit_phonenumber.widget.dart';
 import 'package:smart_market/model/user/presentation/widgets/edit/edit_realname.widget.dart';
 
+import '../../../../core/utils/get_snackbar.dart';
+import '../../../../core/widgets/dialog/loading_dialog.dart';
+
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
@@ -25,7 +27,7 @@ class RegisterPage extends StatefulWidget {
   State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> with NetWorkHandler {
+class _RegisterPageState extends State<RegisterPage> {
   final UserService _userService = locator<UserService>();
   final GlobalKey<EditRealNameWidgetState> _realNameKey = GlobalKey<EditRealNameWidgetState>();
   final GlobalKey<EditGenderWidgetState> _genderKey = GlobalKey<EditGenderWidgetState>();
@@ -36,10 +38,7 @@ class _RegisterPageState extends State<RegisterPage> with NetWorkHandler {
   final GlobalKey<EditAddressWidgetState> _addressKey = GlobalKey<EditAddressWidgetState>();
   final GlobalKey<EditPhoneNumberWidgetState> _phoneNumberKey = GlobalKey<EditPhoneNumberWidgetState>();
 
-  bool _hasError = false;
-  String _errorMessage = "";
-
-  Future<void> pressRegister() async {
+  void pressRegister() {
     NavigatorState navigator = Navigator.of(context);
     ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
     RequestRegister args = RequestRegister(
@@ -54,16 +53,15 @@ class _RegisterPageState extends State<RegisterPage> with NetWorkHandler {
       role: "client",
     );
 
-    try {
-      await _userService.register(args);
-      navigator.pop();
+    LoadingDialog.show(context, title: "회원 가입 중..");
+
+    _userService.register(args).then((_) {
+      navigator.popUntil(ModalRoute.withName("/login"));
       scaffoldMessenger.showSnackBar(getSnackBar('회원가입이 완료되었습니다.'));
-    } catch (err) {
-      setState(() {
-        _hasError = true;
-        _errorMessage = branchErrorMessage(err);
-      });
-    }
+    }).catchError((err) {
+      navigator.pop();
+      HandleNetworkErrorDialog.show(context, err);
+    });
   }
 
   ConditionalButtonBarWidget getRegisterButton(EditUserColumnProvider provider) {
@@ -115,7 +113,6 @@ class _RegisterPageState extends State<RegisterPage> with NetWorkHandler {
                   const SizedBox(height: 10),
                   getRegisterButton(provider),
                   const SizedBox(height: 20),
-                  if (_hasError) getErrorMessageWidget(_errorMessage),
                 ],
               ),
             ),

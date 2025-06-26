@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_market/core/common/network_handler.mixin.dart';
-import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/utils/get_snackbar.dart';
 import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.dart';
+import 'package:smart_market/core/widgets/dialog/loading_dialog.dart';
+import 'package:smart_market/model/account/common/const/default_request_accounts_args.dart';
 import 'package:smart_market/model/account/domain/entities/create_account.entity.dart';
 import 'package:smart_market/model/account/domain/service/account.service.dart';
 import 'package:smart_market/model/account/presentation/provider/create_account.provider.dart';
@@ -14,25 +14,35 @@ import 'package:smart_market/model/account/presentation/widgets/edit_account_num
 import 'package:smart_market/model/account/presentation/widgets/select_bank.widget.dart';
 import 'package:smart_market/model/account/presentation/widgets/set_main_account.widget.dart';
 
+import '../../../../core/widgets/dialog/handle_network_error.dialog.dart';
+import '../../../main/presentation/pages/navigation.page.dart';
+import '../../domain/entities/account.entity.dart';
+
 class CreateAccountPageArgs {
   final bool isAccountsEmpty;
+  final void Function(RequestAccounts) updateCallback;
 
-  const CreateAccountPageArgs({required this.isAccountsEmpty});
+  const CreateAccountPageArgs({
+    required this.isAccountsEmpty,
+    required this.updateCallback,
+  });
 }
 
 class CreateAccountPage extends StatefulWidget {
   final bool isAccountsEmpty;
+  final void Function(RequestAccounts) updateCallback;
 
   const CreateAccountPage({
     super.key,
     required this.isAccountsEmpty,
+    required this.updateCallback,
   });
 
   @override
   State<CreateAccountPage> createState() => _CreateAccountPageState();
 }
 
-class _CreateAccountPageState extends State<CreateAccountPage> with NetWorkHandler {
+class _CreateAccountPageState extends State<CreateAccountPage> {
   final AccountService _accountService = locator<AccountService>();
   final GlobalKey<SelectBankWidgetState> _bankKey = GlobalKey<SelectBankWidgetState>();
   final GlobalKey<EditAccountNumberWidgetState> _accountNumberKey = GlobalKey<EditAccountNumberWidgetState>();
@@ -57,10 +67,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> with NetWorkHandl
     super.dispose();
   }
 
-  bool _hasError = false;
-  String _errorMessage = "";
-
-  Future<void> pressCreateAccount() async {
+  void pressCreateAccount() {
     NavigatorState navigator = Navigator.of(context);
     ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
 
@@ -74,19 +81,23 @@ class _CreateAccountPageState extends State<CreateAccountPage> with NetWorkHandl
       isMainAccount: _setMainAccountKey.currentState!.isChecked,
     );
 
-    try {
-      await _accountService.createAccount(args);
-      navigator.pop(true);
+    LoadingDialog.show(context, title: "계좌 생성 중..");
+
+    _accountService.createAccount(args).then((_) {
+      navigator.pushNamedAndRemoveUntil(
+        "/home",
+        (route) => false,
+        arguments: const NavigationPageArgs(selectedIndex: 3),
+      );
+      widget.updateCallback(defaultRequestAccountsArgs);
       scaffoldMessenger.showSnackBar(getSnackBar('계좌 생성이 완료되었습니다.'));
-    } on DioFailError catch (err) {
-      setState(() {
-        _hasError = true;
-        _errorMessage = branchErrorMessage(err);
-      });
-    }
+    }).catchError((err) {
+      navigator.pop();
+      HandleNetworkErrorDialog.show(context, err);
+    });
   }
 
-  ConditionalButtonBarWidget getCreateAccountButton(CreateAccountProvider provider) {
+  ConditionalButtonBarWidget CreateAccountButton(CreateAccountProvider provider) {
     bool isAllValid = provider.isBankValid && provider.isAccountNumberValid;
 
     return ConditionalButtonBarWidget(
@@ -120,8 +131,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> with NetWorkHandl
                     isAccountsEmpty: widget.isAccountsEmpty,
                   ),
                   const SizedBox(height: 10),
-                  getCreateAccountButton(provider),
-                  if (_hasError) getErrorMessageWidget(_errorMessage),
+                  CreateAccountButton(provider),
                 ],
               ),
             ),

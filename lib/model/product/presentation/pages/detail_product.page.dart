@@ -215,18 +215,21 @@ class _DetailProductPageState extends State<DetailProductPage> {
           } else if (snapshot.hasError) {
             final error = snapshot.error;
             if (error is ConnectionError) {
-              return NetworkErrorHandlerWidget(reconnectCallback: () {
-                setState(() {
-                  _detailProductPageFuture = initDetailProductPageFuture();
-                });
-              });
+              return NetworkErrorHandlerWidget(
+                reconnectCallback: () {
+                  setState(() {
+                    _detailProductPageFuture = initDetailProductPageFuture();
+                  });
+                },
+                hasReturn: true,
+              );
             } else if (error is RefreshTokenExpiredError) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 ForceLogoutDialog.show(context);
               });
               return const SizedBox.shrink();
             } else if (error is DioFailError) {
-              return const InternalServerErrorHandlerWidget();
+              return const InternalServerErrorHandlerWidget(hasReturn: true);
             } else {
               return Center(child: Text("$error"));
             }

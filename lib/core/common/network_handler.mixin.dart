@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:smart_market/core/errors/dio_fail.error.dart';
 
 import '../errors/connection_error.dart';
@@ -16,14 +15,5 @@ mixin NetWorkHandler {
     } else {
       return "$error";
     }
-  }
-
-  Widget getErrorMessageWidget(String errorMessage) {
-    return Center(
-      child: Text(
-        errorMessage,
-        style: const TextStyle(color: Colors.red),
-      ),
-    );
   }
 }

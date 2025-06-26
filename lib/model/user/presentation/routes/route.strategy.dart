@@ -62,7 +62,10 @@ class EditProfileRouteStrategy implements RouteStrategy {
   MaterialPageRoute route(RouteSettings settings) {
     final args = settings.arguments as EditProfilePageArgs;
     return MaterialPageRoute(
-      builder: (context) => EditProfilePage(profile: args.profile),
+      builder: (context) => EditProfilePage(
+        profile: args.profile,
+        updateCallback: args.updateCallback,
+      ),
       settings: settings,
     );
   }

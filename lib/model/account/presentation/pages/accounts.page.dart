@@ -70,14 +70,13 @@ class _AccountPageState extends State<AccountsPage> {
   }
 
   Future<void> pressCreateAccount(List<ResponseAccount> accounts) async {
-    final result = await Navigator.of(context).pushNamed(
+    Navigator.of(context).pushNamed(
       "/create_account",
-      arguments: CreateAccountPageArgs(isAccountsEmpty: accounts.isEmpty),
+      arguments: CreateAccountPageArgs(
+        isAccountsEmpty: accounts.isEmpty,
+        updateCallback: updateAccounts,
+      ),
     );
-
-    if (result == true) {
-      updateAccounts(defaultRequestAccountsArgs);
-    }
   }
 
   @override
@@ -87,16 +86,19 @@ class _AccountPageState extends State<AccountsPage> {
         future: _getAccountsFuture,
         builder: (BuildContext context, AsyncSnapshot<List<ResponseAccount>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const LoadingHandlerWidget(title: "계좌 리스트 불러오기");
+            return const LoadingHandlerWidget(title: "계좌 리스트 불러오기..");
           } else if (snapshot.hasError) {
             updateHasFilterButton(false);
             final error = snapshot.error;
             if (error is ConnectionError) {
-              return NetworkErrorHandlerWidget(reconnectCallback: () {
-                updateAccounts(defaultRequestAccountsArgs);
-              });
+              return NetworkErrorHandlerWidget(
+                reconnectCallback: () {
+                  updateAccounts(defaultRequestAccountsArgs);
+                },
+                hasReturn: true,
+              );
             } else if (error is DioFailError) {
-              return const InternalServerErrorHandlerWidget();
+              return const InternalServerErrorHandlerWidget(hasReturn: true);
             } else {
               return Center(child: Text("$error"));
             }

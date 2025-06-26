@@ -35,19 +35,22 @@ class _BasicProfileWidgetState extends State<BasicProfileWidget> {
     _getProfileFuture = _userService.getProfile();
   }
 
+  void updateProfile() {
+    setState(() {
+      _getProfileFuture = _userService.getProfile();
+    });
+  }
+
   void pressEditProfile(ResponseProfile profile) async {
     NavigatorState navigator = Navigator.of(context);
     navigator.pop();
-    final result = await navigator.pushNamed(
+    navigator.pushNamed(
       "/edit_profile",
-      arguments: EditProfilePageArgs(profile: profile),
+      arguments: EditProfilePageArgs(
+        profile: profile,
+        updateCallback: updateProfile,
+      ),
     );
-
-    if (result == true) {
-      setState(() {
-        _getProfileFuture = _userService.getProfile();
-      });
-    }
   }
 
   void pressEditPassword() {
@@ -261,11 +264,7 @@ class _BasicProfileWidgetState extends State<BasicProfileWidget> {
               } else if (snapshot.hasError) {
                 final error = snapshot.error;
                 if (error is ConnectionError) {
-                  return NetworkErrorHandlerWidget(reconnectCallback: () {
-                    setState(() {
-                      _getProfileFuture = _userService.getProfile();
-                    });
-                  });
+                  return NetworkErrorHandlerWidget(reconnectCallback: updateProfile);
                 } else if (error is DioFailError) {
                   return const InternalServerErrorHandlerWidget();
                 } else {

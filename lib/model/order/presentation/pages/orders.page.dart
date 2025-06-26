@@ -64,16 +64,19 @@ class _OrdersPageState extends State<OrdersPage> {
         future: _getOrdersFuture,
         builder: (BuildContext context, AsyncSnapshot<List<ResponseOrders>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const LoadingHandlerWidget(title: "결제 리스트 불러오기");
+            return const LoadingHandlerWidget(title: "결제 리스트 불러오기..");
           } else if (snapshot.hasError) {
             updateHasFilterButton(false);
             final error = snapshot.error;
             if (error is ConnectionError) {
-              return NetworkErrorHandlerWidget(reconnectCallback: () {
-                updateOrders(defaultRequestOrdersArgs);
-              });
+              return NetworkErrorHandlerWidget(
+                reconnectCallback: () {
+                  updateOrders(defaultRequestOrdersArgs);
+                },
+                hasReturn: true,
+              );
             } else if (error is DioFailError) {
-              return const InternalServerErrorHandlerWidget();
+              return const InternalServerErrorHandlerWidget(hasReturn: true);
             } else {
               return Center(child: Text("$error"));
             }

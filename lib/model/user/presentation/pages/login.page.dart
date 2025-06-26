@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:smart_market/core/common/network_handler.mixin.dart';
 import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/utils/get_snackbar.dart';
@@ -8,6 +7,9 @@ import 'package:smart_market/model/user/domain/service/user.service.dart';
 import 'package:smart_market/model/user/presentation/pages/reset_password.page.dart';
 
 import '../../../../core/widgets/common/conditional_button_bar.widget.dart';
+import '../../../../core/widgets/dialog/handle_network_error.dialog.dart';
+import '../../../../core/widgets/dialog/loading_dialog.dart';
+import '../../../main/presentation/pages/navigation.page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,7 +18,7 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> with NetWorkHandler {
+class _LoginPageState extends State<LoginPage> {
   final UserService _userService = locator<UserService>();
   final FocusNode _emailFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
@@ -24,8 +26,6 @@ class _LoginPageState extends State<LoginPage> with NetWorkHandler {
   final TextEditingController _passwordController = TextEditingController();
 
   bool _isValidForm = false;
-  bool _hasError = false;
-  String _errorMessage = "";
 
   @override
   void initState() {
@@ -40,11 +40,10 @@ class _LoginPageState extends State<LoginPage> with NetWorkHandler {
       } else {
         _isValidForm = false;
       }
-      _hasError = false;
     });
   }
 
-  Future<void> pressLogin() async {
+  void pressLogin() {
     NavigatorState navigator = Navigator.of(context);
     ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
     RequestLogin args = RequestLogin(
@@ -52,23 +51,21 @@ class _LoginPageState extends State<LoginPage> with NetWorkHandler {
       password: _passwordController.text,
     );
 
-    try {
-      await _userService.login(args);
+    LoadingDialog.show(context, title: "로그인 중..");
 
-      navigator.pop();
+    _userService.login(args).then((_) {
+      navigator.pushNamedAndRemoveUntil(
+        "/home",
+        (route) => false,
+        arguments: const NavigationPageArgs(selectedIndex: 0),
+      );
       scaffoldMessenger.showSnackBar(getSnackBar('로그인이 완료되었습니다.'));
-    } catch (err) {
+    }).catchError((err) {
+      navigator.pop();
+      _emailFocusNode.unfocus();
       _passwordFocusNode.unfocus();
-      setState(() {
-        _hasError = true;
-        String errorMessage = branchErrorMessage(err);
-        if (errorMessage == "관리자 계정은 모바일 접근이 불가능합니다.") {
-          _errorMessage = "접근이 불가능한 사용자 입니다.";
-        } else {
-          _errorMessage = errorMessage;
-        }
-      });
-    }
+      HandleNetworkErrorDialog.show(context, err);
+    });
   }
 
   void pressRegister() {
@@ -137,9 +134,7 @@ class _LoginPageState extends State<LoginPage> with NetWorkHandler {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
-              if (_hasError) getErrorMessageWidget(_errorMessage),
-              const SizedBox(height: 10),
+              const SizedBox(height: 20),
               ConditionalButtonBarWidget(
                 backgroundColor: Colors.blueAccent,
                 title: "로그인 하기",

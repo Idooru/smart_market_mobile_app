@@ -25,6 +25,7 @@ class CreateAccountStrategy implements RouteStrategy {
     return MaterialPageRoute(
       builder: (context) => CreateAccountPage(
         isAccountsEmpty: args.isAccountsEmpty,
+        updateCallback: args.updateCallback,
       ),
       settings: settings,
     );

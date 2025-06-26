@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_market/core/common/network_handler.mixin.dart';
+import 'package:smart_market/core/widgets/dialog/handle_network_error.dialog.dart';
 import 'package:smart_market/model/review/domain/service/review.service.dart';
 import 'package:smart_market/model/review/presentation/pages/create_review.page.dart';
 import 'package:smart_market/model/review/presentation/widgets/edit/edit_star_rate.widget.dart';
@@ -37,13 +37,10 @@ class CreateReviewItemWidget extends StatefulWidget {
   State<CreateReviewItemWidget> createState() => _CreateReviewItemWidgetState();
 }
 
-class _CreateReviewItemWidgetState extends AccessReviewItemWidget<CreateReviewItemWidget> with NetWorkHandler {
+class _CreateReviewItemWidgetState extends AccessReviewItemWidget<CreateReviewItemWidget> {
   final ReviewService _reviewService = locator<ReviewService>();
   final GlobalKey<EditReviewContentWidgetState> _reviewContentKey = GlobalKey<EditReviewContentWidgetState>();
   final GlobalKey<EditStarRateWidgetState> _reviewStarRateKey = GlobalKey<EditStarRateWidgetState>();
-
-  bool _hasError = false;
-  String _errorMessage = "";
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +69,7 @@ class _CreateReviewItemWidgetState extends AccessReviewItemWidget<CreateReviewIt
                       icon: Icons.reviews,
                       title: "리뷰 작성하기",
                       isValid: provider.isReviewContentValid,
-                      pressCallback: () async {
+                      pressCallback: () {
                         NavigatorState navigator = Navigator.of(context);
                         ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
 
@@ -84,10 +81,9 @@ class _CreateReviewItemWidgetState extends AccessReviewItemWidget<CreateReviewIt
                           reviewVideos: reviewVideoProvider.reviewVideos,
                         );
 
-                        try {
-                          LoadingDialog.show(context, title: "리뷰 생성 중..");
+                        LoadingDialog.show(context, title: "리뷰 생성 중..");
 
-                          await _reviewService.createReview(args);
+                        _reviewService.createReview(args).then((_) {
                           reviewImageProvider.clearAll();
                           reviewVideoProvider.clearAll();
                           scaffoldMessenger.showSnackBar(getSnackBar("${widget.product.name}상품의 리뷰를 작성하였습니다."));
@@ -109,21 +105,13 @@ class _CreateReviewItemWidgetState extends AccessReviewItemWidget<CreateReviewIt
                               );
                             }
                           }
-                        } catch (err) {
-                          setState(() {
-                            _hasError = true;
-                            _errorMessage = branchErrorMessage(err);
-                          });
+                        }).catchError((err) {
                           navigator.pop();
-                        }
+                          HandleNetworkErrorDialog.show(context, err);
+                        });
                       },
                     );
                   }),
-                  if (_hasError)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: getErrorMessageWidget(_errorMessage),
-                    ),
                   const SizedBox(height: 30),
                 ],
               ),

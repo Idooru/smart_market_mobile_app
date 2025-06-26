@@ -63,16 +63,19 @@ class _AllReviewsPageState extends State<AllReviewsPage> {
         future: _getAllReviewsFuture,
         builder: (BuildContext context, AsyncSnapshot<List<ResponseAllReview>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const LoadingHandlerWidget(title: "리뷰 리스트 불러오기");
+            return const LoadingHandlerWidget(title: "리뷰 리스트 불러오기..");
           } else if (snapshot.hasError) {
             updateIsShow(false);
             final error = snapshot.error;
             if (error is ConnectionError) {
-              return NetworkErrorHandlerWidget(reconnectCallback: () {
-                updateReviews(defaultRequestAllReviewArgs);
-              });
+              return NetworkErrorHandlerWidget(
+                reconnectCallback: () {
+                  updateReviews(defaultRequestAllReviewArgs);
+                },
+                hasReturn: true,
+              );
             } else if (error is DioFailError) {
-              return const InternalServerErrorHandlerWidget();
+              return const InternalServerErrorHandlerWidget(hasReturn: true);
             } else {
               return Center(child: Text("$error"));
             }

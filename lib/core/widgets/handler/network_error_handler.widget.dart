@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:smart_market/core/widgets/common/common_button_bar.widget.dart';
 
 class NetworkErrorHandlerWidget extends StatefulWidget {
+  final bool hasReturn;
   final void Function() reconnectCallback;
 
   const NetworkErrorHandlerWidget({
     super.key,
     required this.reconnectCallback,
+    this.hasReturn = false,
   });
 
   @override
@@ -19,21 +22,10 @@ class _NetworkErrorHandlerWidgetState extends State<NetworkErrorHandlerWidget> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              color: Colors.black,
-              borderRadius: BorderRadius.circular(50),
-            ),
-            child: const Padding(
-              padding: EdgeInsets.only(bottom: 3),
-              child: Icon(
-                Icons.warning_amber,
-                size: 37,
-                color: Colors.yellow,
-              ),
-            ),
+          const Icon(
+            Icons.signal_wifi_connected_no_internet_4,
+            size: 37,
+            color: Colors.red,
           ),
           const SizedBox(height: 10),
           const Text(
@@ -44,30 +36,29 @@ class _NetworkErrorHandlerWidgetState extends State<NetworkErrorHandlerWidget> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 5),
-          GestureDetector(
-            onTap: () {
-              widget.reconnectCallback();
-            },
-            child: Container(
-              width: 150,
-              height: 60,
-              decoration: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Center(
-                child: Text(
-                  "재연결 시도",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 19,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+          const SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: CommonButtonBarWidget(
+              icon: Icons.refresh,
+              title: "재연결 시도",
+              backgroundColor: Colors.black,
+              pressCallback: () {
+                widget.reconnectCallback();
+              },
             ),
           ),
+          const SizedBox(height: 10),
+          if (widget.hasReturn)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: CommonButtonBarWidget(
+                icon: Icons.arrow_back_ios,
+                title: "이전 페이지로 돌아가기",
+                backgroundColor: const Color.fromARGB(255, 90, 90, 90),
+                pressCallback: () => Navigator.of(context).pop(),
+              ),
+            ),
         ],
       ),
     );

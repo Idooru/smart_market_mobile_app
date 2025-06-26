@@ -49,7 +49,10 @@ class _AccountListWidgetState extends State<AccountListWidget> {
   Future<void> pressCreateAccount(List<ResponseAccount> accounts) async {
     final result = await Navigator.of(context).pushNamed(
       "/create_account",
-      arguments: CreateAccountPageArgs(isAccountsEmpty: accounts.isEmpty),
+      arguments: CreateAccountPageArgs(
+        isAccountsEmpty: accounts.isEmpty,
+        updateCallback: updateAccounts,
+      ),
     );
 
     if (result == true) {
@@ -57,7 +60,7 @@ class _AccountListWidgetState extends State<AccountListWidget> {
     }
   }
 
-  Widget getPageElement(List<ResponseAccount> accounts) {
+  Widget PageElement(List<ResponseAccount> accounts) {
     return Column(
       children: [
         const SizedBox(height: 15),
@@ -171,7 +174,7 @@ class _AccountListWidgetState extends State<AccountListWidget> {
     return _isFirstRendering
         ? Builder(builder: (context) {
             WidgetsBinding.instance.addPostFrameCallback((_) => _isFirstRendering = false);
-            return getPageElement(widget.accounts);
+            return PageElement(widget.accounts);
           })
         : (() {
             return FutureBuilder(
@@ -198,7 +201,7 @@ class _AccountListWidgetState extends State<AccountListWidget> {
                     return Center(child: Text("$error"));
                   }
                 } else {
-                  return getPageElement(snapshot.data!);
+                  return PageElement(snapshot.data!);
                 }
               },
             );

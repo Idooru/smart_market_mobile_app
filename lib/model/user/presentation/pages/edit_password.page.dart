@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_market/core/common/network_handler.mixin.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/utils/get_snackbar.dart';
 import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
+import 'package:smart_market/core/widgets/dialog/handle_network_error.dialog.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
 import 'package:smart_market/model/user/presentation/provider/edit_user_column.provider.dart';
 import 'package:smart_market/model/user/presentation/widgets/edit/edit_password.widget.dart';
+
+import '../../../../core/widgets/dialog/loading_dialog.dart';
 
 class EditPasswordPage extends StatefulWidget {
   const EditPasswordPage({super.key});
@@ -15,28 +17,24 @@ class EditPasswordPage extends StatefulWidget {
   State<EditPasswordPage> createState() => _EditPasswordPageState();
 }
 
-class _EditPasswordPageState extends State<EditPasswordPage> with NetWorkHandler {
+class _EditPasswordPageState extends State<EditPasswordPage> {
   final GlobalKey<EditPasswordWidgetState> _passwordKey = GlobalKey();
   final UserService _userService = locator<UserService>();
 
-  bool _hasError = false;
-  String _errorMessage = "";
+  void pressEditPassword() {
+    NavigatorState navigator = Navigator.of(context);
+    ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
+    String password = _passwordKey.currentState!.matchPasswordController.text;
 
-  Future<void> pressEditPassword() async {
-    try {
-      NavigatorState navigator = Navigator.of(context);
-      ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
-      String password = _passwordKey.currentState!.matchPasswordController.text;
+    LoadingDialog.show(context, title: "비밀번호 수정 중..");
 
-      await _userService.modifyPassword(password);
+    _userService.modifyPassword(password).then((_) {
       navigator.pop();
       scaffoldMessenger.showSnackBar(getSnackBar("비밀번호를 수정하였습니다."));
-    } catch (err) {
-      setState(() {
-        _hasError = true;
-        _errorMessage = branchErrorMessage(err);
-      });
-    }
+    }).catchError((err) {
+      navigator.pop();
+      HandleNetworkErrorDialog.show(context, err);
+    });
   }
 
   @override
@@ -93,8 +91,6 @@ class _EditPasswordPageState extends State<EditPasswordPage> with NetWorkHandler
                       ),
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  if (_hasError) getErrorMessageWidget(_errorMessage),
                 ],
               ),
             ),
