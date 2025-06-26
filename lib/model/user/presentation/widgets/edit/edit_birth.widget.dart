@@ -50,8 +50,8 @@ class EditBirthWidgetState extends State<EditBirthWidget> with InputWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        getTitle("생년월일"),
-        getEditWidget(
+        Titile("생년월일"),
+        EditWidget(
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [

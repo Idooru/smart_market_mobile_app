@@ -77,18 +77,18 @@ class EditAccountNumberWidgetState extends EditWidgetState<EditAccountNumberWidg
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        getTitle("계좌번호"),
-        getEditWidget(
+        Titile("계좌번호"),
+        EditWidget(
           TextField(
             focusNode: _focusNode,
             controller: accountNumberController,
             textInputAction: widget.isLastWidget ? TextInputAction.done : TextInputAction.next,
-            style: getInputTextStyle(),
+            style: getInputStyle(),
             onChanged: detectInput,
             decoration: getInputDecoration(Icons.credit_card, _isValid, "계좌번호를 입력하세요."),
           ),
         ),
-        if (!_isValid && _errorMessage.isNotEmpty) getErrorArea(_errorMessage)
+        if (!_isValid && _errorMessage.isNotEmpty) ErrorArea(_errorMessage)
       ],
     );
   }

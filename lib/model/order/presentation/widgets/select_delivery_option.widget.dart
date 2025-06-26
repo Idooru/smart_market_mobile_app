@@ -32,8 +32,8 @@ class SelectDeliveryOptionState extends State<SelectDeliveryOption> with InputWi
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        getTitle("배송 옵션"),
-        getEditWidget(
+        Titile("배송 옵션"),
+        EditWidget(
           RadioGeneratorWidget(
             args: RadioGenerateArgs(
               title: "",

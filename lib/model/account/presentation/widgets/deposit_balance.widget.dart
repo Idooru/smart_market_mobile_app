@@ -28,13 +28,13 @@ class DepositBalanceWidgetState extends EditWidgetState<DepositWidget> with Inpu
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        getTitle("입금"),
-        getEditWidget(
+        Titile("입금"),
+        EditWidget(
           TextField(
             focusNode: _focusNode,
             controller: depositController,
             keyboardType: TextInputType.number,
-            style: getInputTextStyle(),
+            style: getInputStyle(),
             decoration: const InputDecoration(
               isDense: true,
               border: InputBorder.none,

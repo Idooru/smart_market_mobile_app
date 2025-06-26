@@ -76,18 +76,18 @@ class EditRealNameWidgetState extends EditWidgetState<EditRealNameWidget> with I
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        getTitle("이름"),
-        getEditWidget(
+        Titile("이름"),
+        EditWidget(
           TextField(
             focusNode: _focusNode,
             controller: realNameController,
             textInputAction: widget.isLastWidget ? TextInputAction.done : TextInputAction.next,
-            style: getInputTextStyle(),
+            style: getInputStyle(),
             onChanged: detectInput,
             decoration: getInputDecoration(Icons.person, _isValid, "이름을 입력하세요."),
           ),
         ),
-        if (!_isValid && _errorMessage.isNotEmpty) getErrorArea(_errorMessage)
+        if (!_isValid && _errorMessage.isNotEmpty) ErrorArea(_errorMessage)
       ],
     );
   }

@@ -31,8 +31,8 @@ class EditGenderWidgetState extends State<EditGenderWidget> with InputWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        getTitle("성별"),
-        getEditWidget(
+        Titile("성별"),
+        EditWidget(
           Row(
             children: [
               const SizedBox(width: 15),

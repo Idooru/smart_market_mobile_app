@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:smart_market/core/common/input_widget.mixin.dart';
 import 'package:smart_market/core/common/network_handler.mixin.dart';
 import 'package:smart_market/core/common/validate.entity.dart';
-import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
 import 'package:smart_market/model/user/common/interface/edit_detector.interface.dart';
@@ -81,7 +80,7 @@ class EditAddressWidgetState extends EditWidgetState<EditAddressWidget> with Inp
 
       isValidLocal = result.isValidate;
       errorMessage = result.message;
-    } on DioFailError catch (err) {
+    } catch (err) {
       isValidLocal = false;
       errorMessage = branchErrorMessage(err);
     }
@@ -99,18 +98,18 @@ class EditAddressWidgetState extends EditWidgetState<EditAddressWidget> with Inp
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        getTitle("배송지"),
-        getEditWidget(
+        Titile("배송지"),
+        EditWidget(
           TextField(
             focusNode: _focusNode,
             controller: addressController,
             textInputAction: widget.isLastWidget ? TextInputAction.done : TextInputAction.next,
-            style: getInputTextStyle(),
+            style: getInputStyle(),
             onChanged: detectInput,
             decoration: getInputDecoration(Icons.home, _isValid, "배송지를 입력하세요."),
           ),
         ),
-        if (!_isValid && _errorMessage.isNotEmpty) Center(child: getErrorArea(_errorMessage)),
+        if (!_isValid && _errorMessage.isNotEmpty) Center(child: ErrorArea(_errorMessage)),
       ],
     );
   }

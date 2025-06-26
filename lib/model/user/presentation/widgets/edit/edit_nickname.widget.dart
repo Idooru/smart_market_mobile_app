@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:smart_market/core/common/input_widget.mixin.dart';
 import 'package:smart_market/core/common/network_handler.mixin.dart';
 import 'package:smart_market/core/common/validate.entity.dart';
-import 'package:smart_market/core/errors/dio_fail.error.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
 import 'package:smart_market/model/user/common/interface/edit_detector.interface.dart';
@@ -84,7 +83,7 @@ class EditNickNameWidgetState extends EditWidgetState<EditNickNameWidget> with I
 
       isValidLocal = result.isValidate;
       errorMessage = result.message;
-    } on DioFailError catch (err) {
+    } catch (err) {
       isValidLocal = false;
       errorMessage = branchErrorMessage(err);
     }
@@ -102,18 +101,18 @@ class EditNickNameWidgetState extends EditWidgetState<EditNickNameWidget> with I
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        getTitle("닉네임"),
-        getEditWidget(
+        Titile("닉네임"),
+        EditWidget(
           TextField(
             focusNode: _focusNode,
             controller: nickNameController,
             textInputAction: widget.isLastWidget ? TextInputAction.done : TextInputAction.next,
-            style: getInputTextStyle(),
+            style: getInputStyle(),
             onChanged: detectInput,
             decoration: getInputDecoration(Icons.tag, _isValid, "닉네임을 입력하세요."),
           ),
         ),
-        if (!_isValid && _errorMessage.isNotEmpty) getErrorArea(_errorMessage)
+        if (!_isValid && _errorMessage.isNotEmpty) ErrorArea(_errorMessage)
       ],
     );
   }

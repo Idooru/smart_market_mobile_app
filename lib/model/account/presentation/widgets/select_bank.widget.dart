@@ -71,8 +71,8 @@ class SelectBankWidgetState extends State<SelectBankWidget> with InputWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        getTitle("은행"),
-        getEditWidget(
+        Titile("은행"),
+        EditWidget(
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [

@@ -114,7 +114,7 @@ class EditReviewContentWidgetState extends EditWidgetState<EditReviewContentWidg
             ],
           ),
         ),
-        if (!_isValid && _errorMessage.isNotEmpty) getErrorArea(_errorMessage)
+        if (!_isValid && _errorMessage.isNotEmpty) ErrorArea(_errorMessage)
       ],
     );
   }

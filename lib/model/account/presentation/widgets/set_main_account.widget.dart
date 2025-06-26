@@ -32,7 +32,7 @@ class SetMainAccountWidgetState extends State<SetMainAccountWidget> with InputWi
   Widget build(BuildContext context) {
     return Row(
       children: [
-        getTitle("주 사용 계좌 설정"),
+        Titile("주 사용 계좌 설정"),
         const Spacer(),
         IconButton(
           onPressed: widget.isAccountsEmpty ? null : pressCheckBox,

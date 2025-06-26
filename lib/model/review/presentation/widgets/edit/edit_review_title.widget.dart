@@ -111,7 +111,7 @@ class EditReviewTitleState extends EditWidgetState<EditReviewTitleWidget> with I
             ],
           ),
         ),
-        if (!_isValid && _errorMessage.isNotEmpty) getErrorArea(_errorMessage)
+        if (!_isValid && _errorMessage.isNotEmpty) ErrorArea(_errorMessage)
       ],
     );
   }
