@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_market/model/review/presentation/dialog/sort_review.dialog.dart';
 
 import '../../../../core/errors/connection_error.dart';
 import '../../../../core/errors/dio_fail.error.dart';
@@ -90,7 +91,7 @@ class _AllReviewsPageState extends State<AllReviewsPage> {
                 actions: [
                   _hasFilterButton
                       ? IconButton(
-                          onPressed: () {},
+                          onPressed: () => SortReviewDialog.show(context, updateCallback: updateReviews),
                           icon: const Icon(Icons.tune, color: Colors.black),
                         )
                       : const SizedBox.shrink(),
