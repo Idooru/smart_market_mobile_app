@@ -27,6 +27,7 @@ import '../../../cart/domain/entities/cart.entity.dart';
 import '../../../cart/domain/service/cart.service.dart';
 import '../../../cart/presentation/dialog/pay_now.dialog.dart';
 import '../../../order/presentation/provider/create_order.provider.dart';
+import '../../../review/presentation/widgets/item/review_item.widget.dart';
 import '../../../user/domain/entities/profile.entity.dart';
 import '../../../user/domain/service/user.service.dart';
 import '../../../user/presentation/dialog/force_logout.dialog.dart';
@@ -34,7 +35,6 @@ import '../../../user/presentation/dialog/invitation_login.dialog.dart';
 import '../../../user/utils/check_is_logined.dart';
 import '../../domain/entities/detail_product.entity.dart';
 import '../widgets/display_average_score.widget.dart';
-import '../widgets/item/review_item.widget.dart';
 
 class DetailProductPageArgs {
   final String productId;
