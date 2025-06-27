@@ -111,6 +111,7 @@ class _ReviewImageAreaWidgetState extends ReviewMediaWidgetState<ReviewImageArea
                       onTap: () => ExpandImageDialog.show(
                         context,
                         imageFile: reviewImage,
+                        imageFiles: provider.reviewImages,
                       ),
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
@@ -132,6 +133,7 @@ class _ReviewImageAreaWidgetState extends ReviewMediaWidgetState<ReviewImageArea
                       onPressed: () => ExpandImageDialog.show(
                         context,
                         imageFile: reviewImage,
+                        imageFiles: provider.reviewImages,
                       ),
                       icon: const Icon(Icons.search, size: 50, color: Colors.white),
                     ),
