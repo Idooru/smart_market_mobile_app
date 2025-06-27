@@ -270,29 +270,29 @@ class _DetailProductPageState extends State<DetailProductPage> {
                       ),
                       ItemArea(
                         "상품 리뷰",
-                        SizedBox(
-                          height: responseDetailProduct.reviews.isEmpty ? 70 : 450,
-                          child: responseDetailProduct.reviews.isEmpty
-                              ? const Row(
+                        responseDetailProduct.reviews.isEmpty
+                            ? const Padding(
+                                padding: EdgeInsets.all(20),
+                                child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Icon(Icons.warning, size: 18),
                                     SizedBox(width: 5),
                                     Text("아직 상품 리뷰가 존재하지 않습니다."),
                                   ],
-                                )
-                              : SingleChildScrollView(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: responseDetailProduct.reviews.asMap().entries.map((entry) {
-                                      int index = entry.key;
-                                      Review review = entry.value;
-                                      EdgeInsets margin = index != responseDetailProduct.reviews.length - 1 ? EdgeInsets.zero : const EdgeInsets.only(bottom: 10);
-                                      return ReviewItemWidget(review: review, margin: margin);
-                                    }).toList(),
-                                  ),
                                 ),
-                        ),
+                              )
+                            : SingleChildScrollView(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: responseDetailProduct.reviews.asMap().entries.map((entry) {
+                                    int index = entry.key;
+                                    Review review = entry.value;
+                                    EdgeInsets margin = index != responseDetailProduct.reviews.length - 1 ? const EdgeInsets.only(bottom: 10) : EdgeInsets.zero;
+                                    return ReviewItemWidget(review: review, margin: margin);
+                                  }).toList(),
+                                ),
+                              ),
                       ),
                     ],
                   ),
