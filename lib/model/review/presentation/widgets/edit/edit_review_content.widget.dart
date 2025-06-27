@@ -111,6 +111,10 @@ class EditReviewContentWidgetState extends EditWidgetState<EditReviewContentWidg
                   ),
                 ),
               ),
+              Text(
+                "입력 길이: (${reviewContentController.text.length}/300)",
+                style: const TextStyle(fontSize: 12, color: Color.fromARGB(255, 130, 130, 130)),
+              ),
             ],
           ),
         ),
