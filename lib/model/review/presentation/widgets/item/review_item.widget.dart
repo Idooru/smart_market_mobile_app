@@ -194,7 +194,7 @@ class _ReviewItemWidgetState extends State<ReviewItemWidget> {
                                         ),
                                       ),
                                       SizedBox(
-                                        height: 120,
+                                        height: reviewImageFiles.isNotEmpty ? 120 : 0,
                                         child: ListView.builder(
                                           scrollDirection: Axis.horizontal,
                                           itemCount: reviewImageFiles.length,
@@ -255,7 +255,7 @@ class _ReviewItemWidgetState extends State<ReviewItemWidget> {
                                         ),
                                       ),
                                       SizedBox(
-                                        height: 100,
+                                        height: reviewVideoFiles.isNotEmpty ? 100 : 0,
                                         child: ListView.builder(
                                           scrollDirection: Axis.horizontal,
                                           itemCount: reviewVideoFiles.length,
