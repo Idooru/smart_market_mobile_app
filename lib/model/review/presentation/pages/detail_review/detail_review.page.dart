@@ -3,58 +3,48 @@ import 'package:provider/provider.dart';
 import 'package:smart_market/core/utils/check_jwt_duration.dart';
 import 'package:smart_market/model/media/presentation/provider/review_image.provider.dart';
 import 'package:smart_market/model/media/presentation/provider/review_video.provider.dart';
-import 'package:smart_market/model/review/domain/entity/all_review.entity.dart';
 import 'package:smart_market/model/review/domain/entity/detail_review.entity.dart';
 import 'package:smart_market/model/review/domain/service/review.service.dart';
 import 'package:smart_market/model/review/presentation/provider/edit_review.provider.dart';
 import 'package:smart_market/model/review/presentation/widgets/item/access_review_item.widget.dart';
 
-import '../../../../core/errors/connection_error.dart';
-import '../../../../core/errors/dio_fail.error.dart';
-import '../../../../core/errors/refresh_token_expired.error.dart';
-import '../../../../core/themes/theme_data.dart';
-import '../../../../core/utils/get_it_initializer.dart';
-import '../../../../core/utils/get_snackbar.dart';
-import '../../../../core/widgets/common/common_button_bar.widget.dart';
-import '../../../../core/widgets/common/conditional_button_bar.widget.dart';
-import '../../../../core/widgets/dialog/loading_dialog.dart';
-import '../../../../core/widgets/handler/internal_server_error_handler.widget.dart';
-import '../../../../core/widgets/handler/loading_handler.widget.dart';
-import '../../../../core/widgets/handler/network_error_handler.widget.dart';
-import '../../../user/presentation/dialog/force_logout.dialog.dart';
-import '../../common/const/request_all_review.args.dart';
-import '../../domain/entity/modify_review.entity.dart';
-import '../dialog/go_out_review.dialog.dart';
-import '../widgets/edit/edit_review_content.widget.dart';
-import '../widgets/edit/edit_review_media.widget.dart';
-import '../widgets/edit/edit_star_rate.widget.dart';
+import '../../../../../core/errors/connection_error.dart';
+import '../../../../../core/errors/dio_fail.error.dart';
+import '../../../../../core/errors/refresh_token_expired.error.dart';
+import '../../../../../core/themes/theme_data.dart';
+import '../../../../../core/utils/get_it_initializer.dart';
+import '../../../../../core/utils/get_snackbar.dart';
+import '../../../../../core/widgets/common/common_button_bar.widget.dart';
+import '../../../../../core/widgets/common/conditional_button_bar.widget.dart';
+import '../../../../../core/widgets/dialog/loading_dialog.dart';
+import '../../../../../core/widgets/handler/internal_server_error_handler.widget.dart';
+import '../../../../../core/widgets/handler/loading_handler.widget.dart';
+import '../../../../../core/widgets/handler/network_error_handler.widget.dart';
+import '../../../../user/presentation/dialog/force_logout.dialog.dart';
+import '../../../domain/entity/modify_review.entity.dart';
+import '../../dialog/go_out_review.dialog.dart';
+import '../../widgets/edit/edit_review_content.widget.dart';
+import '../../widgets/edit/edit_review_media.widget.dart';
+import '../../widgets/edit/edit_star_rate.widget.dart';
 
 class DetailReviewPageArgs {
   final String reviewId;
   final String productId;
   final String productName;
-  final void Function(RequestAllReviews) updateCallback;
 
   const DetailReviewPageArgs({
     required this.reviewId,
     required this.productId,
     required this.productName,
-    required this.updateCallback,
   });
 }
 
 class DetailReviewPage extends StatefulWidget {
-  final String reviewId;
-  final String productId;
-  final String productName;
-  final void Function(RequestAllReviews) updateCallback;
+  final DetailReviewPageArgs args;
 
   const DetailReviewPage({
     super.key,
-    required this.reviewId,
-    required this.productId,
-    required this.productName,
-    required this.updateCallback,
+    required this.args,
   });
 
   @override
@@ -81,7 +71,7 @@ class _DetailReviewPageState extends AccessReviewItemWidget<DetailReviewPage> {
     await Future.delayed(const Duration(milliseconds: 500));
     await checkJwtDuration();
 
-    ResponseDetailReview review = await _reviewService.fetchDetailReview(widget.reviewId);
+    ResponseDetailReview review = await _reviewService.fetchDetailReview(widget.args.reviewId);
 
     return {"review": review};
   }
@@ -94,8 +84,8 @@ class _DetailReviewPageState extends AccessReviewItemWidget<DetailReviewPage> {
     ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
 
     RequestModifyReview args = RequestModifyReview(
-      reviewId: widget.reviewId,
-      productId: widget.productId,
+      reviewId: widget.args.reviewId,
+      productId: widget.args.productId,
       content: _reviewContentKey.currentState!.reviewContentController.text,
       starRateScore: _reviewStarRateKey.currentState!.selectedRating,
       reviewImages: reviewImageProvider.reviewImages,
@@ -108,10 +98,10 @@ class _DetailReviewPageState extends AccessReviewItemWidget<DetailReviewPage> {
       await _reviewService.modifyReview(args);
       reviewImageProvider.clearAll();
       reviewVideoProvider.clearAll();
-      scaffoldMessenger.showSnackBar(getSnackBar("${widget.productName}상품의 리뷰를 수정하였습니다."));
+      scaffoldMessenger.showSnackBar(getSnackBar("${widget.args.productName}상품의 리뷰를 수정하였습니다."));
 
-      widget.updateCallback(RequestAllReviewsArgs.args);
-      navigator.popUntil(ModalRoute.withName("/all_reviews"));
+      navigator.pop();
+      navigator.pop(true);
     } catch (err) {
       navigator.pop();
       debugPrint("리뷰 수정 에러: $err");
@@ -213,7 +203,7 @@ class _DetailReviewPageState extends AccessReviewItemWidget<DetailReviewPage> {
                   body: SingleChildScrollView(
                     child: Column(
                       children: [
-                        ReviewHeader(productName: widget.productName, subTitle: "상품 리뷰 상세보기"),
+                        ReviewHeader(productName: widget.args.productName, subTitle: "상품 리뷰 상세보기"),
                         ReviewBody(
                           unfocusCallback: () => _reviewContentKey.currentState!.focusNode.unfocus(),
                           widgets: [

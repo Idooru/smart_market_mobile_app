@@ -3,11 +3,11 @@ import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/model/review/common/const/request_all_review.args.dart';
 import 'package:smart_market/model/review/domain/entity/all_review.entity.dart';
 import 'package:smart_market/model/review/domain/service/review.service.dart';
-import 'package:smart_market/model/review/presentation/pages/detail_review.page.dart';
 
 import '../../../../../core/utils/get_it_initializer.dart';
 import '../../../../product/presentation/pages/detail_product.page.dart';
 import '../../../../product/presentation/widgets/display_average_score.widget.dart';
+import '../../pages/detail_review/detail_review.page.dart';
 
 class AllReviewItemWidget extends StatelessWidget {
   final ResponseAllReview responseAllReview;
@@ -46,17 +46,23 @@ class AllReviewItemWidget extends StatelessWidget {
                 ),
               ),
               GestureDetector(
-                onTap: () {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pushNamed(
+                onTap: () async {
+                  NavigatorState navigator = Navigator.of(context);
+                  navigator.pop();
+
+                  Object? result = await navigator.pushNamed(
                     "/detail_review",
                     arguments: DetailReviewPageArgs(
                       reviewId: responseAllReview.review.id,
                       productId: responseAllReview.product.id,
                       productName: responseAllReview.product.name,
-                      updateCallback: updateCallback,
                     ),
                   );
+
+                  if (result == true) {
+                    updateCallback(RequestAllReviewsArgs.args);
+                    navigator.popUntil(ModalRoute.withName("/all_reviews"));
+                  }
                 },
                 child: const ListTile(
                   leading: Icon(Icons.reviews),

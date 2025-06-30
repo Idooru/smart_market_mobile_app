@@ -68,6 +68,12 @@ class _DetailProductPageState extends State<DetailProductPage> {
     _detailProductPageFuture = initDetailProductPageFuture();
   }
 
+  void updateProduct() {
+    setState(() {
+      _detailProductPageFuture = initDetailProductPageFuture();
+    });
+  }
+
   Future<Map<String, dynamic>> initDetailProductPageFuture() async {
     await Future.delayed(const Duration(milliseconds: 500));
     bool isLogined = checkIsLogined();
@@ -289,7 +295,12 @@ class _DetailProductPageState extends State<DetailProductPage> {
                                     int index = entry.key;
                                     Review review = entry.value;
                                     EdgeInsets margin = index != responseDetailProduct.reviews.length - 1 ? const EdgeInsets.only(bottom: 10) : EdgeInsets.zero;
-                                    return ReviewItemWidget(review: review, margin: margin);
+                                    return ReviewItemWidget(
+                                      review: review,
+                                      product: responseDetailProduct.product,
+                                      margin: margin,
+                                      updateCallback: updateProduct,
+                                    );
                                   }).toList(),
                                 ),
                               ),

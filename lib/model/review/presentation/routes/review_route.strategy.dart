@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_market/core/common/route.strategy.dart';
 import 'package:smart_market/model/review/presentation/pages/all_reviews.page.dart';
 import 'package:smart_market/model/review/presentation/pages/create_review.page.dart';
-import 'package:smart_market/model/review/presentation/pages/detail_review.page.dart';
+import 'package:smart_market/model/review/presentation/pages/detail_review/detail_review.page.dart';
 
 import '../../../media/domain/entities/file_source.entity.dart';
 import '../pages/review_video_player.page.dart';
@@ -41,13 +41,9 @@ class CreateReviewStrategy implements RouteStrategy {
 class DetailReviewStrategy implements RouteStrategy {
   @override
   MaterialPageRoute route(RouteSettings settings) {
-    final args = settings.arguments as DetailReviewPageArgs;
     return MaterialPageRoute(
       builder: (context) => DetailReviewPage(
-        reviewId: args.reviewId,
-        productId: args.productId,
-        productName: args.productName,
-        updateCallback: args.updateCallback,
+        args: settings.arguments as DetailReviewPageArgs,
       ),
       settings: settings,
     );
