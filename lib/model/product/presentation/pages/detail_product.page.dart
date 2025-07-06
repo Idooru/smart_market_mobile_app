@@ -21,6 +21,7 @@ import '../../../../core/utils/get_snackbar.dart';
 import '../../../../core/widgets/dialog/handle_network_error.dialog.dart';
 import '../../../../core/widgets/handler/internal_server_error_handler.widget.dart';
 import '../../../../core/widgets/handler/network_error_handler.widget.dart';
+import '../../../account/common/const/request_accounts.args.dart';
 import '../../../account/domain/entities/account.entity.dart';
 import '../../../account/domain/service/account.service.dart';
 import '../../../cart/domain/entities/cart.entity.dart';
@@ -76,29 +77,18 @@ class _DetailProductPageState extends State<DetailProductPage> {
 
   Future<Map<String, dynamic>> initDetailProductPageFuture() async {
     await Future.delayed(const Duration(milliseconds: 500));
-    bool isLogined = checkIsLogined();
 
     ResponseDetailProduct products = await productService.getDetailProduct(widget.productId);
 
-    if (isLogined) {
-      await checkJwtDuration();
-      ResponseProfile profile = await _userService.getProfile();
-      List<ResponseAccount> accounts = await _accountService.fetchAccounts(defaultRequestAccountsArgs);
-
-      return {
-        "products": products,
-        "address": profile.address,
-        "accounts": accounts,
-      };
-    }
     return {"products": products};
   }
 
   Future<void> pressCreateCart(ResponseDetailProduct responseDetailProduct) async {
-    bool isLogined = checkIsLogined();
-    if (!isLogined) return InvitationLoginDialog.show(context);
-
-    await checkJwtDuration();
+    try {
+      await checkJwtDuration();
+    } catch (err) {
+      return HandleNetworkErrorDialog.show(context, err);
+    }
 
     Future<void> createCart({required int quantity, required int totalPrice}) async {
       ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
@@ -131,11 +121,31 @@ class _DetailProductPageState extends State<DetailProductPage> {
 
   Future<void> pressPayNow(
     ResponseDetailProduct responseDetailProduct,
-    List<ResponseAccount> accounts,
-    String address,
     CreateOrderProvider provider,
   ) async {
-    await checkJwtDuration();
+    try {
+      await checkJwtDuration();
+    } catch (err) {
+      return HandleNetworkErrorDialog.show(context, err);
+    }
+
+    List<ResponseAccount> accounts = [];
+    String address = "";
+
+    try {
+      accounts = await _accountService.fetchAccounts(RequestAccountsArgs.args);
+      if (accounts.isEmpty) {
+        // return InvitationCreateAccountDialog.show(
+        //   context,
+        //   backRoute: "/detail_product",
+        // );
+      }
+
+      ResponseProfile profile = await _userService.getProfile();
+      address = profile.address;
+    } catch (err) {
+      return HandleNetworkErrorDialog.show(context, err);
+    }
 
     Future<ResponseCarts?> payNow({required int quantity, required int totalPrice}) async {
       NavigatorState navigator = Navigator.of(context);
@@ -320,7 +330,13 @@ class _DetailProductPageState extends State<DetailProductPage> {
                         icon: Icons.shopping_cart,
                         title: "장바구니 담기",
                         backgroundColor: Colors.blue,
-                        pressCallback: () => pressCreateCart(responseDetailProduct),
+                        pressCallback: () {
+                          if (checkIsLogined()) {
+                            pressCreateCart(responseDetailProduct);
+                          } else {
+                            InvitationLoginDialog.show(context, backRoute: "/detail_product");
+                          }
+                        },
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -336,12 +352,10 @@ class _DetailProductPageState extends State<DetailProductPage> {
                               if (checkIsLogined()) {
                                 pressPayNow(
                                   responseDetailProduct,
-                                  data["accounts"],
-                                  data["address"],
                                   provider,
                                 );
                               } else {
-                                InvitationLoginDialog.show(context);
+                                InvitationLoginDialog.show(context, backRoute: "/detail_product");
                               }
                             },
                           );
