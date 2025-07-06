@@ -10,10 +10,14 @@ import '../../../../core/errors/connection_error.dart';
 import '../../../../core/errors/dio_fail.error.dart';
 import '../../../../core/themes/theme_data.dart';
 import '../../../../core/utils/get_it_initializer.dart';
+import '../../../../core/widgets/dialog/handle_network_error.dialog.dart';
 import '../../../../core/widgets/handler/internal_server_error_handler.widget.dart';
 import '../../../../core/widgets/handler/loading_handler.widget.dart';
 import '../../../../core/widgets/handler/network_error_handler.widget.dart';
+import '../../../account/common/const/request_accounts.args.dart';
 import '../../../account/domain/entities/account.entity.dart';
+import '../../../account/domain/service/account.service.dart';
+import '../../../account/presentation/dialog/invitation_create_account.dialog.dart';
 import '../../common/const/request_carts.args.dart';
 import '../../domain/entities/cart.entity.dart';
 import '../../domain/service/cart.service.dart';
@@ -38,6 +42,7 @@ class CartListWidget extends StatefulWidget {
 
 class CartListWidgetState extends State<CartListWidget> {
   final CartService _cartService = locator<CartService>();
+  final AccountService _accountService = locator<AccountService>();
 
   late Future<ResponseCarts> _getCartsFuture;
   bool _isFirstRendering = true;
@@ -145,8 +150,15 @@ class CartListWidgetState extends State<CartListWidget> {
               icon: Icons.shopping_bag,
               title: "결제 주문하기",
               backgroundColor: Colors.red,
-              pressCallback: () {
+              pressCallback: () async {
                 NavigatorState navigator = Navigator.of(context);
+
+                try {
+                  List<ResponseAccount> accounts = await _accountService.fetchAccounts(RequestAccountsArgs.args);
+                  if (accounts.isEmpty) return InvitationCreateAccountDialog.show(context);
+                } catch (err) {
+                  return HandleNetworkErrorDialog.show(context, err);
+                }
 
                 provider.setCarts(carts.cartRaws);
                 provider.setCartTotalPrice(carts.totalPrice);

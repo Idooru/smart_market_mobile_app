@@ -75,6 +75,7 @@ class _AccountPageState extends State<AccountsPage> {
       arguments: CreateAccountPageArgs(
         isAccountsEmpty: accounts.isEmpty,
         updateCallback: updateAccounts,
+        backRoute: "/accounts",
       ),
     );
   }

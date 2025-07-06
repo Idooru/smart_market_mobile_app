@@ -24,6 +24,7 @@ import '../../../../core/widgets/handler/network_error_handler.widget.dart';
 import '../../../account/common/const/request_accounts.args.dart';
 import '../../../account/domain/entities/account.entity.dart';
 import '../../../account/domain/service/account.service.dart';
+import '../../../account/presentation/dialog/invitation_create_account.dialog.dart';
 import '../../../cart/domain/entities/cart.entity.dart';
 import '../../../cart/domain/service/cart.service.dart';
 import '../../../cart/presentation/dialog/pay_now.dialog.dart';
@@ -60,7 +61,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
   final CartService _cartService = locator<CartService>();
   final UserService _userService = locator<UserService>();
   final AccountService _accountService = locator<AccountService>();
-  final RequestAccounts defaultRequestAccountsArgs = const RequestAccounts(align: "DESC", column: "createdAt");
+
   late Future<Map<String, dynamic>> _detailProductPageFuture;
 
   @override
@@ -135,10 +136,10 @@ class _DetailProductPageState extends State<DetailProductPage> {
     try {
       accounts = await _accountService.fetchAccounts(RequestAccountsArgs.args);
       if (accounts.isEmpty) {
-        // return InvitationCreateAccountDialog.show(
-        //   context,
-        //   backRoute: "/detail_product",
-        // );
+        return InvitationCreateAccountDialog.show(
+          context,
+          backRoute: "/detail_product",
+        );
       }
 
       ResponseProfile profile = await _userService.getProfile();
