@@ -31,11 +31,13 @@ class DetailReviewPageArgs {
   final String reviewId;
   final String productId;
   final String productName;
+  final String backRoute;
 
   const DetailReviewPageArgs({
     required this.reviewId,
     required this.productId,
     required this.productName,
+    required this.backRoute,
   });
 }
 
@@ -138,65 +140,61 @@ class _DetailReviewPageState extends AccessReviewItemWidget<DetailReviewPage> {
             final data = snapshot.data!;
             ResponseDetailReview responseDetailProduct = data["review"];
 
-            return Consumer<EditReviewProvider>(
-              builder: (BuildContext context, EditReviewProvider provider, Widget? child) {
+            return Consumer2<ReviewImageProvider, ReviewVideoProvider>(
+              builder: (BuildContext context, ReviewImageProvider reviewImageProvider, ReviewVideoProvider reviewVideoProvider, Widget? child) {
                 return Scaffold(
                   appBar: AppBar(
                     title: const Text("My review detail"),
                     flexibleSpace: appBarColor,
                     leading: Padding(
                       padding: const EdgeInsets.only(left: 12),
-                      child: Consumer2<ReviewImageProvider, ReviewVideoProvider>(
-                        builder: (
-                          BuildContext context,
-                          ReviewImageProvider reviewImageProvider,
-                          ReviewVideoProvider reviewVideoProvider,
-                          Widget? child,
-                        ) {
-                          return IconButton(
-                            onPressed: () {
-                              String beforeContent = responseDetailProduct.content;
-                              String currentContent = _reviewContentKey.currentState!.reviewContentController.text;
-                              if (beforeContent != currentContent) {
-                                GoOutReviewDialog.show(
-                                  context,
-                                  title: "리뷰가 일부 수정되었습니다._저장 하시겠습니까?",
-                                  buttons: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(bottom: 10),
-                                      child: CommonButtonBarWidget(
-                                        icon: Icons.save,
-                                        title: "저장하고 뒤로가기",
-                                        backgroundColor: Colors.green,
-                                        pressCallback: () {
-                                          pressModifyReview(reviewImageProvider, reviewVideoProvider);
-                                        },
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(bottom: 10),
-                                      child: CommonButtonBarWidget(
-                                        icon: Icons.arrow_back_ios,
-                                        title: "저장하지 않고 뒤로가기",
-                                        pressCallback: () {
-                                          Navigator.of(context).popUntil(ModalRoute.withName("/all_reviews"));
-                                        },
-                                      ),
-                                    ),
-                                    CommonButtonBarWidget(
-                                      backgroundColor: const Color.fromARGB(255, 120, 120, 120),
-                                      title: "취소",
-                                      pressCallback: () => Navigator.of(context).pop(),
-                                    ),
-                                  ],
-                                );
-                              } else {
-                                Navigator.of(context).pop();
-                              }
-                            },
-                            icon: const Icon(Icons.arrow_back_ios),
-                          );
+                      child: IconButton(
+                        onPressed: () {
+                          String beforeContent = responseDetailProduct.content;
+                          String currentContent = _reviewContentKey.currentState!.reviewContentController.text;
+                          bool isNotSameContent = beforeContent != currentContent;
+
+                          if (isNotSameContent && responseDetailProduct.countForModify == 0) {
+                            Navigator.of(context).pop();
+                          } else if (isNotSameContent) {
+                            GoOutReviewDialog.show(
+                              context,
+                              title: "리뷰가 일부 수정되었습니다._저장 하시겠습니까?",
+                              buttons: [
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 10),
+                                  child: CommonButtonBarWidget(
+                                    icon: Icons.save,
+                                    title: "저장하고 뒤로가기",
+                                    backgroundColor: Colors.green,
+                                    pressCallback: () {
+                                      Navigator.of(context).pop();
+                                      pressModifyReview(reviewImageProvider, reviewVideoProvider);
+                                    },
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 10),
+                                  child: CommonButtonBarWidget(
+                                    icon: Icons.arrow_back_ios,
+                                    title: "저장하지 않고 뒤로가기",
+                                    pressCallback: () {
+                                      Navigator.of(context).popUntil(ModalRoute.withName(widget.args.backRoute));
+                                    },
+                                  ),
+                                ),
+                                CommonButtonBarWidget(
+                                  backgroundColor: const Color.fromARGB(255, 120, 120, 120),
+                                  title: "취소",
+                                  pressCallback: () => Navigator.of(context).pop(),
+                                ),
+                              ],
+                            );
+                          } else {
+                            Navigator.of(context).pop();
+                          }
                         },
+                        icon: const Icon(Icons.arrow_back_ios),
                       ),
                     ),
                   ),
@@ -242,11 +240,10 @@ class _DetailReviewPageState extends AccessReviewItemWidget<DetailReviewPage> {
                               beforeImageUrls: responseDetailProduct.imageUrls,
                               beforeVideoUrls: responseDetailProduct.videoUrls,
                             ),
-                            Consumer2<ReviewImageProvider, ReviewVideoProvider>(
+                            Consumer<EditReviewProvider>(
                               builder: (
                                 BuildContext context,
-                                ReviewImageProvider reviewImageProvider,
-                                ReviewVideoProvider reviewVideoProvider,
+                                EditReviewProvider provider,
                                 Widget? child,
                               ) {
                                 return ConditionalButtonBarWidget(

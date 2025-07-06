@@ -56,6 +56,7 @@ class AllReviewItemWidget extends StatelessWidget {
                       reviewId: responseAllReview.review.id,
                       productId: responseAllReview.product.id,
                       productName: responseAllReview.product.name,
+                      backRoute: "/all_reviews",
                     ),
                   );
 

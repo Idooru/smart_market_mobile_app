@@ -60,6 +60,7 @@ class _ReviewItemWidgetState extends State<ReviewItemWidget> {
                             reviewId: widget.review.id,
                             productId: widget.product.id,
                             productName: widget.product.name,
+                            backRoute: "/detail_product",
                           ),
                         );
 
