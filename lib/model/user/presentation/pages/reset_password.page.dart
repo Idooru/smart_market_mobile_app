@@ -7,12 +7,12 @@ import 'package:smart_market/core/widgets/common/conditional_button_bar.widget.d
 import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
 import 'package:smart_market/core/widgets/dialog/handle_network_error.dialog.dart';
 import 'package:smart_market/model/user/domain/entities/reset_password.entity.dart';
-import 'package:smart_market/model/user/domain/service/user.service.dart';
 import 'package:smart_market/model/user/presentation/provider/edit_user_column.provider.dart';
 import 'package:smart_market/model/user/presentation/widgets/edit/edit_email.widget.dart';
 import 'package:smart_market/model/user/presentation/widgets/edit/edit_password.widget.dart';
 
 import '../../../../core/widgets/dialog/loading_dialog.dart';
+import '../../domain/service/auth.service.dart';
 
 class ResetPasswordPageArgs {
   final String? email;
@@ -33,7 +33,7 @@ class ResetPasswordPage extends StatefulWidget {
 }
 
 class _ResetPasswordPageState extends State<ResetPasswordPage> {
-  final UserService _userService = locator<UserService>();
+  final AuthService _authService = locator<AuthService>();
   final GlobalKey<EditEmailWidgetState> _emailKey = GlobalKey();
   final GlobalKey<EditPasswordWidgetState> _passwordKey = GlobalKey();
 
@@ -47,7 +47,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
     LoadingDialog.show(context, title: "비밀번호 초기화 중..");
 
-    _userService.resetPassword(args).then((_) {
+    _authService.resetPassword(args).then((_) {
       navigator.popUntil(ModalRoute.withName("/login"));
       scaffoldMessenger.showSnackBar(getSnackBar("비밀번호를 초기화하였습니다."));
     }).catchError((err) {
