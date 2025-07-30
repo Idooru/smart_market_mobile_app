@@ -3,7 +3,7 @@ import 'package:smart_market/core/themes/theme_data.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/core/utils/get_snackbar.dart';
 import 'package:smart_market/model/user/domain/entities/login.entity.dart';
-import 'package:smart_market/model/user/domain/service/user.service.dart';
+import 'package:smart_market/model/user/domain/service/auth.service.dart';
 import 'package:smart_market/model/user/presentation/pages/reset_password.page.dart';
 
 import '../../../../core/widgets/common/conditional_button_bar.widget.dart';
@@ -36,7 +36,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final UserService _userService = locator<UserService>();
+  final AuthService _authService = locator<AuthService>();
   final FocusNode _emailFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
   final TextEditingController _emailController = TextEditingController();
@@ -70,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
 
     LoadingDialog.show(context, title: "로그인 중..");
 
-    _userService.login(args).then((_) {
+    _authService.login(args).then((_) {
       if (widget.backRoute != null) {
         navigator.popUntil(ModalRoute.withName(widget.backRoute!));
       } else {

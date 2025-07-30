@@ -9,11 +9,12 @@ import 'package:smart_market/core/widgets/common/focus_edit.widget.dart';
 import 'package:smart_market/core/widgets/dialog/handle_network_error.dialog.dart';
 import 'package:smart_market/core/widgets/dialog/loading_dialog.dart';
 import 'package:smart_market/model/user/domain/entities/find_email.entity.dart';
-import 'package:smart_market/model/user/domain/service/user.service.dart';
 import 'package:smart_market/model/user/presentation/pages/reset_password.page.dart';
 import 'package:smart_market/model/user/presentation/provider/edit_user_column.provider.dart';
 import 'package:smart_market/model/user/presentation/widgets/edit/edit_phonenumber.widget.dart';
 import 'package:smart_market/model/user/presentation/widgets/edit/edit_realname.widget.dart';
+
+import '../../domain/service/auth.service.dart';
 
 class FindEmailPage extends StatefulWidget {
   const FindEmailPage({super.key});
@@ -23,7 +24,7 @@ class FindEmailPage extends StatefulWidget {
 }
 
 class _FindEmailPageState extends State<FindEmailPage> with NetWorkHandler {
-  final UserService _userService = locator<UserService>();
+  final AuthService _authService = locator<AuthService>();
   final GlobalKey<EditRealNameWidgetState> _realNameKey = GlobalKey<EditRealNameWidgetState>();
   final GlobalKey<EditPhoneNumberWidgetState> _phoneNumberKey = GlobalKey<EditPhoneNumberWidgetState>();
 
@@ -40,7 +41,7 @@ class _FindEmailPageState extends State<FindEmailPage> with NetWorkHandler {
     LoadingDialog.show(context, title: "이메일 찾는 중..");
 
     try {
-      String email = await _userService.findEmail(args);
+      String email = await _authService.findEmail(args);
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _phoneNumberKey.currentState!.focusNode.unfocus();

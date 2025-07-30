@@ -10,6 +10,7 @@ import 'package:smart_market/model/account/presentation/widgets/navigate_account
 import 'package:smart_market/model/main/presentation/pages/navigation.page.dart';
 import 'package:smart_market/model/order/presentation/widgets/navigate_orders.widget.dart';
 import 'package:smart_market/model/review/presentation/widgets/navigate_all_reviews.widget.dart';
+import 'package:smart_market/model/user/domain/service/auth.service.dart';
 import 'package:smart_market/model/user/domain/service/user.service.dart';
 
 import '../../../../core/widgets/dialog/handle_network_error.dialog.dart';
@@ -28,6 +29,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final UserService _userService = locator<UserService>();
+  final AuthService _authService = locator<AuthService>();
 
   late Future<Map<String, dynamic>> _profilePageFuture;
 
@@ -52,7 +54,7 @@ class _ProfilePageState extends State<ProfilePage> {
     NavigatorState navigator = Navigator.of(context);
 
     try {
-      await _userService.logout();
+      await _authService.logout();
       scaffoldMessenger.showSnackBar(getSnackBar('로그아웃이 완료되었습니다.'));
       navigator.pushNamedAndRemoveUntil(
         "/home",

@@ -1,9 +1,9 @@
-import '../../model/user/domain/service/user.service.dart';
+import '../../model/user/domain/service/auth.service.dart';
 import '../errors/refresh_token_expired.error.dart';
 import 'get_it_initializer.dart';
 
 Future<void> checkJwtDuration() async {
-  final UserService userService = locator<UserService>();
-  bool result = await userService.checkJwtTokenDuration();
+  final AuthService authService = locator<AuthService>();
+  bool result = await authService.checkJwtTokenDuration();
   if (!result) throw RefreshTokenExpiredError();
 }
