@@ -69,7 +69,7 @@ class AuthorizationHttpClient extends DioInitializer {
     dio.interceptors.clear();
     dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) {
-        options.headers["access-token"] = accessToken;
+        options.headers["Authorization"] = 'Bearer $accessToken';
         return handler.next(options);
       },
     ));
