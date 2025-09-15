@@ -61,7 +61,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<DataState<void>> logout(String accessToken) async {
-    String url = "$_baseUrl/logout";
+    String url = "$_baseUrl/logout?check-expired=false";
     ClientArgs clientArgs = ClientArgs(accessToken: accessToken);
     Dio dio = _authorizationHttpClient.getClient(args: clientArgs);
 
@@ -76,7 +76,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<DataState<String>> refreshToken(String accessToken) async {
-    String url = "$_baseUrl/refresh-token";
+    String url = "$_baseUrl/refresh-token?check-expired=false";
     ClientArgs clientArgs = ClientArgs(accessToken: accessToken);
     Dio dio = _authorizationHttpClient.getClient(args: clientArgs);
 
