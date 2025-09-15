@@ -52,7 +52,7 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       Response response = await dio.post(url);
 
-      String accessToken = response.headers["access-token"]![0];
+      String accessToken = response.data["result"];
       return DataSuccess(data: accessToken);
     } on DioException catch (err) {
       return DataFail(exception: err);
