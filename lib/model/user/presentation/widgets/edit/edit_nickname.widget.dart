@@ -32,7 +32,7 @@ class EditNickNameWidgetState extends EditWidgetState<EditNickNameWidget> with I
   late EditUserColumnProvider _provider;
   late bool _isValid;
 
-  String _errorMessage = "";
+  List<String> _errorMessages = [];
 
   @override
   FocusNode get focusNode => _focusNode;
@@ -54,7 +54,7 @@ class EditNickNameWidgetState extends EditWidgetState<EditNickNameWidget> with I
         nickNameController.text = widget.beforeNickName!;
         setState(() {
           _isValid = true;
-          _errorMessage = "";
+          _errorMessages = [];
         });
 
         _provider.setIsNickNameValid(_isValid);
@@ -72,7 +72,7 @@ class EditNickNameWidgetState extends EditWidgetState<EditNickNameWidget> with I
   @override
   Future<void> detectInput(String? _) async {
     bool isValidLocal;
-    String errorMessage;
+    List<String> errorMessages;
 
     try {
       ResponseValidate result = await _userValidateService.validateNickName(
@@ -82,15 +82,15 @@ class EditNickNameWidgetState extends EditWidgetState<EditNickNameWidget> with I
       );
 
       isValidLocal = result.isValidate;
-      errorMessage = result.message;
+      errorMessages = result.errorMessages;
     } catch (err) {
       isValidLocal = false;
-      errorMessage = branchErrorMessage(err);
+      errorMessages = [branchErrorMessage(err)];
     }
 
     setState(() {
       _isValid = isValidLocal;
-      _errorMessage = errorMessage;
+      _errorMessages = errorMessages;
     });
 
     _provider.setIsNickNameValid(_isValid);
@@ -112,7 +112,7 @@ class EditNickNameWidgetState extends EditWidgetState<EditNickNameWidget> with I
             decoration: getInputDecoration(Icons.tag, _isValid, "닉네임을 입력하세요."),
           ),
         ),
-        if (!_isValid && _errorMessage.isNotEmpty) ErrorArea(_errorMessage)
+        if (!_isValid && _errorMessages.isNotEmpty) ErrorArea(_errorMessages)
       ],
     );
   }

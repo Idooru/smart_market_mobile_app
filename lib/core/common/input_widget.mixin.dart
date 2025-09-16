@@ -23,13 +23,12 @@ mixin InputWidget {
     return const TextStyle(fontSize: 16, color: Color.fromARGB(255, 90, 90, 90));
   }
 
-  Center ErrorArea(String errorMessage) {
-    return Center(
+  Widget ErrorArea(List<String> errorMessages) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10, 5, 5, 10),
       child: Column(
-        children: [
-          Text(errorMessage, style: const TextStyle(color: Colors.red)),
-          const SizedBox(height: 10),
-        ],
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: errorMessages.map((message) => Text(message, style: const TextStyle(color: Colors.red))).toList(),
       ),
     );
   }

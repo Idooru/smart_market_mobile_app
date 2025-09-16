@@ -30,7 +30,7 @@ class EditPasswordWidgetState extends EditWidgetState<EditPasswordWidget> with I
   late EditUserColumnProvider _provider;
 
   bool _isValid = false;
-  String _errorMessage = "";
+  List<String> _errorMessages = [];
 
   @override
   FocusNode get focusNode => _newPasswordFocusNode;
@@ -55,7 +55,7 @@ class EditPasswordWidgetState extends EditWidgetState<EditPasswordWidget> with I
   @override
   Future<void> detectInput(_) async {
     bool isValidLocal;
-    String errorMessage;
+    List<String> errorMessages;
 
     try {
       ResponseValidate result = await _userValidateService.validatePassword(
@@ -64,15 +64,15 @@ class EditPasswordWidgetState extends EditWidgetState<EditPasswordWidget> with I
       );
 
       isValidLocal = result.isValidate;
-      errorMessage = result.message;
+      errorMessages = result.errorMessages;
     } catch (err) {
       isValidLocal = false;
-      errorMessage = branchErrorMessage(err);
+      errorMessages = [branchErrorMessage(err)];
     }
 
     setState(() {
       _isValid = isValidLocal;
-      _errorMessage = errorMessage;
+      _errorMessages = errorMessages;
     });
 
     _provider.setIsPasswordValid(_isValid);
@@ -116,7 +116,7 @@ class EditPasswordWidgetState extends EditWidgetState<EditPasswordWidget> with I
             ),
           ),
         ),
-        if (!_isValid && _errorMessage.isNotEmpty) ErrorArea(_errorMessage)
+        if (!_isValid && _errorMessages.isNotEmpty) ErrorArea(_errorMessages)
       ],
     );
   }

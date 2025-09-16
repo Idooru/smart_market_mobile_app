@@ -1,16 +1,16 @@
 class ResponseValidate {
   final bool isValidate;
-  final String message;
+  final List<String> errorMessages;
 
   const ResponseValidate({
     required this.isValidate,
-    required this.message,
+    required this.errorMessages,
   });
 
   factory ResponseValidate.fromJson(Map<String, dynamic> json) {
     return ResponseValidate(
       isValidate: json["isValidate"],
-      message: json["message"],
+      errorMessages: List<String>.from(json["errors"] ?? []),
     );
   }
 }

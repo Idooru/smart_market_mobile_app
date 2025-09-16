@@ -29,7 +29,7 @@ class EditAccountNumberWidgetState extends EditWidgetState<EditAccountNumberWidg
   late CreateAccountProvider _provider;
 
   bool _isValid = false;
-  String _errorMessage = "";
+  List<String> _errorMessages = [];
 
   @override
   FocusNode get focusNode => throw UnimplementedError();
@@ -50,7 +50,7 @@ class EditAccountNumberWidgetState extends EditWidgetState<EditAccountNumberWidg
   @override
   Future<void> detectInput(String? _) async {
     bool isValid;
-    String errorMessage;
+    List<String> errorMessages;
 
     String accountNumber = accountNumberController.text;
 
@@ -58,15 +58,15 @@ class EditAccountNumberWidgetState extends EditWidgetState<EditAccountNumberWidg
       ResponseValidate result = await _accountValidateService.validateAccountNumber(accountNumber);
 
       isValid = result.isValidate;
-      errorMessage = result.message;
+      errorMessages = result.errorMessages;
     } on DioFailError catch (err) {
       isValid = false;
-      errorMessage = branchErrorMessage(err);
+      errorMessages = [branchErrorMessage(err)];
     }
 
     setState(() {
       _isValid = isValid;
-      _errorMessage = errorMessage;
+      _errorMessages = errorMessages;
     });
 
     _provider.setIsAccountNumberVali(_isValid);
@@ -88,7 +88,7 @@ class EditAccountNumberWidgetState extends EditWidgetState<EditAccountNumberWidg
             decoration: getInputDecoration(Icons.credit_card, _isValid, "계좌번호를 입력하세요."),
           ),
         ),
-        if (!_isValid && _errorMessage.isNotEmpty) ErrorArea(_errorMessage)
+        // if (!_isValid && _errorMessages.isNotEmpty) ErrorArea(_errorMessages)
       ],
     );
   }

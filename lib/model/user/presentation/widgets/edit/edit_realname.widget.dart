@@ -23,7 +23,7 @@ class EditRealNameWidgetState extends EditWidgetState<EditRealNameWidget> with I
   late EditUserColumnProvider _provider;
 
   bool _isValid = false;
-  String _errorMessage = "";
+  List<String> _errorMessages = [];
 
   @override
   FocusNode get focusNode => _focusNode;
@@ -48,24 +48,24 @@ class EditRealNameWidgetState extends EditWidgetState<EditRealNameWidget> with I
   @override
   void detectInput(String? _) {
     bool isValidLocal;
-    String errorMessage;
+    List<String> errorMessages = [];
 
     String realName = realNameController.text;
 
     if (realName.isEmpty) {
       isValidLocal = false;
-      errorMessage = "입력된 내용이 없습니다.";
+      errorMessages = [...errorMessages, "입력된 내용이 없습니다."];
     } else if (realName.length > 20) {
       isValidLocal = false;
-      errorMessage = "길이가 20자를 넘어갑니다.";
+      errorMessages = [...errorMessages, "길이가 20자를 넘어갑니다."];
     } else {
       isValidLocal = true;
-      errorMessage = "";
+      errorMessages = [];
     }
 
     setState(() {
       _isValid = isValidLocal;
-      _errorMessage = errorMessage;
+      _errorMessages = errorMessages;
     });
 
     _provider.setIsRealNameValid(_isValid);
@@ -87,7 +87,7 @@ class EditRealNameWidgetState extends EditWidgetState<EditRealNameWidget> with I
             decoration: getInputDecoration(Icons.person, _isValid, "이름을 입력하세요."),
           ),
         ),
-        if (!_isValid && _errorMessage.isNotEmpty) ErrorArea(_errorMessage)
+        if (!_isValid && _errorMessages.isNotEmpty) ErrorArea(_errorMessages)
       ],
     );
   }

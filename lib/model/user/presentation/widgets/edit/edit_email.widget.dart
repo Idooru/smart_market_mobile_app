@@ -32,7 +32,7 @@ class EditEmailWidgetState extends EditWidgetState<EditEmailWidget> with InputWi
   late EditUserColumnProvider _provider;
   late bool _isValid;
 
-  String _errorMessage = "";
+  List<String> _errorMessages = [];
 
   @override
   FocusNode get focusNode => _focusNode;
@@ -54,7 +54,7 @@ class EditEmailWidgetState extends EditWidgetState<EditEmailWidget> with InputWi
         emailController.text = widget.beforeEmail!;
         setState(() {
           _isValid = true;
-          _errorMessage = "";
+          _errorMessages = [];
         });
 
         _provider.setIsEmailValid(_isValid);
@@ -72,7 +72,7 @@ class EditEmailWidgetState extends EditWidgetState<EditEmailWidget> with InputWi
   @override
   Future<void> detectInput(_) async {
     bool isValidLocal;
-    String errorMessage;
+    List<String> errorMessages;
 
     try {
       ResponseValidate result = await _userValidateService.validateEmail(
@@ -82,15 +82,15 @@ class EditEmailWidgetState extends EditWidgetState<EditEmailWidget> with InputWi
       );
 
       isValidLocal = result.isValidate;
-      errorMessage = result.message;
+      errorMessages = result.errorMessages;
     } catch (err) {
       isValidLocal = false;
-      errorMessage = branchErrorMessage(err);
+      errorMessages = [branchErrorMessage(err)];
     }
 
     setState(() {
       _isValid = isValidLocal;
-      _errorMessage = errorMessage;
+      _errorMessages = errorMessages;
     });
 
     _provider.setIsEmailValid(_isValid);
@@ -112,7 +112,7 @@ class EditEmailWidgetState extends EditWidgetState<EditEmailWidget> with InputWi
             decoration: getInputDecoration(Icons.email, _isValid, "이메일을 입력하세요."),
           ),
         ),
-        if (!_isValid && _errorMessage.isNotEmpty) ErrorArea(_errorMessage)
+        if (!_isValid && _errorMessages.isNotEmpty) ErrorArea(_errorMessages)
       ],
     );
   }

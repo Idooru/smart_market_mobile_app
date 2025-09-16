@@ -32,7 +32,7 @@ class EditPhoneNumberWidgetState extends EditWidgetState<EditPhoneNumberWidget> 
   late EditUserColumnProvider _provider;
   late bool _isValid;
 
-  String _errorMessage = "";
+  List<String> _errorMessages = [];
 
   @override
   FocusNode get focusNode => _focusNode;
@@ -54,7 +54,7 @@ class EditPhoneNumberWidgetState extends EditWidgetState<EditPhoneNumberWidget> 
         phoneNumberController.text = widget.beforePhoneNumber!;
         setState(() {
           _isValid = true;
-          _errorMessage = "";
+          _errorMessages = [];
         });
 
         _provider.setIsPhoneNumberValid(_isValid);
@@ -72,7 +72,7 @@ class EditPhoneNumberWidgetState extends EditWidgetState<EditPhoneNumberWidget> 
   @override
   Future<void> detectInput(String? _) async {
     bool isValidLocal;
-    String errorMessage;
+    List<String> errorMessages;
 
     try {
       ResponseValidate result = await _userValidateService.validatePhoneNumber(
@@ -82,15 +82,15 @@ class EditPhoneNumberWidgetState extends EditWidgetState<EditPhoneNumberWidget> 
       );
 
       isValidLocal = result.isValidate;
-      errorMessage = result.message;
+      errorMessages = result.errorMessages;
     } catch (err) {
       isValidLocal = false;
-      errorMessage = branchErrorMessage(err);
+      errorMessages = [branchErrorMessage(err)];
     }
 
     setState(() {
       _isValid = isValidLocal;
-      _errorMessage = errorMessage;
+      _errorMessages = errorMessages;
     });
 
     _provider.setIsPhoneNumberValid(_isValid);
@@ -112,7 +112,7 @@ class EditPhoneNumberWidgetState extends EditWidgetState<EditPhoneNumberWidget> 
             decoration: getInputDecoration(Icons.phone, _isValid, "전화번호를 입력하세요."),
           ),
         ),
-        if (!_isValid && _errorMessage.isNotEmpty) ErrorArea(_errorMessage),
+        if (!_isValid && _errorMessages.isNotEmpty) ErrorArea(_errorMessages),
       ],
     );
   }

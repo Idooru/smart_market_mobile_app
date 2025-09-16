@@ -30,7 +30,7 @@ class EditAddressWidgetState extends EditWidgetState<EditAddressWidget> with Inp
   late EditUserColumnProvider _provider;
   late bool _isValid;
 
-  String _errorMessage = "";
+  List<String> _errorMessages = [];
 
   @override
   FocusNode get focusNode => _focusNode;
@@ -52,7 +52,7 @@ class EditAddressWidgetState extends EditWidgetState<EditAddressWidget> with Inp
         addressController.text = widget.beforeAddress!;
         setState(() {
           _isValid = true;
-          _errorMessage = "";
+          _errorMessages = [];
         });
 
         _provider.setIsAddressValid(_isValid);
@@ -70,7 +70,7 @@ class EditAddressWidgetState extends EditWidgetState<EditAddressWidget> with Inp
   @override
   Future<void> detectInput(String? _) async {
     bool isValidLocal;
-    String errorMessage;
+    List<String> errorMessages;
 
     try {
       ResponseValidate result = await _userValidateService.validateAddress(
@@ -79,15 +79,15 @@ class EditAddressWidgetState extends EditWidgetState<EditAddressWidget> with Inp
       );
 
       isValidLocal = result.isValidate;
-      errorMessage = result.message;
+      errorMessages = result.errorMessages;
     } catch (err) {
       isValidLocal = false;
-      errorMessage = branchErrorMessage(err);
+      errorMessages = [branchErrorMessage(err)];
     }
 
     setState(() {
       _isValid = isValidLocal;
-      _errorMessage = errorMessage;
+      _errorMessages = errorMessages;
     });
 
     _provider.setIsAddressValid(_isValid);
@@ -109,7 +109,7 @@ class EditAddressWidgetState extends EditWidgetState<EditAddressWidget> with Inp
             decoration: getInputDecoration(Icons.home, _isValid, "배송지를 입력하세요."),
           ),
         ),
-        if (!_isValid && _errorMessage.isNotEmpty) Center(child: ErrorArea(_errorMessage)),
+        if (!_isValid && _errorMessages.isNotEmpty) ErrorArea(_errorMessages),
       ],
     );
   }
