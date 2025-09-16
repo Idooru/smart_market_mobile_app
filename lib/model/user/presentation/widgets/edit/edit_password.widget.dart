@@ -30,6 +30,8 @@ class EditPasswordWidgetState extends EditWidgetState<EditPasswordWidget> with I
   late EditUserColumnProvider _provider;
 
   bool _isValid = false;
+  bool _isPasswordHide = true;
+  bool _isMatchPasswordHide = true;
   List<String> _errorMessages = [];
 
   @override
@@ -85,37 +87,77 @@ class EditPasswordWidgetState extends EditWidgetState<EditPasswordWidget> with I
       children: [
         Titile("비밀번호"),
         EditWidget(
-          TextField(
-            obscureText: true,
-            controller: newPasswordController,
-            focusNode: _newPasswordFocusNode,
-            textInputAction: TextInputAction.next,
-            style: getInputStyle(),
-            onChanged: detectInput,
-            decoration: InputDecoration(
-              isDense: true,
-              border: InputBorder.none,
-              prefixIcon: Icon(Icons.lock, color: _isValid ? Colors.green : Colors.red),
-              hintText: "새 비밀번호",
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  obscureText: _isPasswordHide,
+                  controller: newPasswordController,
+                  focusNode: _newPasswordFocusNode,
+                  textInputAction: TextInputAction.next,
+                  style: getInputStyle(),
+                  onChanged: detectInput,
+                  decoration: InputDecoration(
+                    isDense: true,
+                    border: InputBorder.none,
+                    prefixIcon: Icon(Icons.lock, color: _isValid ? Colors.green : Colors.red),
+                    hintText: "새 비밀번호",
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 7),
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _isPasswordHide = !_isPasswordHide;
+                    });
+                  },
+                  child: SizedBox(
+                    width: 30,
+                    height: 30,
+                    child: Icon(Icons.remove_red_eye, color: _isPasswordHide ? null : Colors.blue[700]),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
-        EditWidget(
-          TextField(
-            obscureText: true,
-            controller: matchPasswordController,
-            focusNode: _newMatchPasswordFocusNode,
-            textInputAction: widget.isLastWidget ? TextInputAction.done : TextInputAction.next,
-            style: getInputStyle(),
-            onChanged: detectInput,
-            decoration: InputDecoration(
-              isDense: true,
-              border: InputBorder.none,
-              prefixIcon: Icon(Icons.lock, color: _isValid ? Colors.green : Colors.red),
-              hintText: "새 비밀번호 확인",
+        EditWidget(Row(
+          children: [
+            Expanded(
+              child: TextField(
+                obscureText: _isMatchPasswordHide,
+                controller: matchPasswordController,
+                focusNode: _newMatchPasswordFocusNode,
+                textInputAction: widget.isLastWidget ? TextInputAction.done : TextInputAction.next,
+                style: getInputStyle(),
+                onChanged: detectInput,
+                decoration: InputDecoration(
+                  isDense: true,
+                  border: InputBorder.none,
+                  prefixIcon: Icon(Icons.lock, color: _isValid ? Colors.green : Colors.red),
+                  hintText: "새 비밀번호 확인",
+                ),
+              ),
             ),
-          ),
-        ),
+            Padding(
+              padding: const EdgeInsets.only(right: 7),
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _isMatchPasswordHide = !_isMatchPasswordHide;
+                  });
+                },
+                child: SizedBox(
+                  width: 30,
+                  height: 30,
+                  child: Icon(Icons.remove_red_eye, color: _isMatchPasswordHide ? null : Colors.blue[700]),
+                ),
+              ),
+            ),
+          ],
+        )),
         if (!_isValid && _errorMessages.isNotEmpty) ErrorArea(_errorMessages)
       ],
     );
