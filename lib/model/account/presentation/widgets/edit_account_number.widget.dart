@@ -88,7 +88,7 @@ class EditAccountNumberWidgetState extends EditWidgetState<EditAccountNumberWidg
             decoration: getInputDecoration(Icons.credit_card, _isValid, "계좌번호를 입력하세요."),
           ),
         ),
-        // if (!_isValid && _errorMessages.isNotEmpty) ErrorArea(_errorMessages)
+        if (!_isValid && _errorMessages.isNotEmpty) ErrorArea(_errorMessages)
       ],
     );
   }
