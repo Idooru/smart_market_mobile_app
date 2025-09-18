@@ -7,12 +7,12 @@ import 'package:smart_market/model/account/domain/repository/account_validate.re
 
 class AccountValidateRepositoryImpl implements AccountValidateRepository {
   final DioInitializer _commonHttpClient = locator<DioInitializer>(instanceName: "common");
-  final String _baseUrl = RequestUrl.getUrl("/account/validate");
+  final String _baseUrl = RequestUrl.getUrl("/validate/account");
 
   @override
   Future<DataState<ResponseValidate>> validateAccountNumber(String accountNumber) async {
-    String url = "$_baseUrl/account-number/$accountNumber";
-    Dio dio = await _commonHttpClient.getClient();
+    String url = "$_baseUrl/account-number?current-account-number=$accountNumber";
+    Dio dio = _commonHttpClient.getClient();
 
     try {
       Response response = await dio.get(url);
