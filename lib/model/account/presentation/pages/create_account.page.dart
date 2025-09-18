@@ -94,7 +94,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
         navigator.pushNamedAndRemoveUntil(
           "/home",
           (route) => false,
-          arguments: const NavigationPageArgs(selectedIndex: 2),
+          arguments: const NavigationPageArgs(selectedIndex: 3),
         );
       }
 
