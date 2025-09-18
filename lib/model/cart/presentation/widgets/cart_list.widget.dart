@@ -88,7 +88,7 @@ class CartListWidgetState extends State<CartListWidget> {
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 10),
-          child: carts.cartRaws.isNotEmpty
+          child: carts.items.isNotEmpty
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -112,7 +112,7 @@ class CartListWidgetState extends State<CartListWidget> {
               : const SizedBox.shrink(),
         ),
         Expanded(
-          child: carts.cartRaws.isEmpty
+          child: carts.items.isEmpty
               ? const Center(
                   child: Text(
                     "장바구니가 비어있습니다.",
@@ -123,9 +123,9 @@ class CartListWidgetState extends State<CartListWidget> {
                   ),
                 )
               : ListView.builder(
-                  itemCount: carts.cartRaws.length,
+                  itemCount: carts.items.length,
                   itemBuilder: (context, index) => CartItemWidget(
-                    cart: carts.cartRaws[index],
+                    cart: carts.items[index],
                     updateCallback: updateCarts,
                   ),
                 ),
@@ -160,7 +160,7 @@ class CartListWidgetState extends State<CartListWidget> {
                   return HandleNetworkErrorDialog.show(context, err);
                 }
 
-                provider.setCarts(carts.cartRaws);
+                provider.setCarts(carts.items);
                 provider.setCartTotalPrice(carts.totalPrice);
                 provider.setAccounts(widget.accounts);
 
@@ -169,7 +169,7 @@ class CartListWidgetState extends State<CartListWidget> {
                   arguments: CreateOrderPageArgs(address: widget.address),
                 );
               },
-              isValid: carts.cartRaws.isNotEmpty,
+              isValid: carts.items.isNotEmpty,
             );
           },
         ),

@@ -80,12 +80,12 @@ class _PayNowDialogWidgetState extends EditCartState<PayNowDialogWidget> {
             title: "바로 구매하기",
             pressCallback: () async {
               NavigatorState navigator = Navigator.of(context);
-              ResponseCarts? result = await widget.payNowCallback(quantity: productQuantity, totalPrice: totalPrice);
+              ResponseCarts? carts = await widget.payNowCallback(quantity: productQuantity, totalPrice: totalPrice);
 
-              if (result == null) return;
+              if (carts == null) return;
 
-              provider.setCarts(result.cartRaws);
-              provider.setCartTotalPrice(result.totalPrice);
+              provider.setCarts(carts.items);
+              provider.setCartTotalPrice(carts.totalPrice);
               provider.setAccounts(widget.accounts);
 
               navigator.pushNamed(

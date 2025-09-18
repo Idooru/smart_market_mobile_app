@@ -11,18 +11,22 @@ class RequestCarts {
 }
 
 class ResponseCarts {
-  final List<Cart> cartRaws;
+  final List<Cart> items;
   final int totalPrice;
 
   const ResponseCarts({
-    required this.cartRaws,
+    required this.items,
     required this.totalPrice,
   });
 
-  factory ResponseCarts.fromJson(Map<String, dynamic> json) {
+  factory ResponseCarts.fromJson(List<dynamic> json) {
+    if (json.isEmpty) {
+      return const ResponseCarts(items: [], totalPrice: 0);
+    }
+
     return ResponseCarts(
-      cartRaws: (json["carts"] as List).map((e) => Cart.fromJson(e)).toList(),
-      totalPrice: json["totalPrice"],
+      items: json.map((e) => Cart.fromJson(e)).toList(),
+      totalPrice: json.map((e) => Cart.fromJson(e)).map((cart) => cart.totalPrice).reduce((acc, cur) => acc += cur),
     );
   }
 }

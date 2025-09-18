@@ -158,8 +158,8 @@ class _DetailProductPageState extends State<DetailProductPage> {
       );
 
       try {
-        ResponseCarts responseCarts = await _cartService.fetchCarts(RequestCartsArgs.args);
-        if (responseCarts.cartRaws.isNotEmpty) {
+        ResponseCarts carts = await _cartService.fetchCarts(RequestCartsArgs.args);
+        if (carts.items.isNotEmpty) {
           navigator.pop();
           AlreadyHasCartsDialog.show(
             context,

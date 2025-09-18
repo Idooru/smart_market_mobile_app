@@ -37,10 +37,10 @@ class AlreadyHasCartsDialog {
 
               try {
                 await _cartService.createCart(createCartArgs);
-                ResponseCarts responseCarts = await _cartService.fetchCarts(RequestCartsArgs.args);
+                ResponseCarts carts = await _cartService.fetchCarts(RequestCartsArgs.args);
 
-                provider.setCarts(responseCarts.cartRaws);
-                provider.setCartTotalPrice(responseCarts.totalPrice);
+                provider.setCarts(carts.items);
+                provider.setCartTotalPrice(carts.totalPrice);
                 provider.setAccounts(accounts);
 
                 navigator.pushNamed(
@@ -67,11 +67,11 @@ class AlreadyHasCartsDialog {
 
               try {
                 await _cartService.createCart(createCartArgs);
-                ResponseCarts responseCarts = await _cartService.fetchCarts(RequestCartsArgs.args);
+                ResponseCarts carts = await _cartService.fetchCarts(RequestCartsArgs.args);
 
-                List<Cart> payNowCarts = responseCarts.cartRaws.where((cart) => cart.isPayNow).toList();
+                List<Cart> payNowCarts = carts.items.where((cart) => cart.isPayNow).toList();
                 provider.setCarts(payNowCarts);
-                provider.setCartTotalPrice(responseCarts.totalPrice);
+                provider.setCartTotalPrice(carts.totalPrice);
                 provider.setAccounts(accounts);
 
                 navigator.pushNamed(
