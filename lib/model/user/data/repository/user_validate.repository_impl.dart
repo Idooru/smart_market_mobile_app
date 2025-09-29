@@ -68,11 +68,11 @@ class UserValidateRepositoryImpl implements UserValidateRepository {
 
   @override
   Future<DataState<ResponseValidate>> validatePassword(String newPassword, String matchPassword) async {
-    String url = "$_baseUrl/password?new-password=$newPassword&match-password=$matchPassword";
+    String url = "$_baseUrl/password";
     Dio dio = _commonHttpClient.getClient();
 
     try {
-      Response response = await dio.get(url);
+      Response response = await dio.get(url, data: {"newPassword": newPassword, "matchPassword": matchPassword});
       ResponseValidate responseValidate = ResponseValidate.fromJson(response.data);
       return DataSuccess(data: responseValidate);
     } on DioException catch (err) {
