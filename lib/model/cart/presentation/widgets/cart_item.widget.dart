@@ -128,14 +128,14 @@ class _CartItemWidgetState extends State<CartItemWidget> {
       onLongPress: pressTrailingIcon,
       child: Container(
         width: double.infinity,
-        height: 100,
+        height: 113,
         margin: const EdgeInsets.only(bottom: 10),
         decoration: commonContainerDecoration,
         child: Stack(
           children: [
             Container(
-              width: 80,
-              height: 80,
+              width: 90,
+              height: 90,
               margin: const EdgeInsets.all(10),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
@@ -147,9 +147,9 @@ class _CartItemWidgetState extends State<CartItemWidget> {
             ),
             Positioned(
               top: 10,
-              left: 100,
+              left: 110,
               child: SizedBox(
-                height: 80,
+                height: 90,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
