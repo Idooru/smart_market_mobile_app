@@ -26,4 +26,11 @@ class OrderServiceImpl implements OrderService {
     DataState<void> dataState = await _orderRepository.createOrder(accessToken!, args);
     if (dataState.exception != null) branchNetworkError(dataState);
   }
+
+  @override
+  Future<void> cancelOrder(String orderId) async {
+    String? accessToken = _db.getString("access-token");
+    DataState<void> dataState = await _orderRepository.cancelOrder(accessToken!, orderId);
+    if (dataState.exception!=null) branchNetworkError(dataState);
+  }
 }

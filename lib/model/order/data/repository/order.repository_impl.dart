@@ -42,4 +42,19 @@ class OrderRepositoryImpl implements OrderRepository {
       return DataFail(exception: err);
     }
   }
+
+  @override
+  Future<DataState<void>> cancelOrder(String accessToken, String orderId) async {
+    String url = "$_baseUrl/cancel/orderId/$orderId";
+    ClientArgs clientArgs = ClientArgs(accessToken: accessToken);
+    Dio dio = _authorizationHttpClient.getClient(args: clientArgs);
+
+    try {
+      await dio.patch(url);
+
+      return const DataSuccess(data: null);
+    } on DioException catch (err) {
+      return DataFail(exception: err);
+    }
+  }
 }
