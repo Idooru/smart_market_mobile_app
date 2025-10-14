@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:smart_market/core/widgets/common/common_button_bar.mixin.dart';
 
-class ConditionalButtonBarWidget extends StatelessWidget {
+class ConditionalButtonBarWidget extends StatelessWidget with CommonButtonBar {
   final IconData? icon;
   final Color? backgroundColor;
   final String title;
@@ -24,37 +25,8 @@ class ConditionalButtonBarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: pressCallback,
-      style: ElevatedButton.styleFrom(
-        minimumSize: const Size(0, 50),
-        backgroundColor: isValid ? getBackgroundColorWhenValid() : const Color.fromARGB(255, 190, 190, 190),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          icon != null
-              ? Row(
-                  children: [
-                    Icon(
-                      icon,
-                      size: 19,
-                      color: Colors.white,
-                    ),
-                    const SizedBox(width: 5),
-                  ],
-                )
-              : const SizedBox.shrink(),
-          Text(
-            title,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 17,
-            ),
-          )
-        ],
-      ),
+      style: getButtonStyle(isValid ? getBackgroundColorWhenValid() : const Color.fromARGB(255, 190, 190, 190)),
+      child: getButtonContent(icon, title),
     );
   }
 }
