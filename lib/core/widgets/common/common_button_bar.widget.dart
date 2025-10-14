@@ -20,38 +20,38 @@ class CommonButtonBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: pressCallback,
-      child: Container(
-        height: 50,
-        decoration: BoxDecoration(
-          color: getBackgroundColor(),
+    return ElevatedButton(
+      onPressed: pressCallback,
+      style: ElevatedButton.styleFrom(
+        minimumSize: const Size(0, 50),
+        backgroundColor: getBackgroundColor(),
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            icon != null
-                ? Row(
-                    children: [
-                      Icon(
-                        icon,
-                        size: 19,
-                        color: Colors.white,
-                      ),
-                      const SizedBox(width: 5),
-                    ],
-                  )
-                : const SizedBox.shrink(),
-            Text(
-              title,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 17,
-              ),
-            )
-          ],
-        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          icon != null
+              ? Row(
+                  children: [
+                    Icon(
+                      icon,
+                      size: 19,
+                      color: Colors.white,
+                    ),
+                    const SizedBox(width: 5),
+                  ],
+                )
+              : const SizedBox.shrink(),
+          Text(
+            title,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 17,
+            ),
+          )
+        ],
       ),
     );
   }
