@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_market/core/widgets/common/init_filter_button_bar.widget.dart';
 
 import '../../../../core/widgets/common/radio.widget.dart';
 import '../../domain/entities/order.entity.dart';
@@ -65,7 +66,7 @@ class _OrderFilterDialogState extends State<OrderFilterDialogWidget> {
   Widget build(BuildContext context) {
     return Container(
       width: 250,
-      height: 333,
+      height: 340,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -234,25 +235,7 @@ class _OrderFilterDialogState extends State<OrderFilterDialogWidget> {
                       ],
                     ),
                   ),
-                  GestureDetector(
-                    onTap: initFilterMap,
-                    child: Container(
-                      width: 200,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 180, 180, 180),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          "필터링 초기화",
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 70, 70, 70),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  InitFilterButtonBarWidget(pressInitFilter: initFilterMap),
                 ],
               ),
             ),

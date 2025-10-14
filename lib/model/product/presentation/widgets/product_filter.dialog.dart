@@ -6,6 +6,8 @@ import 'package:smart_market/model/product/domain/entities/search_product.entity
 import 'package:smart_market/model/product/presentation/provider/product_filtered.provider.dart';
 import 'package:smart_market/model/product/presentation/provider/product_search.provider.dart';
 
+import '../../../../core/widgets/common/init_filter_button_bar.widget.dart';
+
 final Map<String, String> filterMap = {};
 
 class ProductFilterDialog {
@@ -83,7 +85,7 @@ class ProductFilterDialogWidgetState extends State<ProductFilterDialogWidget> {
   Widget build(BuildContext context) {
     return Container(
       width: 250,
-      height: 285,
+      height: 295,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -205,25 +207,7 @@ class ProductFilterDialogWidgetState extends State<ProductFilterDialogWidget> {
                           .toList(),
                     ),
                   ),
-                  GestureDetector(
-                    onTap: initFilterMap,
-                    child: Container(
-                      width: 200,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 180, 180, 180),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          "필터링 초기화",
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 70, 70, 70),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  InitFilterButtonBarWidget(pressInitFilter: initFilterMap),
                 ],
               ),
             ),

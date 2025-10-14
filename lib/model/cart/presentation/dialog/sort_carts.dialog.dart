@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_market/core/widgets/common/init_filter_button_bar.widget.dart';
 import 'package:smart_market/model/cart/common/const/request_carts.args.dart';
 
 import '../../../../core/widgets/common/radio.widget.dart';
@@ -69,7 +70,7 @@ class _SortCartDialogWidgetState extends State<SortCartsDialogWidget> {
   Widget build(BuildContext context) {
     return Container(
       width: 250,
-      height: 240,
+      height: 250,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -154,25 +155,7 @@ class _SortCartDialogWidgetState extends State<SortCartsDialogWidget> {
                       ],
                     ),
                   ),
-                  GestureDetector(
-                    onTap: initFilterMap,
-                    child: Container(
-                      width: 200,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 180, 180, 180),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          "필터링 초기화",
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 70, 70, 70),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  InitFilterButtonBarWidget(pressInitFilter: initFilterMap),
                 ],
               ),
             ),

@@ -3,6 +3,7 @@ import 'package:smart_market/core/common/network_handler.mixin.dart';
 import 'package:smart_market/core/widgets/common/radio.widget.dart';
 import 'package:smart_market/model/account/domain/entities/account.entity.dart';
 
+import '../../../../core/widgets/common/init_filter_button_bar.widget.dart';
 import '../../common/const/request_accounts.args.dart';
 
 final Map<String, String> _filterMap = {};
@@ -70,7 +71,7 @@ class SortAccountsDialogWidgetState extends State<SortAccountsDialogWidget> with
   Widget build(BuildContext context) {
     return Container(
       width: 250,
-      height: 240,
+      height: 250,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -145,25 +146,7 @@ class SortAccountsDialogWidgetState extends State<SortAccountsDialogWidget> with
                       ],
                     ),
                   ),
-                  GestureDetector(
-                    onTap: initFilterMap,
-                    child: Container(
-                      width: 200,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 180, 180, 180),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          "필터링 초기화",
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 70, 70, 70),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  InitFilterButtonBarWidget(pressInitFilter: initFilterMap),
                 ],
               ),
             ),
