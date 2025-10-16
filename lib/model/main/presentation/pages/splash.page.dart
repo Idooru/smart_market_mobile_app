@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'navigation.page.dart';
+
 class SplashPage extends StatelessWidget {
   const SplashPage({super.key});
 
@@ -22,7 +24,7 @@ class SplashPage extends StatelessWidget {
             );
           } else {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              Navigator.of(context).pushReplacementNamed('/home');
+              Navigator.of(context).pushReplacementNamed('/home', arguments: const NavigationPageArgs(selectedIndex: 0));
             });
             return const SizedBox.shrink();
           }

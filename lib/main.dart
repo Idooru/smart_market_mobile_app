@@ -56,9 +56,9 @@ class MyApp extends StatelessWidget {
             settings: settings,
           );
         } else if (settings.name == '/home') {
-          final args = settings.arguments as NavigationPageArgs?;
+          final args = settings.arguments as NavigationPageArgs;
           return MaterialPageRoute(
-            builder: (_) => NavigationPage(initialIndex: args?.selectedIndex ?? 0),
+            builder: (_) => NavigationPage(initialIndex: args.selectedIndex),
             settings: settings,
           );
         } else {
