@@ -113,7 +113,13 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
 
     return ConditionalButtonBarWidget(
       icon: Icons.credit_card,
-      title: "계좌 등록하기",
+      title: Text(
+        "계좌 등록하기",
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+        ),
+      ),
       isValid: isAllValid,
       pressCallback: pressCreateAccount,
     );

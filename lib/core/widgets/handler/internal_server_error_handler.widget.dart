@@ -40,8 +40,13 @@ class InternalServerErrorHandlerWidget extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: CommonButtonBarWidget(
-                icon: Icons.arrow_back_ios,
-                title: "이전 페이지로 돌아가기",
+                title: Text(
+                  "이전 페이지로 돌아가기",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
                 backgroundColor: const Color.fromARGB(255, 90, 90, 90),
                 pressCallback: () => Navigator.of(context).pop(),
               ),

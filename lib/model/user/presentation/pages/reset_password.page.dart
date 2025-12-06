@@ -59,7 +59,14 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   ConditionalButtonBarWidget ResetPasswordButton(EditUserColumnProvider provider) {
     return ConditionalButtonBarWidget(
       icon: Icons.lock,
-      title: "비밀번호 초기화하기",
+      backgroundColor: Colors.red,
+      title: Text(
+        "비밀번호 초기화하기",
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+        ),
+      ),
       isValid: provider.isPasswordValid,
       pressCallback: pressResetPassword,
     );

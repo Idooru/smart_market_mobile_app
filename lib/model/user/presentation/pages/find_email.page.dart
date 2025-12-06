@@ -84,7 +84,13 @@ class _FindEmailPageState extends State<FindEmailPage> with NetWorkHandler {
         ),
         CommonButtonBarWidget(
           icon: Icons.lock,
-          title: "비밀번호 초기화하기",
+          title: Text(
+            "비밀번호 초기화하기",
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+            ),
+          ),
           pressCallback: () {
             Navigator.of(context).pushNamed(
               "/reset_password",
@@ -108,7 +114,13 @@ class _FindEmailPageState extends State<FindEmailPage> with NetWorkHandler {
 
     return ConditionalButtonBarWidget(
       icon: Icons.email,
-      title: "이메일 찾기",
+      title: Text(
+        "이메일 찾기",
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+        ),
+      ),
       isValid: isAllValid,
       pressCallback: pressFindEmail,
     );

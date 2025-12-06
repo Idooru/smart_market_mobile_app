@@ -175,7 +175,13 @@ class _AccountPageState extends State<AccountsPage> {
                     padding: const EdgeInsets.fromLTRB(10, 10, 10, 30),
                     child: ConditionalButtonBarWidget(
                       icon: Icons.account_balance_outlined,
-                      title: "계좌 등록하기",
+                      title: Text(
+                        "계좌 등록하기",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 17,
+                        ),
+                      ),
                       isValid: _hasCreateAccountButton,
                       pressCallback: () => pressCreateAccount(accounts),
                     ),

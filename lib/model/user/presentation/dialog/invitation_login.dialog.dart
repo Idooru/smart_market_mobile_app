@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/widgets/common/canel_button_bar.widget.dart';
 import '../../../../core/widgets/common/common_button_bar.widget.dart';
 import '../../../../core/widgets/dialog/warn_dialog.dart';
 import '../pages/login.page.dart';
@@ -17,7 +18,13 @@ class InvitationLoginDialog {
         Padding(
           padding: const EdgeInsets.only(bottom: 10),
           child: CommonButtonBarWidget(
-            title: "로그인 하기",
+            title: Text(
+              "로그인 하기",
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+              ),
+            ),
             backgroundColor: Colors.blueAccent,
             pressCallback: () {
               NavigatorState navigator = Navigator.of(context);
@@ -32,11 +39,7 @@ class InvitationLoginDialog {
             },
           ),
         ),
-        CommonButtonBarWidget(
-          backgroundColor: const Color.fromARGB(255, 120, 120, 120),
-          title: "취소",
-          pressCallback: () => Navigator.of(context).pop(),
-        ),
+        CancelButtonBarWidget()
       ],
     );
   }

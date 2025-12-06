@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_market/core/widgets/common/canel_button_bar.widget.dart';
 import 'package:smart_market/core/widgets/dialog/handle_network_error.dialog.dart';
 import 'package:smart_market/model/order/presentation/provider/create_order.provider.dart';
 
@@ -30,7 +31,13 @@ class AlreadyHasCartsDialog {
         Padding(
           padding: const EdgeInsets.only(bottom: 10),
           child: CommonButtonBarWidget(
-            title: "카트에 있는 상품과 같이 결제",
+            title: Text(
+              "카트에 있는 상품과 같이 결제",
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 17,
+              ),
+            ),
             pressCallback: () async {
               NavigatorState navigator = Navigator.of(context);
               navigator.pop();
@@ -60,7 +67,13 @@ class AlreadyHasCartsDialog {
           padding: const EdgeInsets.only(bottom: 10),
           child: CommonButtonBarWidget(
             backgroundColor: Colors.green,
-            title: "카트에 있는 상품과 따로 결제",
+            title: Text(
+              "카트에 있는 상품과 따로 결제",
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 17,
+              ),
+            ),
             pressCallback: () async {
               NavigatorState navigator = Navigator.of(context);
               navigator.pop();
@@ -87,13 +100,7 @@ class AlreadyHasCartsDialog {
             },
           ),
         ),
-        CommonButtonBarWidget(
-          backgroundColor: const Color.fromARGB(255, 120, 120, 120),
-          title: "결제 취소",
-          pressCallback: () {
-            Navigator.of(context).pop();
-          },
-        ),
+        CancelButtonBarWidget(),
       ],
     );
   }

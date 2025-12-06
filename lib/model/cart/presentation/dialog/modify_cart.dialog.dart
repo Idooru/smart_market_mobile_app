@@ -59,7 +59,13 @@ class _ModifyCartDialogWidgetState extends EditCartState<ModifyCartDialogWidget>
       doneButton: CommonButtonBarWidget(
         icon: Icons.edit,
         backgroundColor: Colors.green,
-        title: "수정하기",
+        title: Text(
+          "수정하기",
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 17,
+          ),
+        ),
         pressCallback: () {
           widget.modifyCallback(quantity: productQuantity, totalPrice: totalPrice);
           Navigator.of(context).pop();

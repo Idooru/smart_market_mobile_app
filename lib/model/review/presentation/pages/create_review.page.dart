@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_market/core/widgets/common/canel_button_bar.widget.dart';
 import 'package:smart_market/core/widgets/common/common_button_bar.widget.dart';
 
 import '../../../../core/themes/theme_data.dart';
@@ -64,8 +65,13 @@ class _CreateReviewPageState extends State<CreateReviewPage> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10),
                   child: CommonButtonBarWidget(
-                    icon: Icons.arrow_back_ios,
-                    title: "뒤로 가기",
+                    title: Text(
+                      "뒤로 가기",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    ),
                     pressCallback: () {
                       if (widget.backRoute != null) {
                         Navigator.of(context).popUntil(ModalRoute.withName(widget.backRoute!));
@@ -79,11 +85,7 @@ class _CreateReviewPageState extends State<CreateReviewPage> {
                     },
                   ),
                 ),
-                CommonButtonBarWidget(
-                  backgroundColor: const Color.fromARGB(255, 120, 120, 120),
-                  title: "취소",
-                  pressCallback: () => Navigator.of(context).pop(),
-                ),
+                CancelButtonBarWidget(),
               ],
             );
           },

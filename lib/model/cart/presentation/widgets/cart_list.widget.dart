@@ -118,7 +118,7 @@ class CartListWidgetState extends State<CartListWidget> {
                     "장바구니가 비어있습니다.",
                     style: TextStyle(
                       color: Color.fromARGB(255, 90, 90, 90),
-                      fontSize: 15,
+                      fontSize: 16,
                     ),
                   ),
                 )
@@ -147,9 +147,13 @@ class CartListWidgetState extends State<CartListWidget> {
         Consumer<CreateOrderProvider>(
           builder: (BuildContext context, CreateOrderProvider provider, Widget? child) {
             return ConditionalButtonBarWidget(
-              icon: Icons.shopping_bag,
-              title: "결제 주문하기",
-              backgroundColor: Colors.red,
+              title: Text(
+                "결제 주문",
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                ),
+              ),
               pressCallback: () async {
                 NavigatorState navigator = Navigator.of(context);
 

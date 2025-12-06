@@ -58,7 +58,13 @@ class _CreateCartDialogWidgetState extends EditCartState<CreateCartDialogWidget>
         isValid: productQuantity != 0,
         icon: Icons.shopping_cart,
         backgroundColor: Colors.blue,
-        title: "장바구니 담기",
+        title: Text(
+          "장바구니 담기",
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+          ),
+        ),
         pressCallback: () {
           widget.createCallback(
             quantity: productQuantity,

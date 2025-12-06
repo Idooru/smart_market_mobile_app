@@ -77,7 +77,13 @@ class _RegisterPageState extends State<RegisterPage> {
     return ConditionalButtonBarWidget(
       icon: Icons.person,
       backgroundColor: Colors.red,
-      title: "회원가입 하기",
+      title: Text(
+        "회원가입 하기",
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 18,
+        ),
+      ),
       isValid: isAllValid,
       pressCallback: pressRegister,
     );

@@ -53,7 +53,13 @@ class WarnDialogWidget extends StatelessWidget {
             if (buttons.isNotEmpty) ...buttons,
             if (buttons.isEmpty)
               CommonButtonBarWidget(
-                title: "확인",
+                title: Text(
+                  "확인",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 17,
+                  ),
+                ),
                 backgroundColor: const Color.fromARGB(255, 120, 120, 120),
                 pressCallback: () => Navigator.of(context).pop(),
               ),

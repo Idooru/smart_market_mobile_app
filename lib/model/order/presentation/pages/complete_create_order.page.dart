@@ -171,7 +171,13 @@ class _CompleteCreateOrderPageState extends State<CompleteCreateOrderPage> with 
                             bool isValid = provider.isCheckedList.any((item) => item.isChecked);
                             return ConditionalButtonBarWidget(
                               icon: isValid ? Icons.reviews : Icons.warning_amber,
-                              title: isValid ? "리뷰 작성하기" : "리뷰를 남길 상품을 선택하세요.",
+                              title: Text(
+                                isValid ? "리뷰 작성하기" : "리뷰를 남길 상품을 선택하세요.",
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                ),
+                              ),
                               backgroundColor: Colors.blue,
                               pressCallback: () {
                                 List<ReviewCartItem> reviewCartItems = provider.isCheckedList.where((item) => item.isChecked).toList();
@@ -195,7 +201,13 @@ class _CompleteCreateOrderPageState extends State<CompleteCreateOrderPage> with 
                           })(),
                           const SizedBox(height: 7),
                           CommonButtonBarWidget(
-                            title: "나중에 작성 할게요!",
+                            title: Text(
+                              "나중에 작성 할게요!",
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                              ),
+                            ),
                             backgroundColor: const Color.fromARGB(255, 120, 120, 120),
                             pressCallback: () {
                               if (widget.backRoute != null) {

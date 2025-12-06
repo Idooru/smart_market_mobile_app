@@ -4,7 +4,7 @@ import 'package:smart_market/core/widgets/common/common_button_bar.mixin.dart';
 class CommonButtonBarWidget extends StatelessWidget with CommonButtonBar {
   final IconData? icon;
   final Color? backgroundColor;
-  final String title;
+  final Widget title;
   final void Function() pressCallback;
 
   const CommonButtonBarWidget({

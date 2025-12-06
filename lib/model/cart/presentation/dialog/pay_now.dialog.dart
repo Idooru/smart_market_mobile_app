@@ -77,7 +77,13 @@ class _PayNowDialogWidgetState extends EditCartState<PayNowDialogWidget> {
             isValid: productQuantity != 0,
             icon: Icons.payment,
             backgroundColor: Colors.orange,
-            title: "바로 구매하기",
+            title: Text(
+              "바로 구매하기",
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 17,
+              ),
+            ),
             pressCallback: () async {
               NavigatorState navigator = Navigator.of(context);
               ResponseCarts? carts = await widget.payNowCallback(quantity: productQuantity, totalPrice: totalPrice);

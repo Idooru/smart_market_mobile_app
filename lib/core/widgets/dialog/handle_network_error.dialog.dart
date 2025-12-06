@@ -40,9 +40,14 @@ class HandleNetworkErrorDialogWidget extends StatelessWidget with NetWorkHandler
                   style: const TextStyle(fontSize: 17),
                 ),
               ),
-          const SizedBox(height: 10),
           CommonButtonBarWidget(
-            title: "확인",
+            title: Text(
+              "확인",
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+              ),
+            ),
             backgroundColor: const Color.fromARGB(255, 120, 120, 120),
             pressCallback: () => Navigator.of(context).pop(),
           ),

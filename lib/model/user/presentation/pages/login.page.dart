@@ -48,6 +48,8 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     _emailFocusNode.requestFocus();
+    _emailController.addListener(_validateForm);
+    _passwordController.addListener(_validateForm);
   }
 
   void detectInput(String _) {
@@ -58,6 +60,16 @@ class _LoginPageState extends State<LoginPage> {
         _isValidForm = false;
       }
     });
+  }
+
+  void _validateForm() {
+    final isValid = _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
+
+    if (_isValidForm != isValid) {
+      setState(() {
+        _isValidForm = isValid;
+      });
+    }
   }
 
   void pressLogin() {
@@ -126,7 +138,6 @@ class _LoginPageState extends State<LoginPage> {
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
-                  onChanged: detectInput,
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(vertical: 15),
@@ -158,8 +169,14 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 20),
               ConditionalButtonBarWidget(
-                backgroundColor: Colors.blueAccent,
-                title: "로그인 하기",
+                icon: Icons.login,
+                title: Text(
+                  "로그인 하기",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
                 isValid: _isValidForm,
                 pressCallback: pressLogin,
               ),

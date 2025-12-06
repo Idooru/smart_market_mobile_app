@@ -67,7 +67,14 @@ class _CreateReviewItemWidgetState extends AccessReviewItemWidget<CreateReviewIt
                   ) {
                     return ConditionalButtonBarWidget(
                       icon: Icons.reviews,
-                      title: "리뷰 작성하기",
+                      backgroundColor: Colors.red,
+                      title: Text(
+                        "리뷰 작성하기",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 17,
+                        ),
+                      ),
                       isValid: provider.isReviewContentValid,
                       pressCallback: () {
                         NavigatorState navigator = Navigator.of(context);

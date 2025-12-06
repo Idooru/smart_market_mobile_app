@@ -77,7 +77,15 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
     bool isAllValid = (orderProvider.isDeliveryOptionValid && userProvider.isAddressValid) && isSatisfiedBalance;
 
     return ConditionalButtonBarWidget(
-      title: '결제 주문하기',
+      icon: Icons.shopping_bag,
+      backgroundColor: Colors.red,
+      title: Text(
+        "결제 주문하기",
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+        ),
+      ),
       isValid: isAllValid,
       pressCallback: () => pressCreateOrder(orderProvider.carts),
     );

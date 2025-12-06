@@ -1,4 +1,5 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:smart_market/core/widgets/common/canel_button_bar.widget.dart';
 import 'package:smart_market/core/widgets/dialog/warn_dialog.dart';
 
 import '../../../../core/widgets/common/common_button_bar.widget.dart';
@@ -15,7 +16,13 @@ class InvitationCreateAccountDialog {
         Padding(
           padding: const EdgeInsets.only(bottom: 10),
           child: CommonButtonBarWidget(
-            title: "계좌 생성 하기",
+            title: Text(
+              "계좌 생성 하기",
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 17,
+              ),
+            ),
             pressCallback: () {
               navigator.pop();
               navigator.pushNamed(
@@ -28,13 +35,7 @@ class InvitationCreateAccountDialog {
             },
           ),
         ),
-        CommonButtonBarWidget(
-          backgroundColor: const Color.fromARGB(255, 120, 120, 120),
-          title: "결제 취소",
-          pressCallback: () {
-            navigator.pop();
-          },
-        ),
+        CancelButtonBarWidget(),
       ],
     );
   }

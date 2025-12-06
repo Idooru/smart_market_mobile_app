@@ -124,7 +124,13 @@ class _AccountListWidgetState extends State<AccountListWidget> {
                           )),
                       CommonButtonBarWidget(
                         icon: Icons.account_balance_outlined,
-                        title: "계좌 등록하기",
+                        title: Text(
+                          "계좌 등록하기",
+                          style: const TextStyle(
+                            color: const Color.fromARGB(255, 200, 200, 200),
+                            fontSize: 16,
+                          ),
+                        ),
                         pressCallback: () => pressCreateAccount(accounts),
                       ),
                     ];
@@ -155,7 +161,13 @@ class _AccountListWidgetState extends State<AccountListWidget> {
                       ),
                       CommonButtonBarWidget(
                         icon: Icons.account_balance_outlined,
-                        title: "계좌 등록하기",
+                        title: Text(
+                          "계좌 등록하기",
+                          style: const TextStyle(
+                            color: const Color.fromARGB(255, 200, 200, 200),
+                            fontSize: 16,
+                          ),
+                        ),
                         pressCallback: () => pressCreateAccount(accounts),
                       )
                     ];

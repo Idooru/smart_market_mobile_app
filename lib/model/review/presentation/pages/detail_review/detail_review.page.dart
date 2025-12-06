@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_market/core/utils/check_jwt_duration.dart';
+import 'package:smart_market/core/widgets/common/canel_button_bar.widget.dart';
 import 'package:smart_market/model/media/presentation/provider/review_image.provider.dart';
 import 'package:smart_market/model/media/presentation/provider/review_video.provider.dart';
 import 'package:smart_market/model/review/domain/entity/detail_review.entity.dart';
@@ -165,8 +166,14 @@ class _DetailReviewPageState extends AccessReviewItemWidget<DetailReviewPage> {
                                   padding: const EdgeInsets.only(bottom: 10),
                                   child: CommonButtonBarWidget(
                                     icon: Icons.save,
-                                    title: "저장하고 뒤로가기",
-                                    backgroundColor: Colors.green,
+                                    title: Text(
+                                      "저장하고 뒤로가기",
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    backgroundColor: Colors.red,
                                     pressCallback: () {
                                       Navigator.of(context).pop();
                                       pressModifyReview(reviewImageProvider, reviewVideoProvider);
@@ -176,18 +183,19 @@ class _DetailReviewPageState extends AccessReviewItemWidget<DetailReviewPage> {
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 10),
                                   child: CommonButtonBarWidget(
-                                    icon: Icons.arrow_back_ios,
-                                    title: "저장하지 않고 뒤로가기",
+                                    title: Text(
+                                      "저장하지 않고 뒤로가기",
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                      ),
+                                    ),
                                     pressCallback: () {
                                       Navigator.of(context).popUntil(ModalRoute.withName(widget.args.backRoute));
                                     },
                                   ),
                                 ),
-                                CommonButtonBarWidget(
-                                  backgroundColor: const Color.fromARGB(255, 120, 120, 120),
-                                  title: "취소",
-                                  pressCallback: () => Navigator.of(context).pop(),
-                                ),
+                                CancelButtonBarWidget(),
                               ],
                             );
                           } else {
@@ -248,7 +256,13 @@ class _DetailReviewPageState extends AccessReviewItemWidget<DetailReviewPage> {
                               ) {
                                 return ConditionalButtonBarWidget(
                                   icon: Icons.edit,
-                                  title: "리뷰 수정하기",
+                                  title: Text(
+                                    "리뷰 수정하기",
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                    ),
+                                  ),
                                   isValid: provider.isReviewContentValid && responseDetailProduct.countForModify != 0,
                                   pressCallback: () => pressModifyReview(reviewImageProvider, reviewVideoProvider),
                                 );

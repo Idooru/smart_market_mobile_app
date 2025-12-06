@@ -78,7 +78,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     return ConditionalButtonBarWidget(
       icon: Icons.person,
-      title: "프로필 수정하기",
+      title: Text(
+        "프로필 수정하기",
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+        ),
+      ),
       isValid: isAllValid,
       pressCallback: pressEditProfile,
     );

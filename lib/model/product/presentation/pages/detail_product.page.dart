@@ -329,7 +329,13 @@ class _DetailProductPageState extends State<DetailProductPage> {
                       flex: 1,
                       child: CommonButtonBarWidget(
                         icon: Icons.shopping_cart,
-                        title: "장바구니 담기",
+                        title: Text(
+                          "장바구니 담기",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                          ),
+                        ),
                         backgroundColor: Colors.blue,
                         pressCallback: () {
                           if (checkIsLogined()) {
@@ -347,7 +353,13 @@ class _DetailProductPageState extends State<DetailProductPage> {
                         builder: (BuildContext context, CreateOrderProvider provider, Widget? child) {
                           return CommonButtonBarWidget(
                             icon: Icons.payment,
-                            title: "바로 구매하기",
+                            title: Text(
+                              "바로 구매하기",
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                              ),
+                            ),
                             backgroundColor: Colors.orange,
                             pressCallback: () {
                               if (checkIsLogined()) {

@@ -10,11 +10,16 @@ class ForceLogoutDialog {
   static void show(BuildContext context) {
     WarnDialog.show(
       context,
-      title: "인증 수단이 만료되어 로그아웃합니다.",
+      title: "인증 수단이 만료되어_ 로그아웃합니다.",
       buttons: [
         CommonButtonBarWidget(
-          icon: Icons.logout,
-          title: "로그아웃 하기",
+          title: Text(
+            "로그아웃 하기",
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+            ),
+          ),
           backgroundColor: const Color.fromARGB(255, 120, 120, 120),
           pressCallback: () {
             final SharedPreferences db = locator<SharedPreferences>();

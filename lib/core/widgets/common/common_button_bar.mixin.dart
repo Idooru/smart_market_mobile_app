@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
 
 mixin CommonButtonBar {
-  ButtonStyle getButtonStyle(Color backgroundColor) {
-    return ElevatedButton.styleFrom(
-      minimumSize: const Size(0, 50),
-      backgroundColor: backgroundColor,
-      foregroundColor: Colors.black87,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
+  ButtonStyle getButtonStyle(Color enabledColor) {
+    return ButtonStyle(
+      minimumSize: MaterialStateProperty.all(const Size(0, 50)),
+      foregroundColor: MaterialStateProperty.all(Colors.black87),
+      shape: MaterialStateProperty.all(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
       ),
+      backgroundColor: MaterialStateProperty.resolveWith((states) {
+        if (states.contains(MaterialState.disabled)) {
+          return const Color.fromARGB(255, 190, 190, 190); // 비활성화
+        }
+        return enabledColor; // 활성화
+      }),
     );
   }
 
-  Row getButtonContent(IconData? icon, String title) {
+  Row getButtonContent(IconData? icon, Widget title) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -28,13 +35,7 @@ mixin CommonButtonBar {
                 ],
               )
             : const SizedBox.shrink(),
-        Text(
-          title,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 17,
-          ),
-        )
+        title,
       ],
     );
   }
