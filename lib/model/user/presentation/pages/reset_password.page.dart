@@ -80,15 +80,32 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  FocusEditWidget<EditEmailWidgetState>(
-                    editWidgetKey: _emailKey,
-                    editWidget: EditEmailWidget(
-                      key: _emailKey,
-                      beforeEmail: widget.email,
-                      hasDuplicateValidation: false,
-                    ),
-                  ),
-                  EditPasswordWidget(key: _passwordKey, isLastWidget: true),
+                  widget.email == null
+                      ? FocusEditWidget<EditEmailWidgetState>(
+                          editWidgetKey: _emailKey,
+                          editWidget: EditEmailWidget(
+                            key: _emailKey,
+                            beforeEmail: widget.email,
+                            hasDuplicateValidation: false,
+                          ),
+                        )
+                      : EditEmailWidget(
+                          key: _emailKey,
+                          beforeEmail: widget.email,
+                          hasDuplicateValidation: false,
+                        ),
+                  widget.email != null
+                      ? FocusEditWidget(
+                          editWidgetKey: _passwordKey,
+                          editWidget: EditPasswordWidget(
+                            key: _passwordKey,
+                            isLastWidget: true,
+                          ),
+                        )
+                      : EditPasswordWidget(
+                          key: _passwordKey,
+                          isLastWidget: true,
+                        ),
                   const SizedBox(height: 10),
                   ResetPasswordButton(provider),
                 ],
