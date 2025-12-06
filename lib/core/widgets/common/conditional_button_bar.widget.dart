@@ -24,7 +24,7 @@ class ConditionalButtonBarWidget extends StatelessWidget with CommonButtonBar {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: pressCallback,
+      onPressed: isValid ? pressCallback : null,
       style: getButtonStyle(isValid ? getBackgroundColorWhenValid() : const Color.fromARGB(255, 190, 190, 190)),
       child: getButtonContent(icon, title),
     );
