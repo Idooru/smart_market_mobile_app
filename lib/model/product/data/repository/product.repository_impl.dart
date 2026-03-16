@@ -26,7 +26,7 @@ class ProductRepositoryImpl implements ProductRepository {
 
   @override
   Future<DataState<List<ResponseSearchProduct>>> searchProduct(RequestSearchProducts args) async {
-    String url = "$_baseUrl/search?mode=${translateRequestProductSearchMode(args.mode)}&keyword=${args.keyword}";
+    String url = "$_baseUrl/search?mode=${translateRequestProductSearchMode(args.mode)}&sequence=${args.sequence}&count=${args.count}&keyword=${args.keyword}";
     Dio dio = _commonHttpClient.getClient();
 
     try {

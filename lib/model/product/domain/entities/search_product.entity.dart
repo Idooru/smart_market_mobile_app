@@ -25,10 +25,14 @@ class RequestConditionalProducts {
 class RequestSearchProducts {
   final RequestProductSearchMode mode;
   final String keyword;
+  final int sequence;
+  final int count;
 
   const RequestSearchProducts({
     required this.mode,
     required this.keyword,
+    required this.sequence,
+    required this.count,
   });
 }
 
@@ -38,6 +42,7 @@ class ResponseSearchProduct {
   final int price;
   final String category;
   final String createdAt;
+  final int sequence;
   final List<String> imageUrls;
   final double averageScore;
   final int reviewCount;
@@ -48,6 +53,7 @@ class ResponseSearchProduct {
     required this.price,
     required this.category,
     required this.createdAt,
+    required this.sequence,
     required this.imageUrls,
     required this.averageScore,
     required this.reviewCount,
@@ -60,6 +66,7 @@ class ResponseSearchProduct {
       price: json["price"],
       category: json["category"],
       createdAt: json["createdAt"],
+      sequence: json["sequence"],
       imageUrls: List<String>.from(json["imageUrls"]).map(splitHostUrl).toList(),
       averageScore: double.parse(json["averageScore"]),
       reviewCount: json["reviewCount"],

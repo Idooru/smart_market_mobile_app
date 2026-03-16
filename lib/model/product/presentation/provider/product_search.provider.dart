@@ -70,6 +70,11 @@ class ProductSearchProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void addProducts(List<ResponseSearchProduct> newProducts) {
+    _products = [..._products, ...newProducts]; // 기존 목록에 추가
+    notifyListeners();
+  }
+
   void setFail(SearchProductFail fail) {
     _fail = fail;
     notifyListeners();

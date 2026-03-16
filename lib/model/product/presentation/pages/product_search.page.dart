@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:smart_market/core/utils/get_it_initializer.dart';
 import 'package:smart_market/model/main/presentation/pages/navigation.page.dart';
 import 'package:smart_market/model/product/common/const/%08product_category.const.dart';
+import 'package:smart_market/model/product/common/const/product_pagincation.const.dart';
 import 'package:smart_market/model/product/domain/entities/search_product.entity.dart';
 import 'package:smart_market/model/product/domain/service/product.service.dart';
 import 'package:smart_market/model/product/presentation/provider/product_filtered.provider.dart';
@@ -36,6 +37,7 @@ class ProductSearchPage extends StatefulWidget {
 class _ProductSearchPageState extends State<ProductSearchPage> {
   final ProductService productService = locator<ProductService>();
   final FocusNode focusNode = FocusNode();
+  final ScrollController scrollController = ScrollController();
   String? _keyword;
 
   late ViewMode viewMode;
@@ -55,6 +57,8 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
       RequestSearchProducts args = RequestSearchProducts(
         mode: RequestProductSearchMode.category,
         keyword: searchProvider.keyword,
+        sequence: firstSequence,
+        count: count,
       );
 
       updateProductList(args);
@@ -79,6 +83,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
   void dispose() {
     super.dispose();
     focusNode.dispose();
+    scrollController.dispose();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       searchProvider.clearAll();
       filteredProvider.clearAll();
@@ -123,6 +128,8 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
 
     RequestSearchProducts searchProduct = RequestSearchProducts(
       mode: productCategory.contains(keyword) ? RequestProductSearchMode.category : RequestProductSearchMode.manual,
+      sequence: firstSequence,
+      count: count,
       keyword: keyword,
     );
 
@@ -164,6 +171,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
               : null,
           body: provider.searchMode == SearchMode.none
               ? CustomScrollView(
+                  controller: scrollController,
                   slivers: [
                     // header
                     SliverAppBar(
@@ -214,10 +222,14 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                     ),
                     ProductSearchResultWidget(
                       viewMode: viewMode,
+                      keyword: _keyword,
+                      scrollController: scrollController,
                       reconnectCallback: () {
                         RequestSearchProducts searchProduct = RequestSearchProducts(
                           mode: productCategory.contains(_keyword) ? RequestProductSearchMode.category : RequestProductSearchMode.manual,
                           keyword: _keyword!,
+                          sequence: firstSequence,
+                          count: count,
                         );
 
                         updateProductList(searchProduct);
